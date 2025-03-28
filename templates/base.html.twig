@@ -3,8 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>StravaWars</title>
+    <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
 </head>
+<header>
+    <div class="banner">
+        <a href="/maps">
+            <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
+        </a>
+        <a href="/home">
+            <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
+        </a>
+        <a href="/profile">
+            <img src="{{ asset('images/default_profile_picture.png') }}" alt="profile picture" style="width: 100px; height: 100px">
+            <img>
+        </a>
+    </div>
+
+</header>
 <body>
-    <a href="{{ path('strava_connect') }}">Login with Strava</a>
+    {% block body %}
+    {% endblock %}
 </body>
 </html>

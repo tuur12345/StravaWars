@@ -1,0 +1,21 @@
+/*primary-color: #fc5200;
+secondary-color: #fecab1;
+background-color: #EDEDED;*/
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100px;
+  background-color: #fecab1;
+}
+
+body {
+  background-color: #EDEDED;
+}

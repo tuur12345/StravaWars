@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StravaWars</title>
+    <link href="{{ asset('css/default_base.css') }}" rel="stylesheet"/>
+</head>
+<header>
+    <div class="default-banner">
+        <a href="/">
+            <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
+        </a>
+    </div>
+
+</header>
+<body>
+    <div class="strava-button">
+        <a href="{{ path('strava_connect') }}">
+            <img src="{{ asset('images/strava_connect_button.png') }}" alt="strava connect button">
+        </a>
+    </div>
+</body>
+</html>

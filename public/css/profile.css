@@ -1,0 +1,48 @@
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.profile-image {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    margin-right: 20px;
+}
+
+.profile-info h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+.profile-info p {
+    font-size: 1.1em;
+}
+
+.profile-stats, .profile-activities {
+    margin-top: 30px;
+}
+
+.profile-stats h2, .profile-activities h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+li {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
