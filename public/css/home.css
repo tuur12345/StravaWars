@@ -1,0 +1,50 @@
+.container { /*layout by chatgpt*/
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.activity-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.activity-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.activity-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.activity-card p {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.activity-card a.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.activity-card a.btn:hover {
+    background-color: #0056b3;
+}

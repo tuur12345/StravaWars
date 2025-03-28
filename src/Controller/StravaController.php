@@ -27,7 +27,7 @@ class StravaController extends AbstractController
                 'client_id' => $this->clientId,
                 'response_type' => 'code',
                 'redirect_uri' => $this->redirectUri,
-                'scope' => 'read,activity:read', // Add any required scope
+                'scope' => 'read,read_all,profile:read_all,activity:read_all', // Get all the required scopes
                 'state' => 'xyz', // Optional, can use for CSRF protection
             ]);
 
@@ -36,7 +36,12 @@ class StravaController extends AbstractController
 
     #[Route('/strava/callback', name:'strava_callback')]
     public function callback(Request $request, HttpClientInterface $httpClient): Response { // after login strava return to this
+        if ($request->query->get('error') === 'access_denied') { // if users doesnt allow permission this should return them
+            return $this->redirectToRoute('connect_to_strava');
+        }
+
         $code = $request->query->get('code'); // get code from user
+
         if (!$code) {
             return $this->redirectToRoute('connect_to_strava'); // go back to start screen
         }
@@ -56,7 +61,7 @@ class StravaController extends AbstractController
         }
 
         $accessToken = $data['access_token']; // Retrieve the access token from the response
-
+        $request->getSession()->set('access_token', $accessToken); // store accessToken for later requests
         // Use the access token to retrieve the user's data
         $userDataResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete', [
             'headers' => [
@@ -71,8 +76,29 @@ class StravaController extends AbstractController
     }
 
     #[Route('/home', name:'home')]
-    public function home(): Response {
-        return $this->render('home.html.twig');
+    public function home(Request $request, HttpClientInterface $httpClient): Response {
+        $user = $request->getSession()->get('userData'); // get user data from session
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
+        }
+
+        $accessToken = $request->getSession()->get('access_token'); // retrieve accesstoken from session
+        if (!$accessToken) {
+            return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
+        }
+
+        // get all the users activities
+        $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        ]);
+
+        $activities = $activitiesResponse->toArray();
+
+        return $this->render('home.html.twig', [
+            'activities' => $activities,
+        ]);
     }
 
     #[Route('/maps', name:'maps')]
