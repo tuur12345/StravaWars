@@ -24,12 +24,12 @@
                             {% if activity.map.summary_polyline is not empty %}
                                 <h4>Activity Route:</h4>
                                 <!-- created a google cloud project to access static map, hopefully they dont charge me :( -->
-                                <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&path=enc:{{ activity.map.summary_polyline }}&key=AIzaSyBhmJLrRlnertfcFQOKCosS6_xBYcr7AHA" alt="Activity Route" style="width: 300px"/>
+                                <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&path=enc:{{ activity.map.summary_polyline }}&key=AIzaSyBhmJLrRlnertfcFQOKCosS6_xBYcr7AHA" alt="Activity Route" style="width: 400px"/>
                             {% else %}
                                 <p>No map available for this activity.</p>
                             {% endif %}
-                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="btn btn-primary">View on Strava</a>
-
+                            <p></p>
+                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
                         </div>
 
                         <!-- Strava Embedded Map -->
