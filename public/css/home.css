@@ -12,14 +12,16 @@ h1 {
 }
 
 .activity-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
 }
 
 .activity-card {
     border: 1px solid #ddd;
     padding: 20px;
+    margin-bottom: 20px;
     border-radius: 8px;
     background-color: #f9f9f9;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -37,7 +39,7 @@ h1 {
 
 .activity-card a.btn {
     display: inline-block;
-    background-color: #007bff;
+    background-color: #fc5200;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
@@ -46,5 +48,5 @@ h1 {
 }
 
 .activity-card a.btn:hover {
-    background-color: #0056b3;
+    background-color: #c54400;
 }

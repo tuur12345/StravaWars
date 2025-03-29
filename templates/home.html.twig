@@ -4,31 +4,46 @@
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
     <div class="container">
         <h1>Your Recent Activities</h1>
-
+        <!-- two options are possible, either our own map made with google, or straight from strava -->
         {% if activities is not empty %}
             <div class="activity-list">
                 {% for activity in activities %}
-                    <div class="activity-card">
-                        <h3>{{ activity.name }}</h3>
-                        <p><strong>Type:</strong> {{ activity.type }}</p>
-                        <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
-                        <p><strong>Distance:</strong> {{ (activity.distance / 1000) | number_format(2) }} km</p> <!-- Distance in kilometers -->
+                    <div class="activity-card" style="display: flex">
+                        <div>
+                            <h3>{{ activity.name }}</h3>
+                            <p><strong>Type:</strong> {{ activity.type }}</p>
+                            <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
+                            <p><strong>Distance:</strong> {{ (activity.distance / 1000) | number_format(2) }} km</p> <!-- Distance in kilometers -->
 
-                        {% set total_seconds = activity.elapsed_time %} <!-- calculate proper time format -->
-                        {% set hours = total_seconds // 3600 %}
-                        {% set minutes = (total_seconds % 3600) // 60 %}
-                        {% set seconds = total_seconds % 60 %}
-                        <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
+                            {% set total_seconds = activity.elapsed_time %}
+                            {% set hours = total_seconds // 3600 %}
+                            {% set minutes = (total_seconds % 3600) // 60 %}
+                            {% set seconds = total_seconds % 60 %}
+                            <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
 
-                        {% if activity.map.summary_polyline is not empty %}
-                            <h4>Activity Route:</h4>
-                            <!-- created a google cloud project to access static map, hopefully they dont charge me :( -->
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&path=enc:{{ activity.map.summary_polyline }}&key=AIzaSyBhmJLrRlnertfcFQOKCosS6_xBYcr7AHA" alt="Activity Route" style="width: 300px"/>
+                            {% if activity.map.summary_polyline is not empty %}
+                                <h4>Activity Route:</h4>
+                                <!-- created a google cloud project to access static map, hopefully they dont charge me :( -->
+                                <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&path=enc:{{ activity.map.summary_polyline }}&key=AIzaSyBhmJLrRlnertfcFQOKCosS6_xBYcr7AHA" alt="Activity Route" style="width: 300px"/>
+                            {% else %}
+                                <p>No map available for this activity.</p>
+                            {% endif %}
+                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="btn btn-primary">View on Strava</a>
+
+                        </div>
+
+                        <!-- Strava Embedded Map -->
+                        {% if activity.id is not empty %}
+                            <div class="strava-embed-placeholder"
+                                 data-embed-type="activity"
+                                 data-embed-id="{{ activity.id }}"
+                                 data-style="standard"
+                                 data-from-embed="true">
+                            </div>
                         {% else %}
                             <p>No map available for this activity.</p>
                         {% endif %}
 
-                        <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="btn btn-primary">View on Strava</a>
                     </div>
                 {% endfor %}
             </div>
@@ -36,4 +51,8 @@
             <p>You have no recent activities.</p>
         {% endif %}
     </div>
+
+    <!-- Strava Embed Script (Only Load Once) -->
+    <script src="https://strava-embeds.com/embed.js"></script>
+
 {% endblock %}
