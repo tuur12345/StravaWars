@@ -98,12 +98,19 @@ class StravaController extends AbstractController
 
         return $this->render('home.html.twig', [
             'activities' => $activities,
+            'user' => $user,
         ]);
     }
 
     #[Route('/maps', name:'maps')]
-    public function maps(): Response {
-        return $this->render('maps.html.twig');
+    public function maps(Request $request): Response {
+        $user = $request->getSession()->get('userData'); // get user data from session
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
+        }
+        return $this->render('maps.html.twig', [
+            'user' => $user,
+            ]);
     }
 
     #[Route('/profile', name:'profile')]

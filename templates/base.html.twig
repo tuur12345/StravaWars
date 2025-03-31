@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>StravaWars</title>
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <header>
     <div class="banner">
@@ -13,15 +14,69 @@
         <a href="/home">
             <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
         </a>
-        <a href="/profile">
-            <img src="{{ asset('images/default_profile_picture.png') }}" alt="profile picture" style="width: 100px; height: 100px">
-            <img>
-        </a>
+        <div class="profile-menu">
+            <img src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
+            <div id="menu-container">
+                <div id="menu-wrapper">
+                    <div id="hamburger-menu"><span></span><span></span><span></span></div>
+                </div>
+                <ul class="menu-list accordion">
+                    <li id="nav1" class="toggle accordion-toggle">
+                        <span class="icon-plus"></span>
+                        <a class="menu-link" href="#">Friends</a>
+                    </li>
+                    <ul class="menu-submenu accordion-content">
+                        <li><a class="head" href="#">Add Friend</a></li>
+                        <li><a class="head" href="#">Your Friends</a></li>
+                    </ul>
+                    <li id="nav2" class="toggle accordion-toggle">
+                        <span class="icon-plus"></span>
+                        <a class="menu-link" href="#">Account</a>
+                    </li>
+                    <ul class="menu-submenu accordion-content">
+                        <li><a class="head" href="{{ path('profile') }}">Profile</a></li>
+                        <li><a class="head" href="{{ path('connect_to_strava') }}">Log out</a></li>
+                        <li><a class="head" href="#">Delete account</a></li>
+                    </ul>
+                    <li id="nav3" class="toggle accordion-toggle">
+                        <span class="icon-plus"></span>
+                        <a class="menu-link" href="#">Settings</a>
+                    </li>
+                    <ul class="menu-submenu accordion-content">
+                        <li><a class="head" href="#">Dark mode</a></li>
+                        <li><a class="head" href="#">More settings</a></li>
+                    </ul>
+                </ul>
+            </div>
+        </div>
     </div>
-
 </header>
 <body>
-    {% block body %}
-    {% endblock %}
+{% block body %}
+{% endblock %}
+<script>
+    $(function() {
+        function slideMenu() {
+            var activeState = $("#menu-container .menu-list").hasClass("active");
+            $("#menu-container .menu-list").animate({ left: activeState ? "-100%" : "0%" }, 400);
+        }
+
+        $("#menu-wrapper").click(function(event) {
+            event.stopPropagation();
+            $("#hamburger-menu").toggleClass("open");
+            $("#menu-container .menu-list").toggleClass("active");
+            slideMenu();
+            $("body").toggleClass("overflow-hidden");
+        });
+
+        $(".menu-list").find(".accordion-toggle").click(function() {
+            $(this).next().toggleClass("open").slideToggle("fast");
+            $(this).toggleClass("active-tab").find(".menu-link").toggleClass("active");
+
+            $(".menu-list .accordion-content").not($(this).next()).slideUp("fast").removeClass("open");
+            $(".menu-list .accordion-toggle").not($(this)).removeClass("active-tab").find(".menu-link").removeClass("active");
+        });
+    });
+</script>
 </body>
 </html>
