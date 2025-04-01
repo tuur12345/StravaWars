@@ -1,1 +1,1 @@
-Ultra SIGMA stravawars to conquer the world
+SIGMA stravawars to conquer the world
