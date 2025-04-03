@@ -10,6 +10,10 @@ h1 {
     margin-bottom: 20px;
     color: #333;
 }
+.activity-map {
+    position: relative; /* or absolute if needed */
+    z-index: 0; /* Lower value ensures it's behind other elements */
+}
 
 .activity-list {
     display: flex;

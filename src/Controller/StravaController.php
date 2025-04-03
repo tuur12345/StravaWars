@@ -12,8 +12,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153511'; // Replace with your Strava client ID
-    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
+    private $clientId = '153505'; // Replace with your Strava client ID
+    private $clientSecret = '658ffd98156a5101444096565e9565a00c051ca4'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
@@ -87,16 +87,18 @@ class StravaController extends AbstractController
         }
 
         // get all the users activities
-        $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities?' . time(), [
+        $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $accessToken,
             ],
             'query' => [
-                'per_page' => 3, // Limiteer het aantal activiteiten per pagina
-                'page' => 1,       // Geef de eerste pagina weer (je kunt dit aanpassen voor paginering)
+                'per_page' => 3,
+                'page' => 1,
             ],
         ]);
+
         $activities = $activitiesResponse->toArray();
+
 
         // Bereken de start van de week (bijvoorbeeld afgelopen zondag)
         $startOfWeek = strtotime('last sunday');
@@ -115,6 +117,7 @@ class StravaController extends AbstractController
             // Voeg de kudos van deze activiteit toe aan de totaalscore
             $totalKudosThisWeek += $activity['kudos_count'];
         }
+        $request->getSession()->set('weekActivities', $activities); // sla de activiteiten van deze week op
 
         // Je kunt de activiteiten hier opslaan of naar de view sturen
         $request->getSession()->set('weekActivities', $weekActivities); // sla de activiteiten van deze week op
@@ -129,24 +132,34 @@ class StravaController extends AbstractController
 
     #[Route('/maps', name:'maps')]
     public function maps(Request $request): Response {
+        $weekActivities = $request->getSession()->get('weekActivities', []);
+        $activities = $request->getSession()->get('activities', []);
+        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
         return $this->render('maps.html.twig', [
             'user' => $user,
-            ]);
+            'weekActivities'=> $weekActivities,
+            'activities'=> $activities,
+            'totalKudosThisWeek'=> $totalKudosThisWeek
+        ]);
     }
 
     #[Route('/profile', name:'profile')]
     public function profile(Request $request): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
+        $activities = $request->getSession()->get('activities', []);
+        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
         return $this->render('profile.html.twig',
             [
-                'user' => $user
+                'user' => $user,
+                'activities'=> $activities,
+                'totalKudosThisWeek'=> $totalKudosThisWeek
             ]
         );
     }

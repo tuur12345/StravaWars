@@ -29,7 +29,7 @@
                         <div style="width: 70%">
                             {% if activity.map.summary_polyline is not empty %}
                                 <h4>Activity Route:</h4>
-                                <div id="map_{{ activity.id }}" class="activity-map" data-polyline="{{ activity.map.summary_polyline }}" style="width: 80%; height: 80%"></div>
+                                <div id="popup_map_{{ activity.id }}" class="activity-map" data-polyline="{{ activity.map.summary_polyline }}" style="width: 80%; height: 80%"></div>
                             {% else %}
                                 <p>No map available for this activity.</p>
                             {% endif %}
