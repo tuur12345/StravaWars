@@ -87,17 +87,43 @@ class StravaController extends AbstractController
         }
 
         // get all the users activities
-        $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities', [
+        $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities?' . time(), [
             'headers' => [
                 'Authorization' => 'Bearer ' . $accessToken,
             ],
+            'query' => [
+                'per_page' => 3, // Limiteer het aantal activiteiten per pagina
+                'page' => 1,       // Geef de eerste pagina weer (je kunt dit aanpassen voor paginering)
+            ],
         ]);
-
         $activities = $activitiesResponse->toArray();
 
+        // Bereken de start van de week (bijvoorbeeld afgelopen zondag)
+        $startOfWeek = strtotime('last sunday');
+        $endOfWeek = strtotime('next sunday');
+
+        // Filter de activiteiten die deze week zijn
+        $weekActivities = array_filter($activities, function ($activity) use ($startOfWeek, $endOfWeek) {
+            $activityDate = strtotime($activity['start_date']);
+            // Controleer of de activiteit binnen de huidige week valt
+            return $activityDate >= $startOfWeek && $activityDate < $endOfWeek;
+        });
+        // Tel de kudos van de activiteiten van deze week
+        $totalKudosThisWeek = 0;
+
+        foreach ($activities as $activity) {
+            // Voeg de kudos van deze activiteit toe aan de totaalscore
+            $totalKudosThisWeek += $activity['kudos_count'];
+        }
+
+        // Je kunt de activiteiten hier opslaan of naar de view sturen
+        $request->getSession()->set('weekActivities', $weekActivities); // sla de activiteiten van deze week op
+        $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek);
         return $this->render('home.html.twig', [
+            'weekActivities'=> $weekActivities,
             'activities' => $activities,
             'user' => $user,
+            'totalKudosThisWeek'=> $totalKudosThisWeek
         ]);
     }
 

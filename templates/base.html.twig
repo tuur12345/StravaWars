@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>StravaWars</title>
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
     <script src="{{ asset('js/SyncPopUp.js') }}"></script>
@@ -61,10 +60,10 @@
     <div class="popup-content">
         <!-- Zijbalk met foto-buttons -->
         <div class="sidebar">
-            <button class="sidebar-btn">
+            <button class="sidebar-btn" onclick="changeContent('activities')">
                 <img src="{{ asset('images/activity.png') }}" alt="Button 1">
             </button>
-            <button class="sidebar-btn">
+            <button class="sidebar-btn" onclick="changeContent('kudosconverter')">
                 <img src="{{ asset('images/pasted-image.png') }}" alt="Button 2">
             </button>
         </div>
@@ -72,8 +71,43 @@
         <!-- Hoofdcontent -->
         <div class="main-content">
             <span class="close-btn" onclick="closePopup()">&times;</span>
-            <h2>Popup Venster</h2>
-            <p>Hier kun je tekst of een formulier plaatsen.</p>
+
+            <!-- Default content from Button 1 -->
+            <div id="activities-content">
+                {% if activities is not empty %}
+                    <h1>Your Activities this Week</h1>
+                    <div class="activities-list">
+                        {% for activity in activities %}
+                            <div class="activity-card" style="display: flex">
+                                <!-- Strava Embedded Map -->
+                                {% if activity.id is not empty %}
+                                    <div class="strava-embed-placeholder"
+                                         data-embed-type="activity"
+                                         data-embed-id="{{ activity.id }}"
+                                         data-style="standard"
+                                         data-from-embed="true">
+                                    </div>
+                                {% else %}
+                                    <p>No map available for this activity.</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <h1>You have no activities this week</h1>
+                {% endif %}
+            </div>
+
+            <!-- Default content for Button 2 (Map view or other content) -->
+            <div id="kudosconverter" style="display: none;">
+                <h1>Converting Strava Kudos from this week</h1>
+                <div class="arrow">
+                    <h1>Kudos this week: {{ totalKudosThisWeek }}</h1>
+                    <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}"></div>
+                    <div><img src="{{ asset('images/stravabucks.png') }}"></div>
+                </div>
+                <button class="convert-button" onclick="convert()"><img src="{{ asset('images/convertbutton.png') }}"></button>
+            </div>
         </div>
     </div>
 </div>
@@ -83,6 +117,65 @@
 {% endblock %}
 <footer>
     <button class="floating-button" onclick="floatingButtonAction()"><img src="{{ asset('images/refreshbutton.png') }}"></button>
+
 </footer>
+
+<script>
+    $(function() {
+        function slideMenu() {
+            var activeState = $("#menu-container .menu-list").hasClass("active");
+            $("#menu-container .menu-list").animate({ left: activeState ? "-100%" : "0%" }, 400);
+        }
+
+        $("#menu-wrapper").click(function(event) {
+            event.stopPropagation();
+            $("#hamburger-menu").toggleClass("open");
+            $("#menu-container .menu-list").toggleClass("active");
+            slideMenu();
+            $("body").toggleClass("overflow-hidden");
+        });
+
+        $(".menu-list").find(".accordion-toggle").click(function() {
+            $(this).next().toggleClass("open").slideToggle("fast");
+            $(this).toggleClass("active-tab").find(".menu-link").toggleClass("active");
+
+            $(".menu-list .accordion-content").not($(this).next()).slideUp("fast").removeClass("open");
+            $(".menu-list .accordion-toggle").not($(this)).removeClass("active-tab").find(".menu-link").removeClass("active");
+        });
+    });
+
+    function floatingButtonAction() {
+        openPopup();
+    }
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+
+    function changeContent(contentType) {
+        // Hide both contents
+        document.getElementById('activities-content').style.display = 'none';
+        document.getElementById('kudosconverter').style.display = 'none';
+
+        // Update sidebar button images
+        if (contentType === 'activities') {
+            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/activity.png') }}";
+            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/pasted-image.png') }}";
+            document.getElementById('activities-content').style.display = 'block';
+        } else if (contentType === 'kudosconverter') {
+            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/whiteactivity.png') }}";
+            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/orangethumbsup.png') }}";
+            document.getElementById('kudosconverter').style.display = 'block';
+        }
+    }
+
+    window.onload = function() {
+        changeContent('activities');
+    };
+
+</script>
 </body>
 </html>
