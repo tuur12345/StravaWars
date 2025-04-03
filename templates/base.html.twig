@@ -51,14 +51,30 @@
         </div>
     </div>
 </header>
+
+
 <!-- Pop-up venster -->
 <div id="popup" class="popup">
     <div class="popup-content">
-        <span class="close-btn" onclick="closePopup()">&times;</span>
-        <h2>Popup Venster</h2>
-        <p>Hier kun je tekst of een formulier plaatsen.</p>
+        <!-- Zijbalk met foto-buttons -->
+        <div class="sidebar">
+            <button class="sidebar-btn">
+                <img src="{{ asset('images/activity.png') }}" alt="Button 1">
+            </button>
+            <button class="sidebar-btn">
+                <img src="{{ asset('images/pasted-image.png') }}" alt="Button 2">
+            </button>
+        </div>
+
+        <!-- Hoofdcontent -->
+        <div class="main-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Popup Venster</h2>
+            <p>Hier kun je tekst of een formulier plaatsen.</p>
+        </div>
     </div>
 </div>
+
 <body>
 {% block body %}
 {% endblock %}

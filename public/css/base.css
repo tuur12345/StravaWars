@@ -75,8 +75,39 @@ body {
 
 .popup-content {
   text-align: center;
+  display: flex;
+}
+/* Zijbalk */
+.sidebar {
+  width: 80px;
+  background: #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+}
+/* Zijbalk knoppen */
+.sidebar-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin: 10px 0;
+  width: 50px;
+  height: 50px;
+  padding: 0;
 }
 
+.sidebar-btn img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.2s;
+}
+/* Hoofdcontent */
+.main-content {
+  padding: 20px;
+  flex-grow: 1;
+  text-align: center;
+}
 .close-btn {
   position: absolute;
   top: 10px;
