@@ -90,7 +90,7 @@
             $("#menu-container .menu-list").animate({ left: activeState ? "-100%" : "0%" }, 400);
         }
 
-        $("#profile-menu".click(function(event) {
+        $("#profile-menu").click(function(event) {
             event.stopPropagation();
             $("#hamburger-menu").toggleClass("open");
             $("#menu-container .menu-list").toggleClass("active");
