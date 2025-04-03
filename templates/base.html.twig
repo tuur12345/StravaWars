@@ -6,21 +6,23 @@
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
+    <script src="{{ asset('js/SyncPopUp.js') }}"></script>
 </head>
 <header>
     <div class="banner">
         <a href="/maps">
             <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
         </a>
-        <a href="/home">
-            <img  src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
+        <a href="/">
+            <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
         </a>
-        <div class="profile-menu">
+        <div class="profile-menu" id="profile-clickable">
             <img id="profile-picture" src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
+            <div id="menu-wrapper">
+                <div id="hamburger-menu"><span></span><span></span><span></span></div>
+            </div>
             <div id="menu-container">
-                <div id="menu-wrapper">
-                    <div id="hamburger-menu"><span></span><span></span><span></span></div>
-                </div>
                 <ul class="menu-list accordion">
                     <li id="nav1" class="toggle accordion-toggle">
                         <span class="icon-plus"></span>
@@ -52,33 +54,35 @@
         </div>
     </div>
 </header>
+
+
+<!-- Pop-up venster -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <!-- Zijbalk met foto-buttons -->
+        <div class="sidebar">
+            <button class="sidebar-btn">
+                <img src="{{ asset('images/activity.png') }}" alt="Button 1">
+            </button>
+            <button class="sidebar-btn">
+                <img src="{{ asset('images/pasted-image.png') }}" alt="Button 2">
+            </button>
+        </div>
+
+        <!-- Hoofdcontent -->
+        <div class="main-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Popup Venster</h2>
+            <p>Hier kun je tekst of een formulier plaatsen.</p>
+        </div>
+    </div>
+</div>
 <script src="{{ asset('js/DarkMode.js') }}"></script>
 <body>
 {% block body %}
 {% endblock %}
-<script>
-    $(function() {
-        function slideMenu() {
-            var activeState = $("#menu-container .menu-list").hasClass("active");
-            $("#menu-container .menu-list").animate({ left: activeState ? "-100%" : "0%" }, 400);
-        }
-
-        $("#menu-wrapper").click(function(event) {
-            event.stopPropagation();
-            $("#hamburger-menu").toggleClass("open");
-            $("#menu-container .menu-list").toggleClass("active");
-            slideMenu();
-            $("body").toggleClass("overflow-hidden");
-        });
-
-        $(".menu-list").find(".accordion-toggle").click(function() {
-            $(this).next().toggleClass("open").slideToggle("fast");
-            $(this).toggleClass("active-tab").find(".menu-link").toggleClass("active");
-
-            $(".menu-list .accordion-content").not($(this).next()).slideUp("fast").removeClass("open");
-            $(".menu-list .accordion-toggle").not($(this)).removeClass("active-tab").find(".menu-link").removeClass("active");
-        });
-    });
-</script>
+<footer>
+    <button class="floating-button" onclick="floatingButtonAction()"><img src="{{ asset('images/refreshbutton.png') }}"></button>
+</footer>
 </body>
 </html>

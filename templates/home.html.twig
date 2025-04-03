@@ -1,15 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <!-- leaflet provides global map and ability to add route and hexagons -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{{ asset('js/polyline.js') }}"></script>
+    <script src="{{ asset('js/DrawHexagon.js') }}"></script>
+    <script src="{{ asset('js/activityMap.js') }}"></script>
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
     <div class="container">
         <h1>Your Recent Activities</h1>
-        <!-- two options are possible, either our own map made with google, or straight from strava -->
         {% if activities is not empty %}
             <div class="activity-list">
                 {% for activity in activities %}
                     <div class="activity-card" style="display: flex">
-                        <div>
+                        <div style="width: 30%">
                             <h3>{{ activity.name }}</h3>
                             <p><strong>Type:</strong> {{ activity.type }}</p>
                             <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
@@ -20,30 +25,18 @@
                             {% set minutes = (total_seconds % 3600) // 60 %}
                             {% set seconds = total_seconds % 60 %}
                             <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
-
+                        </div>
+                        <div style="width: 70%">
                             {% if activity.map.summary_polyline is not empty %}
                                 <h4>Activity Route:</h4>
-                                <!-- created a google cloud project to access static map, hopefully they dont charge me :( -->
-                                <img src="https://maps.googleapis.com/maps/api/staticmap?size=600x400&path=enc:{{ activity.map.summary_polyline }}&key=AIzaSyBhmJLrRlnertfcFQOKCosS6_xBYcr7AHA" alt="Activity Route" style="width: 400px"/>
+                                <div id="map_{{ activity.id }}" class="activity-map" data-polyline="{{ activity.map.summary_polyline }}" style="width: 80%; height: 80%"></div>
                             {% else %}
                                 <p>No map available for this activity.</p>
                             {% endif %}
                             <p></p>
                             <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
+
                         </div>
-
-                        <!-- Strava Embedded Map -->
-                        {% if activity.id is not empty %}
-                            <div class="strava-embed-placeholder"
-                                 data-embed-type="activity"
-                                 data-embed-id="{{ activity.id }}"
-                                 data-style="standard"
-                                 data-from-embed="true">
-                            </div>
-                        {% else %}
-                            <p>No map available for this activity.</p>
-                        {% endif %}
-
                     </div>
                 {% endfor %}
             </div>
@@ -51,8 +44,5 @@
             <p>You have no recent activities.</p>
         {% endif %}
     </div>
-
-    <!-- Strava Embed Script (Only Load Once) -->
-    <script src="https://strava-embeds.com/embed.js"></script>
 
 {% endblock %}

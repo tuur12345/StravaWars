@@ -31,6 +31,7 @@ html, body {
   align-items: center;
   justify-content: space-between;
   padding: 10px;
+  height: 120px;
   background-color: var(--secondary-color);
 }
 
@@ -53,6 +54,24 @@ body {
   height: 40px;
   object-fit: cover;
   padding: 10px; /* Hiermee creëer je ruimte binnen het vierkant */
+}
+.floating-button {
+    position: fixed;
+    bottom: 20px; /* Afstand vanaf de onderkant */
+    right: 20px;  /* Afstand vanaf de rechterkant */
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: none; /* Geen achtergrondkleur of afbeelding */
+}
+
+.floating-button img {
+    width: 120px; /* Pas de breedte aan voor een kleinere knop */
+    height: auto; /* Behoud de originele aspect ratio */
+}
+
+.floating-button:hover {
+    transform: scale(1.1);
 }
 
 
