@@ -13,9 +13,8 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 98%;
+  padding: 10px;
   background-color: #fecab1;
-  padding: 1%;
 }
 
 body {
@@ -27,9 +26,8 @@ body {
   align-items: center;
   cursor: pointer;
   background: #fc5200;
-  width: 11%;
-  border-radius: 20%;
-  padding-right: 10px;
+  width: 200px;
+  border-radius: 20px;
 }
 
 .profile-menu img {

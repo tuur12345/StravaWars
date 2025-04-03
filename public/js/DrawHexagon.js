@@ -5,7 +5,14 @@ const metersToLng = metersToLat / Math.cos(50.875 * Math.PI / 180); // one degre
 const hexRadiusLat = hexRadiusMeters * metersToLat; // radius in terms of degrees
 const hexRadiusLng = hexRadiusMeters * metersToLng;
 
-const leuvenBounds = { // bound it to leuven for now
+const worldBounds = { // world bounds so hexagon grid are always matching
+    south: 50.77,
+    north: 51,
+    west: 4.58,
+    east: 4.83
+};
+
+const leuvenBounds = { // visualize it to leuven for now
     south: 50.87,
     north: 50.90,
     west: 4.68,
@@ -21,11 +28,29 @@ document.addEventListener("DOMContentLoaded", function () { // when map div is l
 
     let hexLayer = L.layerGroup().addTo(map); // add a hexlayer to the map
 
-    map.whenReady(drawHexagons(hexRadiusLat, hexRadiusLng, hexLayer, leuvenBounds)); // draw hexagons when map is ready
+    map.whenReady(drawHexagons(hexLayer)); // draw hexagons when map is ready
+
+
+
 });
 
-function drawHexagons(hexRadiusLat, hexRadiusLng, hexLayer, leuvenBounds) {
-    let hexagons = generateHexagonGrid(hexRadiusLat, hexRadiusLng, leuvenBounds); // generate hexagon grid
+function drawHexagons(hexLayer) {
+    let hexagons = generateHexagonGrid(); // generate hexagon grid
+    for (let hex of hexagons) { // customize the hexagons
+        let polygon = L.polygon(hex, {
+            color: 'blue',
+            weight: 1,
+            opacity: 0.5,
+            fillColor: 'blue',
+            fillOpacity: 0.3
+        }).addTo(hexLayer);
+
+        polygon.on('click', function (e) {
+            let newColor = this.options.fillColor === 'blue' ? 'red' : 'blue'; // play with color
+            this.setStyle({ fillColor: newColor });
+        });
+    }
+    hexagons= generateHexagonGrid(); // generate hexagon grid
     for (let hex of hexagons) { // customize the hexagons
         let polygon = L.polygon(hex, {
             color: 'blue',
@@ -43,28 +68,29 @@ function drawHexagons(hexRadiusLat, hexRadiusLng, hexLayer, leuvenBounds) {
     return 0;
 }
 
-function generateHexagonGrid(sizeLat, sizeLng, leuvenBounds) {
+function generateHexagonGrid() {
     let hexagons = [];
     let row = 0;
 
-    for (let lat = leuvenBounds.south; lat < leuvenBounds.north; lat += sizeLat * Math.sqrt(3)/2, row++) { // calculate relative position of hexagons
+    for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3)/2, row++) { // calculate relative position of hexagons
 
-        let lngOffset = (row % 2 === 0) ? 0 : sizeLng * 1.5;  // shift every other row
+        let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;  // shift every other row
 
-        for (let lng = leuvenBounds.west + lngOffset; lng < leuvenBounds.east; lng += sizeLng * 3) {
-            hexagons.push(generateHexagon(lat, lng, sizeLat, sizeLng)); // add hexagon
+        for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
+            if (leuvenBounds.south < lat && lat < leuvenBounds.north && leuvenBounds.west < lng && lng < leuvenBounds.east) {
+                hexagons.push(generateHexagon(lat, lng)); // add hexagon
+            }
         }
     }
     return hexagons;
 }
 
-
-function generateHexagon(centerLat, centerLng, sizeLat, sizeLng) {
+function generateHexagon(centerLat, centerLng) {
     let points = [];
     for (let i = 0; i < 6; i++) { // draw six corners of each hexagon
         let angle = (Math.PI / 3) * i;
-        let lat = centerLat + sizeLat * Math.sin(angle);
-        let lng = centerLng + sizeLng * Math.cos(angle);
+        let lat = centerLat + hexRadiusLat * Math.sin(angle);
+        let lng = centerLng + hexRadiusLng * Math.cos(angle);
         points.push([lat, lng]);
     }
     return points;
