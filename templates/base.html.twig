@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>StravaWars</title>
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <header>
@@ -12,10 +13,10 @@
             <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
         </a>
         <a href="/home">
-            <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
+            <img  src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
         </a>
         <div class="profile-menu">
-            <img src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
+            <img id="profile-picture" src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
             <div id="menu-container">
                 <div id="menu-wrapper">
                     <div id="hamburger-menu"><span></span><span></span><span></span></div>
@@ -43,7 +44,7 @@
                         <a class="menu-link" href="#">Settings</a>
                     </li>
                     <ul class="menu-submenu accordion-content">
-                        <li><a class="head" href="#">Dark mode</a></li>
+                        <li id="dark-mode"><a class="head" href="#">Dark mode</a></li>
                         <li><a class="head" href="#">More settings</a></li>
                     </ul>
                 </ul>
@@ -51,6 +52,7 @@
         </div>
     </div>
 </header>
+<script src="{{ asset('js/DarkMode.js') }}"></script>
 <body>
 {% block body %}
 {% endblock %}
