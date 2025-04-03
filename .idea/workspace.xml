@@ -4,13 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="strava activities in home page" />
+    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="fixed banner">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/StravaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StravaController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/connect_strava.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/connect_strava.html.twig" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings">
+  <component name="ComposerSettings" synchronizationState="DONT_SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution>
       <executable path="composer" />
@@ -41,7 +46,7 @@
     &quot;accountId&quot;: &quot;c52f613a-64c6-40bc-9887-f5c7b89f4edb&quot;
   }
 }</component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\Users\TUUR\Servers\php-8.4.4-nts-Win32-vs17-x64\php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/psr/cache" />
       <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
@@ -410,9 +415,9 @@
       <workItem from="1743268061812" duration="2279000" />
       <workItem from="1743413388961" duration="725000" />
       <workItem from="1743416216914" duration="716000" />
-      <workItem from="1743423446367" duration="8430000" />
-      <workItem from="1743438312098" duration="185000" />
-      <workItem from="1743665134764" duration="4289000" />
+      <workItem from="1743423446367" duration="8328000" />
+      <workItem from="1743439687536" duration="559000" />
+      <workItem from="1743668030367" duration="2000000" />
     </task>
     <task id="LOCAL-00001" summary="login with strava">
       <option name="closed" value="true" />
@@ -446,7 +451,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743269844401</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fixed banner">
+      <option name="closed" value="true" />
+      <created>1743436059749</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1743436059749</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -468,7 +481,8 @@
     <MESSAGE value="home page, profile page, map page with basic hexagons" />
     <MESSAGE value="activities in home page" />
     <MESSAGE value="strava activities in home page" />
-    <option name="LAST_COMMIT_MESSAGE" value="strava activities in home page" />
+    <MESSAGE value="fixed banner" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed banner" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

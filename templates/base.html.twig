@@ -11,7 +11,7 @@
         <a href="/maps">
             <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
         </a>
-        <a href="/home">
+        <a href="/">
             <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
         </a>
         <div class="profile-menu">
@@ -90,7 +90,7 @@
             $("#menu-container .menu-list").animate({ left: activeState ? "-100%" : "0%" }, 400);
         }
 
-        $("#menu-wrapper").click(function(event) {
+        $("#profile-menu".click(function(event) {
             event.stopPropagation();
             $("#hamburger-menu").toggleClass("open");
             $("#menu-container .menu-list").toggleClass("active");
