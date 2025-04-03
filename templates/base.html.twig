@@ -51,9 +51,22 @@
         </div>
     </div>
 </header>
+<!-- Pop-up venster -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <h2>Popup Venster</h2>
+        <p>Hier kun je tekst of een formulier plaatsen.</p>
+    </div>
+</div>
 <body>
 {% block body %}
 {% endblock %}
+<footer>
+    <button class="floating-button" onclick="floatingButtonAction()"><img src="{{ asset('images/refreshbutton.png') }}"></button>
+
+</footer>
+
 <script>
     $(function() {
         function slideMenu() {
@@ -77,6 +90,19 @@
             $(".menu-list .accordion-toggle").not($(this)).removeClass("active-tab").find(".menu-link").removeClass("active");
         });
     });
+
+    function floatingButtonAction() {
+        openPopup();
+    }
+    function openPopup() {
+        document.getElementById("popup").style.display = "block";
+    }
+
+    function closePopup() {
+        document.getElementById("popup").style.display = "none";
+    }
+
+
 </script>
 </body>
 </html>

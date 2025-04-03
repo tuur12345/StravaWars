@@ -35,8 +35,56 @@ body {
   width: 40px;
   height: 40px;
   object-fit: cover;
-  padding: 10px; /* Hiermee creëer je ruimte binnen het vierkant */
+  padding: 10px;
 }
+
+
+
+
+.floating-button {
+  position: fixed;
+  bottom: 20px; /* Afstand vanaf de onderkant */
+  right: 20px;  /* Afstand vanaf de rechterkant */
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+  background: none; /* Geen achtergrondkleur of afbeelding */
+}
+
+.floating-button img {
+  width: 120px; /* Pas de breedte aan voor een kleinere knop */
+  height: auto; /* Behoud de originele aspect ratio */
+}
+
+.floating-button:hover {
+  transform: scale(1.1);
+}
+.popup {
+  display: none; /* Begin als verborgen */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.popup-content {
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 
 
 #menu-wrapper {
