@@ -12,11 +12,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '154290'; // Replace with your Strava client ID
-    private $clientSecret = '5e927e0e6d2d449168ef7924a7dde989f10814ea'; // Replace with your Strava client secret
+    private $clientId = '153511'; // Replace with your Strava client ID
+    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
-    #[Route('/', name:'connect_to_strava')]
+    #[Route('/connect_strava', name:'connect_to_strava')]
     public function connect_strava(): Response { // start screen with button to connect to strava
         return $this->render('connect_strava.html.twig');
     }
@@ -75,16 +75,15 @@ class StravaController extends AbstractController
         return $this->redirectToRoute('home'); // go to the home screen
     }
 
-    #[Route('/home', name:'home')]
+    #[Route('/', name:'home')]
     public function home(Request $request, HttpClientInterface $httpClient): Response {
-        $user = $request->getSession()->get('userData'); // get user data from session
-        if (!$user) {
-            return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
-        }
-
         $accessToken = $request->getSession()->get('access_token'); // retrieve accesstoken from session
         if (!$accessToken) {
             return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
+        }
+        $user = $request->getSession()->get('userData'); // get user data from session
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
 
         // get all the users activities
