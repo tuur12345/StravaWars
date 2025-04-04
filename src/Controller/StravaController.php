@@ -12,8 +12,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153505'; // Replace with your Strava client ID
-    private $clientSecret = '658ffd98156a5101444096565e9565a00c051ca4'; // Replace with your Strava client secret
+    private $clientId = '153511'; // Replace with your Strava client ID
+    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
@@ -81,50 +81,53 @@ class StravaController extends AbstractController
         if (!$accessToken) {
             return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
         }
+        $response = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete', [ // check if token is still valid
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+            ],
+        ]);
+        if ($response->getStatusCode() === 401) { // Token is invalid or expired
+            return $this->redirectToRoute('connect_to_strava');
+        }
+
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
 
-        // get all the users activities
+        // get three most recent users activities
         $activitiesResponse = $httpClient->request('GET', 'https://www.strava.com/api/v3/athlete/activities', [
             'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-            'query' => [
-                'per_page' => 3,
-                'page' => 1,
+                'Authorization' => 'Bearer ' . $accessToken
             ],
         ]);
 
         $activities = $activitiesResponse->toArray();
 
 
-        // Bereken de start van de week (bijvoorbeeld afgelopen zondag)
-        $startOfWeek = strtotime('last sunday');
+        // calc start of week
+        $startOfWeek = strtotime('-2 week');
         $endOfWeek = strtotime('next sunday');
 
-        // Filter de activiteiten die deze week zijn
+        // filter weekly activities
         $weekActivities = array_filter($activities, function ($activity) use ($startOfWeek, $endOfWeek) {
             $activityDate = strtotime($activity['start_date']);
-            // Controleer of de activiteit binnen de huidige week valt
+            // check if activity within this week
             return $activityDate >= $startOfWeek && $activityDate < $endOfWeek;
         });
-        // Tel de kudos van de activiteiten van deze week
+        //count kudos of this week activities
         $totalKudosThisWeek = 0;
 
         foreach ($activities as $activity) {
-            // Voeg de kudos van deze activiteit toe aan de totaalscore
+            // add kudos to total
             $totalKudosThisWeek += $activity['kudos_count'];
         }
-        $request->getSession()->set('weekActivities', $activities); // sla de activiteiten van deze week op
 
-        // Je kunt de activiteiten hier opslaan of naar de view sturen
-        $request->getSession()->set('weekActivities', $weekActivities); // sla de activiteiten van deze week op
-        $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek);
+        $request->getSession()->set('weekActivities', $weekActivities); // save activities of this week
+        $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek); // save kudos
+
         return $this->render('home.html.twig', [
-            'weekActivities'=> $weekActivities,
-            'activities' => $activities,
+            'activities' => $weekActivities,
             'user' => $user,
             'totalKudosThisWeek'=> $totalKudosThisWeek
         ]);
@@ -132,17 +135,17 @@ class StravaController extends AbstractController
 
     #[Route('/maps', name:'maps')]
     public function maps(Request $request): Response {
-        $weekActivities = $request->getSession()->get('weekActivities', []);
-        $activities = $request->getSession()->get('activities', []);
-        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
+
+        $weekActivities = $request->getSession()->get('weekActivities', []);
+        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
+
         return $this->render('maps.html.twig', [
             'user' => $user,
-            'weekActivities'=> $weekActivities,
-            'activities'=> $activities,
+            'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek
         ]);
     }
@@ -150,15 +153,17 @@ class StravaController extends AbstractController
     #[Route('/profile', name:'profile')]
     public function profile(Request $request): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
-        $activities = $request->getSession()->get('activities', []);
-        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
+
+        $weekActivities = $request->getSession()->get('weekActivities', []);
+        $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
+
         return $this->render('profile.html.twig',
             [
                 'user' => $user,
-                'activities'=> $activities,
+                'activities' => $weekActivities,
                 'totalKudosThisWeek'=> $totalKudosThisWeek
             ]
         );

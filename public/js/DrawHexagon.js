@@ -12,8 +12,9 @@ const worldBounds = { // world bounds so hexagon grid are always matching
     east: 6
 };
 
-function drawHexagons(hexLayer, bounds) {
+function drawHexagons(hexLayer, bounds, clickable = true) {
     let hexagons = generateHexagonGrid(bounds); // generate hexagon grid
+    let polygons = []; // Store references to the polygons to update later
     for (let hex of hexagons) { // customize the hexagons
         let polygon = L.polygon(hex, {
             color: 'blue',
@@ -23,24 +24,37 @@ function drawHexagons(hexLayer, bounds) {
             fillOpacity: 0.2
         }).addTo(hexLayer);
 
-        polygon.on('click', function (e) {
-            let newColor = this.options.fillColor === 'blue' ? 'red' : 'blue'; // play with color
-            this.setStyle({ fillColor: newColor });
+        if (clickable) {
+            polygon.on('click', function (e) {
+                let newColor = this.options.fillColor === 'blue' ? 'red' : 'blue'; // play with color
+                this.setStyle({ fillColor: newColor });
+                alert("hexagon pushed at: " + hex);
+            });
+        }
+
+
+        polygons.push({ // store polygon and other variables
+            polygon: polygon,
+            coords: hex,
+            owner: null,
+            color: 'blue',
+            level: 1
         });
     }
+    return polygons; // Return the list of polygons
 }
 
 function generateHexagonGrid(bounds) {
     let hexagons = [];
     let row = 0;
-
-    for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3)/2, row++) { // calculate relative position of hexagons
-
-        let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;  // shift every other row
+    // calculate relative position of hexagons
+    for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3) / 2, row++) {
+        // shift every other row
+        let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;
 
         for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
             if (bounds.contains([lat, lng])) {
-                hexagons.push(generateHexagon(lat, lng)); // add hexagon
+                hexagons.push(generateHexagon(lat, lng));
             }
         }
     }
@@ -56,4 +70,35 @@ function generateHexagon(centerLat, centerLng) {
         points.push([lat, lng]);
     }
     return points;
+}
+
+function highlightHexagons(coords, polygons) {
+    for (let coord of coords) {
+        for (let poly of polygons) {
+            if (pointInPolygon(coord, poly.coords)) { // check if point is inside the hexagon
+                poly.color = 'red';
+                poly.polygon.setStyle({ fillColor: 'red' });
+            }
+        }
+    }
+}
+
+// function to check if a point is inside a hexagon, made by chatgpt
+function pointInPolygon(point, polygon) {
+    let [x, y] = point;
+    let inside = false;
+    let j = polygon.length - 1;
+
+    for (let i = 0; i < polygon.length; i++) {
+        let xi = polygon[i][0], yi = polygon[i][1];
+        let xj = polygon[j][0], yj = polygon[j][1];
+
+        let intersect = ((yi > y) !== (yj > y)) &&
+            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+        if (intersect) inside = !inside;
+        j = i;
+    }
+
+    return inside;
 }

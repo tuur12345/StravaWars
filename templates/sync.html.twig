@@ -1,0 +1,100 @@
+<link rel="stylesheet" href="{{ asset('css/sync.css') }}">
+<script src="{{ asset('js/SyncPopUp.js') }}"></script>
+<script src="{{ asset('js/ActivityMapPopUp.js') }}"></script>
+<script> // inline because it uses twig assets and symfony cant handle it outside
+    function changeContent(contentType) {
+        // Hide both contents
+        document.getElementById('activities-content').style.display = 'none';
+        document.getElementById('kudosconverter').style.display = 'none';
+        document.getElementById('activity-details').style.display = 'none';
+
+        // Update sidebar button images
+        if (contentType === 'activities') {
+            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/orangeactivity.png') }}";
+            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/whitethumbsup.png') }}";
+            document.getElementById('activities-content').style.display = 'block';
+        } else if (contentType === 'kudosconverter') {
+            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/whiteactivity.png') }}";
+            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/orangethumbsup.png') }}";
+            document.getElementById('kudosconverter').style.display = 'block';
+        }
+    }
+</script>
+
+
+<button class="floating-button" onclick="floatingButtonAction()"><img src="{{ asset('images/sync.png') }}" alt="sync button"></button>
+
+<div id="overlay" class="overlay">
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <div class="sidebar">
+                <button class="sidebar-btn" onclick="changeContent('activities')">
+                    <img src="{{ asset('images/orangeactivity.png') }}" alt="Button 1">
+                </button>
+                <button class="sidebar-btn" onclick="changeContent('kudosconverter')">
+                    <img src="{{ asset('images/whitethumbsup.png') }}" alt="Button 2">
+                </button>
+            </div>
+            <div class="main-content">
+                <span class="close-btn" onclick="closePopup()">&times;</span>
+                <!-- Default content from Button 1 -->
+                <div id="activities-content">
+                    {% if activities is not empty %}
+                        <h1>Your Activities this Week</h1>
+                        <p>click on the activity to conquer new territory</p>
+                        <div class="activities-list">
+                            {% for activity in activities %}
+                                <div class="activities-card" style="display: flex; cursor: pointer;" data-activity-name="{{ activity.name }}">
+                                    <div class="cardtext">
+                                        <h3>{{ activity.name }}</h3>
+                                        <p><strong>Type:</strong> {{ activity.type }}</p>
+                                        <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
+                                        <p><strong>Distance:</strong> {{ (activity.distance / 1000) | number_format(2) }} km</p> <!-- Distance in kilometers -->
+
+                                        {% set total_seconds = activity.elapsed_time %}
+                                        {% set hours = total_seconds // 3600 %}
+                                        {% set minutes = (total_seconds % 3600) // 60 %}
+                                        {% set seconds = total_seconds % 60 %}
+                                        <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
+                                    </div>
+                                    <div class="activity">
+                                        {% if activity.map.summary_polyline is not empty %}
+                                            <h4>Activity Route:</h4>
+                                            <div id="act_map_{{ activity.id }}" class="activities-map" data-polyline="{{ activity.map.summary_polyline }}"></div>
+                                        {% else %}
+                                            <p>No map available for this activity.</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    {% else %}
+                        <h1>You have no activities this week</h1>
+                    {% endif %}
+                </div>
+                <!-- Default content for Button 2 (Map view or other content) -->
+                <div id="kudosconverter" style="display: none;">
+                    <h1>Converting Kudos from this week</h1>
+                    <div class="arrow">
+                        <h1>Kudos this week: {{ totalKudosThisWeek }}</h1>
+                        <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}"></div>
+                        <div><img src="{{ asset('images/stravabucks.png') }}"></div>
+                    </div>
+                    <button class="convert-button" onclick="convert()"><img src="{{ asset('images/convertbutton.png') }}"></button>
+                </div>
+            </div>
+            <div id="activity-details" style="display: none;">
+                <h1 id="details-activity-name"></h1>
+                <div id="details-activity-details"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="activity-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+    <h1 id="popup-activity-name"></h1>
+    <button id="close-popup">Close</button>
+</div>
+
+<div id="popup-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>

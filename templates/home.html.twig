@@ -6,15 +6,18 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="{{ asset('js/polyline.js') }}"></script>
     <script src="{{ asset('js/DrawHexagon.js') }}"></script>
-    <script src="{{ asset('js/activityMap.js') }}"></script>
+    <script src="{{ asset('js/ActivityMap.js') }}"></script>
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+
+    {% include('sync.html.twig') %}
+
     <div class="container">
-        <h1>Your Recent Activities</h1>
+        <h1>All Activities</h1>
         {% if activities is not empty %}
             <div class="activity-list">
                 {% for activity in activities %}
                     <div class="activity-card" style="display: flex">
-                        <div style="width: 30%">
+                        <div style="width: 20%">
                             <h3>{{ activity.name }}</h3>
                             <p><strong>Type:</strong> {{ activity.type }}</p>
                             <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
@@ -25,17 +28,15 @@
                             {% set minutes = (total_seconds % 3600) // 60 %}
                             {% set seconds = total_seconds % 60 %}
                             <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
+                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
                         </div>
-                        <div style="width: 70%">
+
+                        <div style="width: 80%">
                             {% if activity.map.summary_polyline is not empty %}
-                                <h4>Activity Route:</h4>
-                                <div id="popup_map_{{ activity.id }}" class="activity-map" data-polyline="{{ activity.map.summary_polyline }}" style="width: 80%; height: 80%"></div>
+                                <div id="map_{{ activity.id }}" class="activity-map" data-polyline="{{ activity.map.summary_polyline }}" style="width: 90%; height: 100%"></div>
                             {% else %}
                                 <p>No map available for this activity.</p>
                             {% endif %}
-                            <p></p>
-                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
-
                         </div>
                     </div>
                 {% endfor %}
