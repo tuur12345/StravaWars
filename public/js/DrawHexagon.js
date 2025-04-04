@@ -17,18 +17,24 @@ function drawHexagons(hexLayer, bounds, clickable = true) {
     let polygons = []; // Store references to the polygons to update later
     for (let hex of hexagons) { // customize the hexagons
         let polygon = L.polygon(hex, {
-            color: 'blue',
+            color: '#fc5200',
             weight: 1,
             opacity: 0.3,
-            fillColor: 'blue',
-            fillOpacity: 0.2
+            fillColor: '#fecab1',
+            fillOpacity: 0.0
         }).addTo(hexLayer);
 
         if (clickable) {
             polygon.on('click', function (e) {
-                let newColor = this.options.fillColor === 'blue' ? 'red' : 'blue'; // play with color
-                this.setStyle({ fillColor: newColor });
-                alert("hexagon pushed at: " + hex);
+                let color = this.options.fillColor;
+                let opacity = 0;
+                if (color === '#fecab1') {
+                    color = '#fc5200';
+                    opacity = 0.4;
+                } else {
+                    color = '#fecab1';
+                }
+                this.setStyle({ fillColor: color, fillOpacity: opacity });
             });
         }
 
@@ -37,7 +43,7 @@ function drawHexagons(hexLayer, bounds, clickable = true) {
             polygon: polygon,
             coords: hex,
             owner: null,
-            color: 'blue',
+            color: '#fecab1',
             level: 1
         });
     }
@@ -76,8 +82,8 @@ function highlightHexagons(coords, polygons) {
     for (let coord of coords) {
         for (let poly of polygons) {
             if (pointInPolygon(coord, poly.coords)) { // check if point is inside the hexagon
-                poly.color = 'red';
-                poly.polygon.setStyle({ fillColor: 'red' });
+                poly.color = '#fc5200';
+                poly.polygon.setStyle({ fillColor: '#fc5200', fillOpacity: 0.4 });
             }
         }
     }

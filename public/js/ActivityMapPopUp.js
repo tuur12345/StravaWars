@@ -15,19 +15,19 @@ function initializeActivityMap(div) {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    const route = L.layerGroup().addTo(map);
-    const polylineStr = div.getAttribute('data-polyline');
-    const decodedCoords = polyline.decode(polylineStr);
-    const polylineLine = L.polyline(decodedCoords, { color: 'blue' }).addTo(route);
-
-    map.fitBounds(polylineLine.getBounds());
-    div._leaflet_map = map;
-    div._leaflet_polyline = polylineLine;
-
     map.whenReady(() => {
         let hexLayer = L.layerGroup().addTo(map);
         let bounds = map.getBounds().pad(0.1);
         let polygons = drawHexagons(hexLayer, bounds, false);
         highlightHexagons(decodedCoords, polygons);
     });
+
+    const route = L.layerGroup().addTo(map);
+    const polylineStr = div.getAttribute('data-polyline');
+    const decodedCoords = polyline.decode(polylineStr);
+    const polylineLine = L.polyline(decodedCoords, { color: 'black' }).addTo(route);
+
+    map.fitBounds(polylineLine.getBounds());
+    div._leaflet_map = map;
+    div._leaflet_polyline = polylineLine;
 }

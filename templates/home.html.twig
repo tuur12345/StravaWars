@@ -28,6 +28,7 @@
                             {% set minutes = (total_seconds % 3600) // 60 %}
                             {% set seconds = total_seconds % 60 %}
                             <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
+                            <p><strong>Kudos:</strong> {{ activity.kudos_count }}</p>
                             <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
                         </div>
 
@@ -43,6 +44,7 @@
             </div>
         {% else %}
             <p>You have no recent activities.</p>
+            <p><strong>Go for a run!</strong></p>
         {% endif %}
     </div>
 

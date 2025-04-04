@@ -106,7 +106,7 @@ class StravaController extends AbstractController
 
 
         // calc start of week
-        $startOfWeek = strtotime('-2 week');
+        $startOfWeek = strtotime('last sunday');
         $endOfWeek = strtotime('next sunday');
 
         // filter weekly activities
@@ -118,7 +118,7 @@ class StravaController extends AbstractController
         //count kudos of this week activities
         $totalKudosThisWeek = 0;
 
-        foreach ($activities as $activity) {
+        foreach ($weekActivities as $activity) {
             // add kudos to total
             $totalKudosThisWeek += $activity['kudos_count'];
         }

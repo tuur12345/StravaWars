@@ -21,6 +21,16 @@ document.addEventListener("DOMContentLoaded", function() {
             openPopup(); // Open the popup if it's not already open
         });
     });
+
+    //close when click outside pop up
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('popup');
+
+    overlay.addEventListener('click', function (e) {
+        if (!popup.contains(e.target)) {
+            closePopup();
+        }
+    });
 });
 
 function openPopup() {

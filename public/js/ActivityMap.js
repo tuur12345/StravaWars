@@ -17,11 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        const route = L.layerGroup().addTo(map);
-        const polylineStr = activityMap.getAttribute('data-polyline');
-        const decodedCoords = polyline.decode(polylineStr);
-        const polylineLine = L.polyline(decodedCoords, { color: 'blue' }).addTo(route);
-        map.fitBounds(polylineLine.getBounds());
+
 
         map.whenReady(() => {
             let hexLayer = L.layerGroup().addTo(map);
@@ -29,5 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
             let polygons = drawHexagons(hexLayer, bounds);
                 highlightHexagons(decodedCoords, polygons);
         });
+        const route = L.layerGroup().addTo(map);
+        const polylineStr = activityMap.getAttribute('data-polyline');
+        const decodedCoords = polyline.decode(polylineStr);
+        const polylineLine = L.polyline(decodedCoords, { color: 'black' }).addTo(route);
+        map.fitBounds(polylineLine.getBounds());
     });
 });

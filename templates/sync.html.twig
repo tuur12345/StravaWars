@@ -56,6 +56,7 @@
                                         {% set minutes = (total_seconds % 3600) // 60 %}
                                         {% set seconds = total_seconds % 60 %}
                                         <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
+                                        <p><strong>Kudos:</strong> {{ activity.kudos_count }}</p>
                                     </div>
                                     <div class="activity">
                                         {% if activity.map.summary_polyline is not empty %}
