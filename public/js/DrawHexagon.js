@@ -12,42 +12,64 @@ const worldBounds = { // world bounds so hexagon grid are always matching
     east: 6
 };
 
+
+// small simulation
+const centerLat = 50.8793;
+const centerLng = 4.7002;
+function assignCamp(lat, lng) {
+    if (lat >= centerLat && lng >= centerLng) return {owner: 'Tuur Colignon', color: 'red'};
+    if (lat >= centerLat && lng < centerLng) return {owner: 'Lowie Declerq', color: 'blue'};
+    if (lat < centerLat && lng < centerLng) return {owner: 'Oscar Mues', color: 'yellow'};
+    return {owner: 'Pieter Nouwen', color: 'green'};
+}
+
+
 function drawHexagons(hexLayer, bounds, clickable = true) {
     let hexagons = generateHexagonGrid(bounds); // generate hexagon grid
     let polygons = []; // Store references to the polygons to update later
-    for (let hex of hexagons) { // customize the hexagons
+    for (let hex of hexagons) {
+        const center = findCenter(hex);
+        const camp = assignCamp(center.lat, center.lng);
+
         let polygon = L.polygon(hex, {
-            color: '#fc5200',
+            color: (clickable) ? camp.color : '#fc5200',
             weight: 1,
             opacity: 0.3,
-            fillColor: '#fecab1',
-            fillOpacity: 0.0
+            fillColor: (clickable) ? camp.color : '#fecab1',
+            fillOpacity: (clickable) ? 0.2 : 0
         }).addTo(hexLayer);
 
-        if (clickable) {
-            polygon.on('click', function (e) {
-                let color = this.options.fillColor;
-                let opacity = 0;
-                if (color === '#fecab1') {
-                    color = '#fc5200';
-                    opacity = 0.4;
-                } else {
-                    color = '#fecab1';
-                }
-                this.setStyle({ fillColor: color, fillOpacity: opacity });
-            });
-        }
-
-
-        polygons.push({ // store polygon and other variables
+        polygons.push({
             polygon: polygon,
             coords: hex,
-            owner: null,
-            color: '#fecab1',
+            color: camp.color,
+            owner: camp.owner,
             level: 1
         });
     }
-    return polygons; // Return the list of polygons
+
+    if (clickable) {
+        polygons.forEach(poly => {
+            poly.polygon.on('click', function(e) {
+                // create pop up for each hexagon when clicked on
+                openHexagonInfo(findCenter(poly.coords), poly)
+            })
+            poly.polygon.on('mouseover', function () {
+                this.setStyle({ fillOpacity: 0.5, fillColor: '#000000' });
+            });
+            poly.polygon.on('mouseout', function () {
+                this.setStyle({ fillOpacity: 0.2, fillColor: poly.color});
+            });
+        })
+    }
+    return polygons; // Return the list of polygons to the maps
+}
+
+function findCenter(coords) {
+    return {
+        'lat': coords[0][0],
+        'lng': coords[0][1] - hexRadiusLng
+    };
 }
 
 function generateHexagonGrid(bounds) {
@@ -78,33 +100,5 @@ function generateHexagon(centerLat, centerLng) {
     return points;
 }
 
-function highlightHexagons(coords, polygons) {
-    for (let coord of coords) {
-        for (let poly of polygons) {
-            if (pointInPolygon(coord, poly.coords)) { // check if point is inside the hexagon
-                poly.color = '#fc5200';
-                poly.polygon.setStyle({ fillColor: '#fc5200', fillOpacity: 0.4 });
-            }
-        }
-    }
-}
 
-// function to check if a point is inside a hexagon, made by chatgpt
-function pointInPolygon(point, polygon) {
-    let [x, y] = point;
-    let inside = false;
-    let j = polygon.length - 1;
 
-    for (let i = 0; i < polygon.length; i++) {
-        let xi = polygon[i][0], yi = polygon[i][1];
-        let xj = polygon[j][0], yj = polygon[j][1];
-
-        let intersect = ((yi > y) !== (yj > y)) &&
-            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-
-        if (intersect) inside = !inside;
-        j = i;
-    }
-
-    return inside;
-}

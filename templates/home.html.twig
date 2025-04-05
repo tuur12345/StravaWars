@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="{{ asset('js/polyline.js') }}"></script>
+    {# <script src="{{ asset('js/ActivityMapPopUp.js') }}"></script> already inside sync.html.twig#}
+    <script src="{{ asset('js/RouteHexagons.js') }}"></script>
     <script src="{{ asset('js/DrawHexagon.js') }}"></script>
     <script src="{{ asset('js/ActivityMap.js') }}"></script>
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
@@ -29,7 +31,9 @@
                             {% set seconds = total_seconds % 60 %}
                             <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
                             <p><strong>Kudos:</strong> {{ activity.kudos_count }}</p>
-                            <a href="https://www.strava.com/activities/{{ activity.id }}" target="_blank" class="strava-btn">View on Strava</a>
+                            <a class="strava-button" href="https://www.strava.com/activities/{{ activity.id }}" target="_blank">
+                                <img src="{{ asset('images/view_on_strava.png') }}" alt="strava connect button" style="width: 100px; height: 33px">
+                            </a>
                         </div>
 
                         <div style="width: 80%">
@@ -48,4 +52,9 @@
         {% endif %}
     </div>
 
+    <footer>
+        <img src="{{ asset('images/powered_by_strava.png') }}" alt="powered by strava">
+    </footer>
 {% endblock %}
+
+

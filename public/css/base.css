@@ -28,6 +28,7 @@ html, body {
 }
 
 .banner {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,6 +36,12 @@ html, body {
   height: 120px;
   background-color: var(--secondary-color);
 }
+.banner .center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 
 body {
   background-color: var(--background-color);
