@@ -9,15 +9,18 @@ function openHexagonInfo(latlng, hexagon) {
     `;
     if (user === hexagon.owner) {
         const button = L.DomUtil.create('button', '', container);
-        button.textContent = 'Upgrade';
+        button.textContent = ' Upgrade';
+        button.style.backgroundImage = 'url("/images/stravabucks.png")';
+        button.style.backgroundRepeat = 'no-repeat';
+        button.style.backgroundPosition = '8px center';
+        button.style.paddingLeft = '32px';
+        button.style.backgroundSize = '16px';
 
         L.DomEvent.on(button, 'click', () => {
             hexagon.level++;
             container.querySelector('#hex-level').textContent = hexagon.level;
         });
     }
-
-
     L.popup({ className: 'hex-popup' })
         .setLatLng(latlng)
         .setContent(container)

@@ -34,7 +34,7 @@ function drawHexagons(hexLayer, bounds, clickable = true) {
         let polygon = L.polygon(hex, {
             color: (clickable) ? camp.color : '#fc5200',
             weight: 1,
-            opacity: 0.3,
+            opacity: 0.5,
             fillColor: (clickable) ? camp.color : '#fecab1',
             fillOpacity: (clickable) ? 0.2 : 0
         }).addTo(hexLayer);
@@ -44,7 +44,7 @@ function drawHexagons(hexLayer, bounds, clickable = true) {
             coords: hex,
             color: camp.color,
             owner: camp.owner,
-            level: 1
+            level: 0
         });
     }
 

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         card.addEventListener('click', function() {
             detailsActivityName.textContent = this.getAttribute('data-activity-name');
             detailsActivityDetails.innerHTML = '';
-            detailsActivityDetails.appendChild(this.cloneNode(true));
+            detailsActivityDetails.appendChild(this.cloneNode(true)); // copies map properly
             activityDetails.style.display = 'block';
             document.getElementById('activities-content').style.display = 'none'; //hide the activity list.
             openPopup(); // Open the popup if it's not already open
