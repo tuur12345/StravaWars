@@ -14,17 +14,20 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
-# Copy the composer.json and composer.lock files first
+# Copy the composer.json and composer.lock files first to utilize Docker caching
 COPY composer.json composer.lock ./
 
 # Install PHP extensions (if needed)
 RUN docker-php-ext-install pdo_mysql
 
 # Run Composer to install dependencies
-RUN composer install --no-dev --optimize-autoloader --no-scripts
+RUN composer install --no-dev --optimize-autoloader --no-scripts && composer clear-cache
 
 # Copy the rest of the application files
 COPY . .
+
+# Set file permissions (if necessary)
+RUN chown -R www-data:www-data /var/www/html
 
 # Expose the port the app will run on
 EXPOSE 80
