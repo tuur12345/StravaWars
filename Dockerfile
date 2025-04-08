@@ -14,13 +14,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Set the working directory inside the container
 WORKDIR /var/www/html
 
-# Copy the composer.json and composer.lock first to leverage Docker cache
+# Copy the composer.json and composer.lock files first
 COPY composer.json composer.lock ./
 
-# Install PHP extensions
+# Install PHP extensions (if needed)
 RUN docker-php-ext-install pdo_mysql
 
-# Run Composer to install dependencies (this should be run after copying composer files)
+# Run Composer to install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
 # Copy the rest of the application files
