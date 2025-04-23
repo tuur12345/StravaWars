@@ -1,204 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="">
 <head>
     <meta charset="UTF-8">
     <title>StravaWars</title>
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
+    <link href="{{ asset('css/hamburger_menu.css') }}" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
-    <script src="{{ asset('js/SyncPopUp.js') }}"></script>
-    <script src="{{ asset('js/WorldMapPopup.js') }}"></script>
+    <script src="{{ asset('js/DarkMode.js') }}"></script>
 </head>
 <header>
     <div class="banner">
-        <a href="/maps">
-            <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
-        </a>
-        <a href="/">
-            <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
-        </a>
-        <div class="profile-menu" id="profile-clickable">
-            <img id="profile-picture" src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
-            <div id="menu-wrapper">
-                <div id="hamburger-menu"><span></span><span></span><span></span></div>
-            </div>
-            <div id="menu-container">
-                <ul class="menu-list accordion">
-                    <li id="nav1" class="toggle accordion-toggle">
-                        <span class="icon-plus"></span>
-                        <a class="menu-link" href="#">Friends</a>
-                    </li>
-                    <ul class="menu-submenu accordion-content">
-                        <li><a class="head" href="#">Add Friend</a></li>
-                        <li><a class="head" href="#">Your Friends</a></li>
+        <div class="left">
+            <a href="{{ path('maps') }}">
+                <img src="{{ asset('images/map_icon.png') }}" alt="map icon" style="width: 100px; height: 100px;">
+            </a>
+        </div>
+        <div class="center">
+            <a href="{{ path('home') }}">
+                <img src="{{ asset('images/stravawars_icon.png') }}" alt="stravawars icon" style="width: 200px; height: 100px;">
+            </a>
+        </div>
+        <div class="right">
+            <div class="profile-menu" id="profile-clickable">
+                <img id="profile-picture" src="{{ user.profile_medium }}" alt="profile picture" style="width: 100px; height: 100px">
+                <div id="menu-wrapper">
+                    <div id="hamburger-menu"><span></span><span></span><span></span></div>
+                </div>
+                <div id="menu-container">
+                    <ul class="menu-list accordion">
+                        <li id="nav1" class="toggle accordion-toggle">
+                            <span class="icon-plus"></span>
+                            <a class="menu-link" href="#">Friends</a>
+                        </li>
+                        <ul class="menu-submenu accordion-content">
+                            <li><a class="head" href="#">Add Friend</a></li>
+                            <li><a class="head" href="#">Your Friends</a></li>
+                        </ul>
+                        <li id="nav2" class="toggle accordion-toggle">
+                            <span class="icon-plus"></span>
+                            <a class="menu-link" href="#">Account</a>
+                        </li>
+                        <ul class="menu-submenu accordion-content">
+                            <li><a class="head" href="{{ path('profile') }}">Profile</a></li>
+                            <li><a class="head" href="{{ path('connect_to_strava') }}">Log out</a></li>
+                            <li><a class="head" href="#">Delete account</a></li>
+                        </ul>
+                        <li id="nav3" class="toggle accordion-toggle">
+                            <span class="icon-plus"></span>
+                            <a class="menu-link" href="#">Settings</a>
+                        </li>
+                        <ul class="menu-submenu accordion-content">
+                            <li id="dark-mode"><a class="head">Dark mode</a></li>
+                            <li><a class="head" href="#">More settings</a></li>
+                        </ul>
                     </ul>
-                    <li id="nav2" class="toggle accordion-toggle">
-                        <span class="icon-plus"></span>
-                        <a class="menu-link" href="#">Account</a>
-                    </li>
-                    <ul class="menu-submenu accordion-content">
-                        <li><a class="head" href="{{ path('profile') }}">Profile</a></li>
-                        <li><a class="head" href="{{ path('connect_to_strava') }}">Log out</a></li>
-                        <li><a class="head" href="#">Delete account</a></li>
-                    </ul>
-                    <li id="nav3" class="toggle accordion-toggle">
-                        <span class="icon-plus"></span>
-                        <a class="menu-link" href="#">Settings</a>
-                    </li>
-                    <ul class="menu-submenu accordion-content">
-                        <li id="dark-mode"><a class="head" href="#">Dark mode</a></li>
-                        <li><a class="head" href="#">More settings</a></li>
-                    </ul>
-                </ul>
+                </div>
             </div>
         </div>
     </div>
 </header>
 
-<div id="overlay" class="overlay">
 
-<!-- Pop-up venster -->
-<div id="popup" class="popup">
-    <div class="popup-content">
-        <!-- Zijbalk met foto-buttons -->
-        <div class="sidebar">
-            <button class="sidebar-btn" onclick="changeContent('activities')">
-                <img src="{{ asset('images/orangeactivity.png') }}" alt="Button 1">
-            </button>
-            <button class="sidebar-btn" onclick="changeContent('kudosconverter')">
-                <img src="{{ asset('images/whitethumbsup.png') }}" alt="Button 2">
-            </button>
-        </div>
-
-        <!-- Hoofdcontent -->
-        <div class="main-content">
-            <span class="close-btn" onclick="closePopup()">&times;</span>
-            <!-- Default content from Button 1 -->
-            <div id="activities-content">
-
-                {% if activities is not empty %}
-                    <h1>Your Activities this Week</h1>
-                    <p>click on the activity to conquer new territory</p>
-                    <div class="activities-list">
-                    {% for activity in activities %}
-                        <div class="activities-card" style="display: flex; cursor: pointer;" data-activity-name="{{ activity.name }}">
-                            <div class="cardtext">
-                                <h3>{{ activity.name }}</h3>
-                                <p><strong>Type:</strong> {{ activity.type }}</p>
-                                <p><strong>Date:</strong> {{ activity.start_date|date('Y-m-d H:i') }}</p>
-                                <p><strong>Distance:</strong> {{ (activity.distance / 1000) | number_format(2) }} km</p> <!-- Distance in kilometers -->
-
-                                {% set total_seconds = activity.elapsed_time %}
-                                {% set hours = total_seconds // 3600 %}
-                                {% set minutes = (total_seconds % 3600) // 60 %}
-                                {% set seconds = total_seconds % 60 %}
-                                <p><strong>Duration:</strong> {{ hours }}h {{ minutes }}m {{ seconds }}s</p> <!-- Duration formatted as h:m:s -->
-                            </div>
-                            <div style="width: 100%">
-                                {% if activity.map.summary_polyline is not empty %}
-                                    <h4>Activity Route:</h4>
-                                    <div id="activity_map_{{ activity.id }}" class="activities-map"
-                                         data-polyline="{{ activity.map.summary_polyline }}" style="width: 80%; height: 80%">
-                                    </div>
-                                {% else %}
-                                    <p>No map available for this activity.</p>
-                                {% endif %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                {% else %}
-                    <h1>You have no activities this week</h1>
-                {% endif %}
-            </div>
-            <!-- Default content for Button 2 (Map view or other content) -->
-            <div id="kudosconverter" style="display: none;">
-                <h1>Converting Kudos from this week</h1>
-                <div class="arrow">
-                    <h1>Kudos this week: {{ totalKudosThisWeek }}</h1>
-                    <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}"></div>
-                    <div><img src="{{ asset('images/stravabucks.png') }}"></div>
-                </div>
-                <button class="convert-button" onclick="convert()"><img src="{{ asset('images/convertbutton.png') }}"></button>
-                </div>
-            </div>
-            <div id="activity-details" style="display: none;">
-            <h1 id="details-activity-name"></h1>
-            <div id="details-activity-details">
-            </div>
-        </div>
-        </div>
-    </div>
-</div>
-</div>
-<div id="activity-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
-    <h1 id="popup-activity-name"></h1>
-    <button id="close-popup">Close</button>
-</div>
-
-<div id="popup-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
-
-<script src="{{ asset('js/DarkMode.js') }}"></script>
 <body>
 {% block body %}
 {% endblock %}
-<footer>
-    <button class="floating-button" onclick="floatingButtonAction()"><img src="{{ asset('images/sync.png') }}"></button>
-</footer>
 </body>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Set the default content to activities
-        changeContent('activities');
-
-        const activityCards = document.querySelectorAll('.activities-card');
-        const activityDetails = document.getElementById('activity-details');
-        const detailsActivityName = document.getElementById('details-activity-name');
-        const detailsActivityDetails = document.getElementById('details-activity-details');
-
-        activityCards.forEach(card => {
-            card.addEventListener('click', function() {
-                const activityName = this.getAttribute('data-activity-name');
-                detailsActivityName.textContent = activityName;
-                detailsActivityDetails.innerHTML = this.innerHTML; //copying the card details into the details section.
-                activityDetails.style.display = 'block';
-                document.getElementById('activities-content').style.display = 'none'; //hide the activity list.
-                openPopup(); // Open the popup if it's not already open
-            });
-        });
-    });
-
-    function changeContent(contentType) {
-        // Hide both contents
-        document.getElementById('activities-content').style.display = 'none';
-        document.getElementById('kudosconverter').style.display = 'none';
-        document.getElementById('activity-details').style.display = 'none';
-
-        // Update sidebar button images
-        if (contentType === 'activities') {
-            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/orangeactivity.png') }}";
-            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/whitethumbsup.png') }}";
-            document.getElementById('activities-content').style.display = 'block';
-        } else if (contentType === 'kudosconverter') {
-            document.querySelector('.sidebar-btn:nth-child(1) img').src = "{{ asset('images/whiteactivity.png') }}";
-            document.querySelector('.sidebar-btn:nth-child(2) img').src = "{{ asset('images/orangethumbsup.png') }}";
-            document.getElementById('kudosconverter').style.display = 'block';
-        }
-    }
-
-    function openPopup() {
-        document.getElementById('popup').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        document.body.classList.add('no-scroll'); // Prevent background scrolling
-    }
-
-    function closePopup() {
-        document.getElementById('popup').style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        document.body.classList.remove('no-scroll'); // Restore scrolling
-        document.getElementById('activities-content').style.display = 'block'; //show activity list again on close.
-        document.getElementById('activity-details').style.display = 'none'; //hide the activity details again on close.
-    }
-</script>
 </html>
