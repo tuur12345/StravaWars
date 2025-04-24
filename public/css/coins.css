@@ -22,9 +22,9 @@
     justify-content: center; /* Centreert de inhoud horizontaal */
     align-items: center; /* Centreert de inhoud verticaal */
     border-radius: 50%; /* Maakt de container rond */
-    background-color: var(--primary-color); /* De gele achtergrondkleur */
-    border: 2px solid black; /* De oranjerode rand */
-    color: #fdb200; /* De kleur van het getal */
+    background-color: #fdb200; /* De gele achtergrondkleur */
+    border: 5px solid var(--primary-color); /* De oranjerode rand */
+    color: var(--primary-color); /* De kleur van het getal */
     font-size: 24px; /* Een mooie grootte voor het getal */
     font-weight: bold; /* Maakt het getal vetgedrukt */
     padding: 0.4em; /* Voeg wat interne padding toe om ruimte rond het getal te creëren */
