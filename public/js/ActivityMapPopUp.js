@@ -24,7 +24,6 @@ function initializeActivityMap(div) {
 
     const route = L.layerGroup().addTo(map);
     const polylineStr = div.getAttribute('data-polyline');
-    console.log(polylineStr);
     const decodedCoords = polyline.decode(polylineStr);
     const polylineLine = L.polyline(decodedCoords, { color: 'black' }).addTo(route);
 

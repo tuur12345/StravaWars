@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="testje2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/ActivityMapPopUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/ActivityMapPopUp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/SyncPopUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/SyncPopUp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/StravaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StravaController.php" afterDir="false" />
+    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="fixed map popup in maps">
       <change beforePath="$PROJECT_DIR$/templates/maps.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/maps.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -470,7 +466,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745488191163</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fixed map popup in maps">
+      <option name="closed" value="true" />
+      <created>1745489130461</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1745489130462</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -494,7 +498,8 @@
     <MESSAGE value="strava activities in home page" />
     <MESSAGE value="testje" />
     <MESSAGE value="testje2" />
-    <option name="LAST_COMMIT_MESSAGE" value="testje2" />
+    <MESSAGE value="fixed map popup in maps" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed map popup in maps" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
