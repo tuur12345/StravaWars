@@ -106,7 +106,7 @@ class StravaController extends AbstractController
 
 
         // calc start of week
-        $startOfWeek = strtotime('-1 week');
+        $startOfWeek = strtotime('-6 week');
         $endOfWeek = strtotime('next sunday');
 
         // filter weekly activities
