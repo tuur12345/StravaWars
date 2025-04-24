@@ -48,19 +48,123 @@
     display: none; /* Begin as hidden */
     position: fixed;
     left: 50%;
-    top: 50%;
+    top: 40%;
     transform: translate(-50%, -50%);
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     z-index: 1001;
-    height: 80%;
     width: 70%;
 }
-.coin-close-btn {
+
+.shop-window {
+    background-color: #f0f0f0; /* Achtergrondkleur van het venster */
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 80%; /* Pas de breedte aan */
+    max-width: 600px; /* Maximale breedte */
+    margin: 50px auto; /* Centreer het venster */
+    overflow: hidden; /* Zorgt ervoor dat afgeronde hoeken werken voor de inhoud */
+    height: 700px;
+}
+
+.shop-menu {
+    background-color: #e0e0e0; /* Achtergrondkleur van de menubalk */
+    padding: 10px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.menu-button {
+    background-color: transparent;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+    transition: background-color 0.3s ease;
+}
+
+.menu-button.active {
+    background-color: #ff8c00; /* Oranje kleur voor de actieve knop */
+    color: white;
+}
+
+.menu-button:hover {
+    background-color: #ddd;
+}
+
+.close-button {
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
     position: absolute;
     top: 10px;
     right: 15px;
-    font-size: 60px;
+}
+
+.close-button:hover {
+    color: #333;
+}
+
+.shop-content {
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hexagon-container {
+    text-align: center;
+    position: relative; /* Voor de positionering van de prijs */
+}
+
+.hexagon-container img {
+    width: 120px; /* Geschatte grootte van de hexagonale afbeeldingen */
+    height: auto;
+}
+
+.price {
+    position: absolute;
+    bottom: -15px; /* Plaats de prijs onder de hexagon */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fdb200; /* Gele achtergrond voor de prijs */
+    color: black;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.price img {
+    width: 20px;
+    height: auto;
+}
+
+.buy-coins {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.buy-button {
+    background: none;
+    border: none;
     cursor: pointer;
+}
+
+.buy-button img {
+    width: 150px; /* Geschatte grootte van de koop coins knop */
+    height: auto;
+}
+.paypaypal {
+    margin: 0;
 }

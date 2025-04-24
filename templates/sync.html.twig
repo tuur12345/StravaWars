@@ -81,15 +81,18 @@
                     <div class="arrow">
                         <h1>Kudos this week: {{ totalKudosThisWeek }}</h1>
                         <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}"></div>
-                        <div><img src="{{ asset('images/stravabucks.png') }}"></div>
-                    </div>
+                        <div class="floating-button-coin-2">
+                            <img src="{{ asset('images/coins.png') }}" alt="coins button">
+                            <div class="circle-container ">{{ Kudostocoins }}</div>                        </div>
+                        </div>
                     <button class="convert-button" onclick="convert()"><img src="{{ asset('images/convertbutton.png') }}"></button>
                 </div>
+                <div id="activity-details" style="display: none;">
+                    <h1 id="details-activity-name"></h1>
+                    <div id="details-activity-details"></div>
+                </div>
             </div>
-            <div id="activity-details" style="display: none;">
-                <h1 id="details-activity-name"></h1>
-                <div id="details-activity-details"></div>
-            </div>
+
         </div>
     </div>
 </div>

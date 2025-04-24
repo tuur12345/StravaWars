@@ -52,6 +52,7 @@ function openPopup() {
 }
 
 function closePopup() {
+    changeContent('activities');
     document.getElementById('popup').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
     document.body.classList.remove('no-scroll'); // Restore scrolling

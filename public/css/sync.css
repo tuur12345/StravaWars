@@ -159,3 +159,35 @@ body.no-scroll {
     width: 30%;
     height: auto;
 }
+.floating-button-coin-2 {
+    position: fixed;
+    bottom: 400px; /* Afstand vanaf de onderkant */
+    right: 350px;  /* Afstand vanaf de rechterkant */
+    border: none;
+    transition: transform 0.2s;
+    background: none; /* Geen achtergrondkleur of afbeelding */
+    z-index: 9;
+}
+.floating-button-coin-2 img {
+    width: 120px; /* Pas de breedte aan voor een kleinere knop */
+    height: auto; /* Behoud de originele aspect ratio */
+}
+.circle-container {
+    position: absolute;
+
+    top: -3px; /* Beetje naar boven */
+    right: -3px; /* Beetje naar rechts buiten de rand */
+    display: inline-flex; /* Zorgt ervoor dat de container zich aanpast aan de inhoud en inline gerangschikt kan worden */
+    justify-content: center; /* Centreert de inhoud horizontaal */
+    align-items: center; /* Centreert de inhoud verticaal */
+    border-radius: 50%; /* Maakt de container rond */
+    background-color: var(--primary-color); /* De gele achtergrondkleur */
+    border: 2px solid black; /* De oranjerode rand */
+    color: #fdb200; /* De kleur van het getal */
+    font-size: 24px; /* Een mooie grootte voor het getal */
+    font-weight: bold; /* Maakt het getal vetgedrukt */
+    padding: 0.4em; /* Voeg wat interne padding toe om ruimte rond het getal te creëren */
+    line-height: 1; /* Zorgt ervoor dat de hoogte van de tekst geen onnodige ruimte toevoegt */
+    white-space: nowrap; /* Voorkomt dat het getal op meerdere regels breekt */
+    height: 12px;
+}
