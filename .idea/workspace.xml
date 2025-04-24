@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="strava activities in home page">
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/StravaWars.iml" beforeDir="false" afterPath="$PROJECT_DIR$/StravaWars.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Service/PayPalService.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/coins.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coins.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -435,6 +437,7 @@
       <workItem from="1745479672353" duration="305000" />
       <workItem from="1745480061964" duration="7724000" />
       <workItem from="1745491073359" duration="3086000" />
+      <workItem from="1745494409000" duration="1237000" />
     </task>
     <task id="LOCAL-00001" summary="login with strava">
       <option name="closed" value="true" />
