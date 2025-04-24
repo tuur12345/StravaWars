@@ -18,7 +18,7 @@ const centerLat = 50.8793;
 const centerLng = 4.7002;
 function assignCamp(lat, lng) {
     if (lat >= centerLat && lng >= centerLng) return {owner: 'Tuur Colignon', color: 'red'};
-    if (lat >= centerLat && lng < centerLng) return {owner: 'Lowie Declerq', color: 'blue'};
+    if (lat >= centerLat && lng < centerLng) return {owner: 'Lowie Declercq', color: 'blue'};
     if (lat < centerLat && lng < centerLng) return {owner: 'Oscar Mues', color: 'yellow'};
     return {owner: 'Pieter Nouwen', color: 'green'};
 }

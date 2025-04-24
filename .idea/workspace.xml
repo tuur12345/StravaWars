@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="strava activities in home page">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_03_04_2025_10_26_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_03_04_2025_10_26__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/DrawHexagon.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/DrawHexagon.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/StravaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StravaController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/maps.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/maps.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -367,7 +368,7 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/decle/Documents/StravawarsClone&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/decle/Documents/StravawarsClone/public/images&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
@@ -382,6 +383,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\decle\Documents\StravawarsClone\public\images" />
       <recent name="C:\Users\TUUR\IdeaProjects\StravaWars\public\images" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
@@ -424,6 +426,8 @@
       <workItem from="1743711691749" duration="305000" />
       <workItem from="1745395845177" duration="337000" />
       <workItem from="1745396233079" duration="100000" />
+      <workItem from="1745396401294" duration="6244000" />
+      <workItem from="1745479672353" duration="305000" />
     </task>
     <task id="LOCAL-00001" summary="login with strava">
       <option name="closed" value="true" />
