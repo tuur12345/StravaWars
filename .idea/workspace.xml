@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="fixed coin color">
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="database connection, look at documentation first: https://symfony.com/doc/current/doctrine.html">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/StravaController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/StravaController.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -500,7 +498,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745489516836</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="database connection, look at documentation first: https://symfony.com/doc/current/doctrine.html">
+      <option name="closed" value="true" />
+      <created>1745494940225</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1745494940227</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -527,7 +533,8 @@
     <MESSAGE value="fixed map popup in maps" />
     <MESSAGE value="fixed map popup in mapsv2" />
     <MESSAGE value="fixed coin color" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed coin color" />
+    <MESSAGE value="database connection, look at documentation first: https://symfony.com/doc/current/doctrine.html" />
+    <option name="LAST_COMMIT_MESSAGE" value="database connection, look at documentation first: https://symfony.com/doc/current/doctrine.html" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

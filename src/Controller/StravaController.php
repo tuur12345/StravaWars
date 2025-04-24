@@ -169,16 +169,6 @@ class StravaController extends AbstractController
             ]
         );
     }
-
-
-    #[Route('/test', name:'test')]
-    public function testQuery(Connection $connection): Response
-    {
-        $sql = "SELECT * FROM hexagon WHERE latitude = '1' AND longitude = '1'";
-        $hexagon = $connection->fetchAssociative($sql);
-
-        return new Response('<pre>' . print_r($hexagon, true) . '</pre>');
-    }
 }
 
 
