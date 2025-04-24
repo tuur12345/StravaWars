@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Doctrine\DBAL\Connection;
 
 class StravaController extends AbstractController
 {
@@ -167,6 +168,16 @@ class StravaController extends AbstractController
                 'totalKudosThisWeek'=> $totalKudosThisWeek
             ]
         );
+    }
+
+
+    #[Route('/test', name:'test')]
+    public function testQuery(Connection $connection): Response
+    {
+        $sql = "SELECT * FROM hexagon WHERE latitude = '1' AND longitude = '1'";
+        $hexagon = $connection->fetchAssociative($sql);
+
+        return new Response('<pre>' . print_r($hexagon, true) . '</pre>');
     }
 }
 
