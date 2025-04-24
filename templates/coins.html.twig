@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="{{ asset('css/coins.css') }}">
+
+<button class="floating-button-coin" onclick="CoinPopup();">
+    <img src="{{ asset('images/coins.png') }}" alt="coins button">
+    <div class="circle-container single-digit">81</div>
+
+</button>
+
+<div id="coinsoverlay">
+    <div id="coinspopup">
+        <span class="coin-close-btn" onclick="CoinclosePopup()">&times;</span>
+
+        <h1>hey</h1>
+    </div>
+
+</div>
+<script>
+    const coinoverlay = document.getElementById('coinsoverlay');
+    const coinpopup = document.getElementById('coinspopup');
+
+    coinoverlay.addEventListener('click', function (e) {
+        if (!coinpopup.contains(e.target)) {
+            CoinclosePopup();
+        }
+    });
+
+    function CoinPopup() {
+        document.getElementById('coinsoverlay').style.display = 'block';
+        document.getElementById('coinspopup').style.display = 'block';
+    }
+    function CoinclosePopup() {
+        document.getElementById('coinsoverlay').style.display = 'none';
+        document.getElementById('coinspopup').style.display = 'none';
+
+    }
+
+</script>
+
+
