@@ -130,7 +130,8 @@ class StravaController extends AbstractController
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
             'user' => $user,
-            'totalKudosThisWeek'=> $totalKudosThisWeek
+            'totalKudosThisWeek'=> $totalKudosThisWeek,
+            'Kudostocoins'=> round($totalKudosThisWeek/2)
         ]);
     }
 
@@ -147,7 +148,8 @@ class StravaController extends AbstractController
         return $this->render('maps.html.twig', [
             'user' => $user,
             'activities' => $weekActivities,
-            'totalKudosThisWeek'=> $totalKudosThisWeek
+            'totalKudosThisWeek'=> $totalKudosThisWeek,
+            'Kudostocoins'=> round($totalKudosThisWeek/2)
         ]);
     }
 
@@ -165,7 +167,8 @@ class StravaController extends AbstractController
             [
                 'user' => $user,
                 'activities' => $weekActivities,
-                'totalKudosThisWeek'=> $totalKudosThisWeek
+                'totalKudosThisWeek'=> $totalKudosThisWeek,
+
             ]
         );
     }
