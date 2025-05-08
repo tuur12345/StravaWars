@@ -23,6 +23,9 @@ class Hexagon
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $owner = null;
 
+    #[ORM\Column]
+    private ?int $level = null;
+
     public function getLatitude(): ?string
     {
         return $this->latitude;
@@ -67,6 +70,18 @@ class Hexagon
     public function setOwner(?string $owner): static
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): static
+    {
+        $this->level = $level;
 
         return $this;
     }

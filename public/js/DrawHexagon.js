@@ -32,7 +32,7 @@ async function drawHexagons(hexLayer, bounds, clickable = true) {
             weight: 1,
             opacity: 0.5,
             fillColor: hex.color,
-            fillOpacity: (clickable) ? 0.2 : 0
+            fillOpacity: (hex.color !== '#fc5200') ? 0.2 : 0
 
         }).addTo(hexLayer);
 
@@ -41,7 +41,7 @@ async function drawHexagons(hexLayer, bounds, clickable = true) {
             coords: points,
             color: hex.color,
             owner: hex.owner,
-            level: 0
+            level: hex.level
         });
     }
 
@@ -96,7 +96,7 @@ function addClickListener(polygons) {
             this.setStyle({ fillOpacity: 0.5, fillColor: '#000000' });
         });
         poly.polygon.on('mouseout', function () {
-            this.setStyle({ fillOpacity: 0.2, fillColor: poly.color});
+            this.setStyle({ fillOpacity: (poly.color !== '#fc5200') ? 0.2 : 0, fillColor: poly.color});
         });
     })
 }
