@@ -3,135 +3,125 @@
 <button class="floating-button-coin" onclick="CoinPopup();">
     <img src="{{ asset('images/coins.png') }}" alt="coins button">
     <div class="circle-container single-digit">81</div>
-
 </button>
 
 <div id="coinsoverlay">
-        <div class="shop-window" id="coinspopup">
-            <div class="shop-menu">
-                <button class="menu-button active" data-tab="shop">Shop</button>
-                <button class="menu-button" data-tab="inventory">Inventory</button>
-                <button class="menu-button" data-tab="events">Events</button>
-                <button class="close-button" onclick="CoinclosePopup()">&times;</button>
-            </div>
+    <div class="shop-window" id="coinspopup">
+        <div class="shop-menu">
+            <button class="menu-button active" data-tab="shop">Shop</button>
+            <button class="menu-button" data-tab="inventory">Inventory</button>
+            <button class="menu-button" data-tab="buycoins">Buy Coins</button>
+            <button class="close-button" onclick="CoinclosePopup()">&times;</button>
+        </div>
 
-            <div class="shop-content" id="shopContent">
-                <div class="hexagon-container">
-                    <img src="{{ asset('images/trap.png') }}" alt="Hexagon 1">
-                    <div class="price">
-                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                        <span>15</span>
-                    </div>
-                </div>
-                <div class="hexagon-container">
-                    <img src="{{ asset('images/fake.png') }}" alt="Hexagon 2">
-                    <div class="price">
-                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                        <span>15</span>
-                    </div>
-                </div>
-                <div class="hexagon-container">
-                    <img src="{{ asset('images/poison.png') }}" alt="Hexagon 3">
-                    <div class="price">
-                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                        <span>15</span>
-                    </div>
+        <div class="shop-content" id="shopContent">
+            <div class="hexagon-container">
+                <img src="{{ asset('images/trap.png') }}" alt="Hexagon 1">
+                <div class="price" onclick="toggleActive(this)">
+                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                    <span>15</span>
                 </div>
             </div>
-
-            <div class="buy-coins">
-                <script async
-                        src="https://js.stripe.com/v3/buy-button.js">
-                </script>
-
-                <stripe-buy-button
-                        buy-button-id="buy_btn_1RHMV9KL6jD48P382Ot9hYke"
-                        publishable-key="pk_live_51RHM6LKL6jD48P38kJwWVFZZX2nSULCZid34FeTAlCy7K5W92tFxy3kaxF9hNVYLR64jhQCxneg2Ne83sBVDnEYW00ewn8n5ED"
-                >
-                </stripe-buy-button>
-                                <p class="paypaypal">Of Betaal met Paypal:</p>
-                <div id="payment_options"></div>
-                <div class="paypal">
-                    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="VUDDK5FRYV38Q" />
-                        <input type="hidden" name="currency_code" value="EUR" />
-                        <input type="image" src="https://www.paypalobjects.com/nl_NL/BE/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="PayPal – de veiligere, gemakkelijkere manier om online te betalen!" alt="Nu kopen" />
-                    </form>
+            <div class="hexagon-container">
+                <img src="{{ asset('images/fake.png') }}" alt="Hexagon 2">
+                <div class="price" onclick="toggleActive(this)">
+                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                    <span>15</span>
                 </div>
-
+            </div>
+            <div class="hexagon-container">
+                <img src="{{ asset('images/poison.png') }}" alt="Hexagon 3">
+                <div class="price" onclick="toggleActive(this)">
+                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                    <span>15</span>
+                </div>
             </div>
         </div>
+
+        <div class="buy-coins-section" id="buyCoinsSection" style="display: none;">
+            <script async src="https://js.stripe.com/v3/buy-button.js"></script>
+            <stripe-buy-button
+                    buy-button-id="buy_btn_1RHMV9KL6jD48P382Ot9hYke"
+                    publishable-key="pk_live_51RHM6LKL6jD48P38kJwWVFZZX2nSULCZid34FeTAlCy7K5W92tFxy3kaxF9hNVYLR64jhQCxneg2Ne83sBVDnEYW00ewn8n5ED">
+            </stripe-buy-button>
+            <p class="paypaypal">Of Betaal met Paypal:</p>
+            <div id="payment_options"></div>
+            <div class="paypal">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick" />
+                    <input type="hidden" name="hosted_button_id" value="VUDDK5FRYV38Q" />
+                    <input type="hidden" name="currency_code" value="EUR" />
+                    <input type="image" src="https://www.paypalobjects.com/nl_NL/BE/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" title="PayPal – de veiligere, gemakkelijkere manier om online te betalen!" alt="Nu kopen" />
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
 <script>
     const menu = document.querySelector('.shop-menu');
     const menuButtons = menu.querySelectorAll('.menu-button');
     const shopContent = document.getElementById('shopContent');
+    const buyCoinsSection = document.getElementById('buyCoinsSection');
 
-    // Demo content voor de andere tabs
+    // Empty inventory content
     const inventoryContent = `
-  <h2>Inventaris</h2>
-  <p>Hier zie je een overzicht van je verzamelde items en bezittingen.</p>
-  <ul>
-    <li>Item 1</li>
-    <li>Item 2</li>
-    <li>Nog een item</li>
-  </ul>
-`;
-
-    const eventsContent = `
-  <h2>Evenementen</h2>
-  <p>Bekijk de huidige en aankomende speciale evenementen!</p>
-  <ul>
-    <li>Lente-evenement (loopt tot 30 april)</li>
-    <li>Bonus XP weekend (26-27 april)</li>
-  </ul>
-`;
+        <div class="empty-inventory">
+            <h2>Inventaris</h2>
+            <p>Je hebt nog geen items in je inventaris.</p>
+        </div>
+    `;
 
     menuButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Verwijder de 'active' klasse van alle knoppen
+            // Remove 'active' class from all buttons
             menuButtons.forEach(btn => {
                 btn.classList.remove('active');
             });
-            // Voeg de 'active' klasse toe aan de geklikte knop
+            // Add 'active' class to clicked button
             this.classList.add('active');
 
-            // Haal het 'data-tab' attribuut op om te bepalen welke inhoud getoond moet worden
+            // Get data-tab attribute to determine which content to show
             const tab = this.dataset.tab;
 
-            // Update de inhoud van het shopContent element
+            // Update content based on selected tab
             if (tab === 'shop') {
+                shopContent.style.display = 'flex';
+                buyCoinsSection.style.display = 'none';
                 shopContent.innerHTML = `
-        <div class="hexagon-container">
-          <img src="path/to/hexagon1.png" alt="Hexagon 1">
-          <div class="price">
-            <img src="path/to/coin_icon.png" alt="Coin Icon">
-            <span>15</span>
-          </div>
-        </div>
-        <div class="hexagon-container">
-          <img src="path/to/hexagon2.png" alt="Hexagon 2">
-          <div class="price">
-            <img src="path/to/coin_icon.png" alt="Coin Icon">
-            <span>15</span>
-          </div>
-        </div>
-        <div class="hexagon-container">
-          <img src="path/to/hexagon3.png" alt="Hexagon 3">
-          <div class="price">
-            <img src="path/to/coin_icon.png" alt="Coin Icon">
-            <span>15</span>
-          </div>
-        </div>
-      `;
+                    <div class="hexagon-container">
+                        <img src="{{ asset('images/trap.png') }}" alt="Hexagon 1">
+                        <div class="price" onclick="toggleActive(this)">
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                            <span>15</span>
+                        </div>
+                    </div>
+                    <div class="hexagon-container">
+                        <img src="{{ asset('images/fake.png') }}" alt="Hexagon 2">
+                        <div class="price" onclick="toggleActive(this)">
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                            <span>15</span>
+                        </div>
+                    </div>
+                    <div class="hexagon-container">
+                        <img src="{{ asset('images/poison.png') }}" alt="Hexagon 3">
+                        <div class="price" onclick="toggleActive(this)">
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
+                            <span>15</span>
+                        </div>
+                    </div>
+                `;
             } else if (tab === 'inventory') {
+                shopContent.style.display = 'block';
+                buyCoinsSection.style.display = 'none';
                 shopContent.innerHTML = inventoryContent;
-            } else if (tab === 'events') {
-                shopContent.innerHTML = eventsContent;
+            } else if (tab === 'buycoins') {
+                shopContent.style.display = 'none';
+                buyCoinsSection.style.display = 'block';
             }
         });
     });
+
     const coinoverlay = document.getElementById('coinsoverlay');
     const coinpopup = document.getElementById('coinspopup');
 
@@ -145,12 +135,22 @@
         document.getElementById('coinsoverlay').style.display = 'block';
         document.getElementById('coinspopup').style.display = 'block';
     }
+
     function CoinclosePopup() {
         document.getElementById('coinsoverlay').style.display = 'none';
         document.getElementById('coinspopup').style.display = 'none';
-
     }
 
+    function toggleActive(element) {
+        // Remove active class from all price elements
+        document.querySelectorAll('.price').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // Add active class to clicked element
+        element.classList.add('active');
+
+        // You can add more functionality here, like storing the selected item
+        console.log('Selected item:', element.parentNode.querySelector('img').alt);
+    }
 </script>
-
-
