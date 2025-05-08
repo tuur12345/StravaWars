@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Service;
 
 use PayPal\Rest\ApiContext;

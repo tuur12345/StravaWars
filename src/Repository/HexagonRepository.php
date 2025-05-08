@@ -16,6 +16,21 @@ class HexagonRepository extends ServiceEntityRepository
         parent::__construct($registry, Hexagon::class);
     }
 
+    public function findColorByCoordinates(float $lat, float $lng): ?string
+    {
+        return $this->createQueryBuilder('h')
+            ->select('h.color')
+            ->where('h.latitude = :lat')
+            ->andWhere('h.longitude = :lng')
+            ->setParameters([
+                'lat' => $lat,
+                'lng' => $lng
+            ])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
     //    /**
     //     * @return Hexagon[] Returns an array of Hexagon objects
     //     */
