@@ -5,11 +5,12 @@ namespace App\Controller;
 use App\Entity\Hexagon;
 use App\Repository\HexagonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class HexagonController
+class HexagonController extends AbstractController
 {
     #[Route('/insert-hexagons', methods: ['POST'])]
     public function insertHexagons(Request $request, EntityManagerInterface $em): JsonResponse
