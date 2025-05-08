@@ -15,10 +15,10 @@ function initializeActivityMap(div) {
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    map.whenReady(() => {
+    map.whenReady(async () => {
         let hexLayer = L.layerGroup().addTo(map);
         let bounds = map.getBounds().pad(0.1);
-        let polygons = drawHexagons(hexLayer, bounds, false);
+        let polygons = await drawHexagons(hexLayer, bounds, false);
         highlightHexagons(decodedCoords, polygons);
     });
 

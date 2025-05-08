@@ -12,55 +12,41 @@ const worldBounds = { // world bounds so hexagon grid are always matching
     east: 6
 };
 
-
-// small simulation
-const centerLat = 50.8793;
-const centerLng = 4.7002;
-function assignCamp(lat, lng) {
-    if (lat >= centerLat && lng >= centerLng) return {owner: 'Tuur Colignon', color: 'red'};
-    if (lat >= centerLat && lng < centerLng) return {owner: 'Lowie Declercq', color: 'blue'};
-    if (lat < centerLat && lng < centerLng) return {owner: 'Oscar Mues', color: 'yellow'};
-    return {owner: 'Pieter Nouwen', color: 'green'};
-}
-
-
-function drawHexagons(hexLayer, bounds, clickable = true) {
-    let hexagons = generateHexagonGrid(bounds); // generate hexagon grid
+async function drawHexagons(hexLayer, bounds, clickable = true) {
+    //let hexagons = generateHexagonGrid(bounds); // generate hexagon grid
     let polygons = []; // Store references to the polygons to update later
-    for (let hex of hexagons) {
-        const center = findCenter(hex);
-        const camp = assignCamp(center.lat, center.lng);
-
-        let polygon = L.polygon(hex, {
-            color: (clickable) ? camp.color : '#fc5200',
+    let hexagons_from_db = [];
+    try {
+        const response = await fetch('/hexagons');
+        hexagons_from_db = await response.json();
+    } catch (error) {
+        console.error('Error fetching hexagons:', error);
+    }
+    for (let hex of hexagons_from_db) {
+        //const dbHex = findHexagonFromDb(hex, hexagons_from_db);
+        //const hex_color = dbHex?.color || '#fc5200';
+        //const hex_owner = dbHex?.owner || "None"
+        let points = generateHexagon(hex.latitude, hex.longitude);
+        let polygon = L.polygon(points, {
+            color: hex.color,
             weight: 1,
             opacity: 0.5,
-            fillColor: (clickable) ? camp.color : '#fecab1',
-            fillOpacity: (clickable) ? 0.2 : 0
+            fillColor: hex.color,
+            fillOpacity: (hex.color !== '#fc5200') ? 0.2 : 0
+
         }).addTo(hexLayer);
 
         polygons.push({
             polygon: polygon,
-            coords: hex,
-            color: camp.color,
-            owner: camp.owner,
-            level: 0
+            coords: points,
+            color: hex.color,
+            owner: hex.owner,
+            level: hex.level
         });
     }
 
     if (clickable) {
-        polygons.forEach(poly => {
-            poly.polygon.on('click', function(e) {
-                // create pop up for each hexagon when clicked on
-                openHexagonInfo(findCenter(poly.coords), poly)
-            })
-            poly.polygon.on('mouseover', function () {
-                this.setStyle({ fillOpacity: 0.5, fillColor: '#000000' });
-            });
-            poly.polygon.on('mouseout', function () {
-                this.setStyle({ fillOpacity: 0.2, fillColor: poly.color});
-            });
-        })
+        addClickListener(polygons);
     }
     return polygons; // Return the list of polygons to the maps
 }
@@ -93,11 +79,34 @@ function generateHexagon(centerLat, centerLng) {
     let points = [];
     for (let i = 0; i < 6; i++) { // draw six corners of each hexagon
         let angle = (Math.PI / 3) * i;
-        let lat = centerLat + hexRadiusLat * Math.sin(angle);
-        let lng = centerLng + hexRadiusLng * Math.cos(angle);
+        let lat = parseFloat(centerLat) + hexRadiusLat * Math.sin(angle);
+        let lng = parseFloat(centerLng) + hexRadiusLng * Math.cos(angle);
         points.push([lat, lng]);
     }
     return points;
+}
+
+function addClickListener(polygons) {
+    polygons.forEach(poly => {
+        poly.polygon.on('click', function(e) {
+            // create pop up for each hexagon when clicked on
+            openHexagonInfo(findCenter(poly.coords), poly)
+        })
+        poly.polygon.on('mouseover', function () {
+            this.setStyle({ fillOpacity: 0.5, fillColor: '#000000' });
+        });
+        poly.polygon.on('mouseout', function () {
+            this.setStyle({ fillOpacity: (poly.color !== '#fc5200') ? 0.2 : 0, fillColor: poly.color});
+        });
+    })
+}
+
+function findHexagonFromDb(hex, hexagons_from_db) {
+    const center = findCenter(hex);
+    return hexagons_from_db.find(hexagon =>
+        hexagon.latitude === center.lat.toFixed(4) &&
+        hexagon.longitude === center.lng.toFixed(4)
+    );
 }
 
 

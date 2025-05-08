@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Hexagon;
+use App\Repository\HexagonRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,8 +17,8 @@ use Doctrine\DBAL\Connection;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153505'; // Replace with your Strava client ID
-    private $clientSecret = '658ffd98156a5101444096565e9565a00c051ca4'; // Replace with your Strava client secret
+    private $clientId = '153511'; // Replace with your Strava client ID
+    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
@@ -149,7 +153,7 @@ class StravaController extends AbstractController
             'user' => $user,
             'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
-            'Kudostocoins'=> round($totalKudosThisWeek/2)
+            'Kudostocoins'=> round($totalKudosThisWeek),
         ]);
     }
 
@@ -171,6 +175,38 @@ class StravaController extends AbstractController
 
             ]
         );
+    }
+    #[Route('/insert-hexagons', methods: ['POST'])]
+    public function insertHexagons(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        foreach ($data['hexagons'] as $hexData) {
+            $hex = new Hexagon();
+            $hex->setLatitude($hexData['latitude']);
+            $hex->setLongitude($hexData['longitude']);
+            $hex->setColor($hexData['color']);
+
+            $em->persist($hex);
+        }
+        $em->flush();
+
+        return new JsonResponse(['status' => 'success']);
+    }
+    #[Route('/hexagons', name: 'getAllHexagons')]
+    public function getAllHexagons(HexagonRepository $hexagonRepository): JsonResponse
+    {
+        $hexagons = $hexagonRepository->findAll();
+        $data = [];
+        foreach ($hexagons as $hex) {
+            $data[] = [
+                'latitude' => $hex->getLatitude(),
+                'longitude' => $hex->getLongitude(),
+                'color' => $hex->getColor(),
+                'owner' => $hex->getOwner()
+            ];
+        }
+        return new JsonResponse($data);
     }
 }
 

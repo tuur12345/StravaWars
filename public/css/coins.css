@@ -1,38 +1,37 @@
 .floating-button-coin {
     position: fixed;
-    bottom: 150px; /* Afstand vanaf de onderkant */
-    right: 20px;  /* Afstand vanaf de rechterkant */
+    bottom: 150px; /* Distance from bottom */
+    right: 20px;  /* Distance from right */
     border: none;
     cursor: pointer;
     transition: transform 0.2s;
-    background: none; /* Geen achtergrondkleur of afbeelding */
+    background: none; /* No background color or image */
     z-index: 9;
 }
+
 .floating-button-coin img {
-    width: 120px; /* Pas de breedte aan voor een kleinere knop */
-    height: auto; /* Behoud de originele aspect ratio */
+    width: 120px; /* Adjust width for smaller button */
+    height: auto; /* Maintain original aspect ratio */
 }
 
 .circle-container {
     position: absolute;
-
-    top: -3px; /* Beetje naar boven */
-    right: -3px; /* Beetje naar rechts buiten de rand */
-    display: inline-flex; /* Zorgt ervoor dat de container zich aanpast aan de inhoud en inline gerangschikt kan worden */
-    justify-content: center; /* Centreert de inhoud horizontaal */
-    align-items: center; /* Centreert de inhoud verticaal */
-    border-radius: 50%; /* Maakt de container rond */
-    background-color: #fdb200; /* De gele achtergrondkleur */
-    border: 5px solid var(--primary-color); /* De oranjerode rand */
-    color: var(--primary-color); /* De kleur van het getal */
-    font-size: 24px; /* Een mooie grootte voor het getal */
-    font-weight: bold; /* Maakt het getal vetgedrukt */
-    padding: 0.4em; /* Voeg wat interne padding toe om ruimte rond het getal te creëren */
-    line-height: 1; /* Zorgt ervoor dat de hoogte van de tekst geen onnodige ruimte toevoegt */
-    white-space: nowrap; /* Voorkomt dat het getal op meerdere regels breekt */
+    top: -3px; /* Slightly up */
+    right: -3px; /* Slightly right outside the edge */
+    display: inline-flex; /* Makes container adapt to content and can be inline arranged */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    border-radius: 50%; /* Makes container round */
+    background-color: #fdb200; /* Yellow background color */
+    border: 5px solid var(--primary-color); /* Orange-red border */
+    color: var(--primary-color); /* Number color */
+    font-size: 24px; /* Nice size for the number */
+    font-weight: bold; /* Makes number bold */
+    padding: 0.4em; /* Adds internal padding for space around the number */
+    line-height: 1; /* Ensures text height doesn't add unnecessary space */
+    white-space: nowrap; /* Prevents number from breaking to multiple lines */
     height: 12px;
 }
-
 
 #coinsoverlay {
     display: none; /* Initially hidden */
@@ -42,39 +41,42 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
-    z-index: 1000; /* Ensure it's below the popup but above other content */
+    z-index: 1000; /* Below popup but above other content */
 }
+
 #coinspopup {
-    display: none; /* Begin as hidden */
+    display: none; /* Initially hidden */
     position: fixed;
     left: 50%;
-    top: 40%;
+    top: 50%;
     transform: translate(-50%, -50%);
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     z-index: 1001;
     width: 70%;
+    height: 80vh; /* 60% of viewport height */
 }
 
 .shop-window {
-    background-color: #f0f0f0; /* Achtergrondkleur van het venster */
+    background-color: #f0f0f0; /* Window background color */
     border-radius: 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    width: 80%; /* Pas de breedte aan */
-    max-width: 600px; /* Maximale breedte */
-    margin: 50px auto; /* Centreer het venster */
-    overflow: hidden; /* Zorgt ervoor dat afgeronde hoeken werken voor de inhoud */
-    height: 700px;
+    width: 80%; /* Adjust width */
+    max-width: 600px; /* Maximum width */
+    margin: 0 auto; /* Center window */
+    overflow: hidden; /* Ensures rounded corners work for content */
+    height: 100%; /* Fill the container */
 }
 
 .shop-menu {
-    background-color: #e0e0e0; /* Achtergrondkleur van de menubalk */
+    background-color: #f0cdbb; /* Menu bar background color */
     padding: 10px;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #f0cdbb;
+    position: relative; /* For positioning the close button */
 }
 
 .menu-button {
@@ -84,25 +86,25 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-    color: #555;
+    color: #000000;
     transition: background-color 0.3s ease;
 }
 
 .menu-button.active {
-    background-color: #ff8c00; /* Oranje kleur voor de actieve knop */
-    color: white;
+    background-color: #f85000; /* Orange color for active button */
+    color: #000000;
 }
 
 .menu-button:hover {
-    background-color: #ddd;
+    background-color: #f85000;
 }
 
 .close-button {
     background-color: transparent;
     border: none;
-    font-size: 24px;
+    font-size: 30px;
     cursor: pointer;
-    color: #888;
+    color: #000000;
     position: absolute;
     top: 10px;
     right: 15px;
@@ -121,20 +123,20 @@
 
 .hexagon-container {
     text-align: center;
-    position: relative; /* Voor de positionering van de prijs */
+    position: relative; /* For price positioning */
 }
 
 .hexagon-container img {
-    width: 120px; /* Geschatte grootte van de hexagonale afbeeldingen */
+    width: 120px; /* Estimated size of hexagonal images */
     height: auto;
 }
 
 .price {
     position: absolute;
-    bottom: -15px; /* Plaats de prijs onder de hexagon */
+    bottom: -55px; /* This value controls the distance between image and price button - increase for more space */
     left: 50%;
     transform: translateX(-50%);
-    background-color: #fdb200; /* Gele achtergrond voor de prijs */
+    background-color: #fdb200; /* Yellow background for price */
     color: black;
     padding: 5px 10px;
     border-radius: 15px;
@@ -142,6 +144,13 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.price:hover {
+    background-color: #ffcc33; /* Lighter yellow on hover */
 }
 
 .price img {
@@ -149,22 +158,28 @@
     height: auto;
 }
 
-.buy-coins {
-    padding: 0;
-    margin: 0;
+.buy-coins-section {
+    padding: 20px;
     text-align: center;
 }
 
-.buy-button {
-    background: none;
-    border: none;
-    cursor: pointer;
+.empty-inventory {
+    text-align: center;
+    padding: 40px 20px;
 }
 
-.buy-button img {
-    width: 150px; /* Geschatte grootte van de koop coins knop */
-    height: auto;
+.empty-inventory h2 {
+    color: #555;
+    margin-bottom: 15px;
 }
+
+.empty-inventory p {
+    color: #777;
+    font-size: 16px;
+}
+
 .paypaypal {
-    margin: 0;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-weight: bold;
 }

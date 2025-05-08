@@ -20,6 +20,12 @@ class Hexagon
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $color = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $owner = null;
+
+    #[ORM\Column]
+    private ?int $level = null;
+
     public function getLatitude(): ?string
     {
         return $this->latitude;
@@ -52,6 +58,30 @@ class Hexagon
     public function setColor(?string $color): static
     {
         $this->color = $color;
+
+        return $this;
+    }
+
+    public function getOwner(): ?string
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?string $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel(int $level): static
+    {
+        $this->level = $level;
 
         return $this;
     }
