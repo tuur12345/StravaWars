@@ -1,9 +1,11 @@
+<?php
+
 namespace App\Service;
 
 use PayPal\Rest\ApiContext;
 use PayPal\Auth\OAuthTokenCredential;
 
-class PaypalService
+class PayPalService
 {
 private $apiContext;
 
