@@ -14,7 +14,30 @@ document.addEventListener("DOMContentLoaded", function () { // when map div is l
         L.latLng(50.90, 4.81)   // Northeast
     );
 
-    map.whenReady(function() { // draw hexagons when map is ready
-        drawHexagons(hexLayer, bounds)
+    map.whenReady(/*async*/ function() { // draw hexagons when map is ready
+        drawHexagons(hexLayer, bounds);
+
+
+        // only used to insert hexagons in database
+        // let polygons = await drawHexagons(hexLayer, bounds);
+        //
+        // let hexagons = polygons.map(poly => {
+        //     let center = findCenter(poly.coords);
+        //     return {
+        //         latitude: center.lat,
+        //         longitude: center.lng,
+        //         color: poly.color
+        //     };
+        // });
+        //
+        // fetch('/insert-hexagons', {
+        //     method: 'POST',
+        //     headers: {'Content-Type': 'application/json'},
+        //     body: JSON.stringify({hexagons: hexagons})
+        // })
+        //     .then(response => response.json())
+        //     .then(data => console.log('Success:', data))
+        //     .catch(error => console.error('Error:', error));
+
     });
 });
