@@ -11,10 +11,10 @@ deploy-job:
   only:
     - feature/deployment
   script:
-    -composer install
-    -rsync -rv --exclude=".git/"
-               --exclude=".env/"
-               --exclude="upload/"
-               --delete
+    - composer install
+    - rsync -rv --exclude=".git/" \
+               --exclude=".env/" \
+               --exclude="upload/" \
+               --delete \
                ./ a24sewt303@shell.studev.groept.be:/var/www/html
 
