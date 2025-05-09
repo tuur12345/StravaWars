@@ -13,8 +13,8 @@ const worldBounds = { // world bounds so hexagon grid are always matching
 };
 
 async function drawHexagons(hexLayer, bounds, clickable = true) {
-    //let hexagons = generateHexagonGrid(bounds); // generate hexagon grid
-    let polygons = []; // Store references to the polygons to update later
+    //let hexagons = generateHexagonGrid(bounds); // generate hexagon grid for initialising
+    let polygons = [];
     let hexagons_from_db = [];
     try {
         const response = await fetch('/hexagons');
@@ -23,9 +23,6 @@ async function drawHexagons(hexLayer, bounds, clickable = true) {
         console.error('Error fetching hexagons:', error);
     }
     for (let hex of hexagons_from_db) {
-        //const dbHex = findHexagonFromDb(hex, hexagons_from_db);
-        //const hex_color = dbHex?.color || '#fc5200';
-        //const hex_owner = dbHex?.owner || "None"
         let points = generateHexagon(hex.latitude, hex.longitude);
         let polygon = L.polygon(points, {
             color: hex.color,
@@ -48,7 +45,7 @@ async function drawHexagons(hexLayer, bounds, clickable = true) {
     if (clickable) {
         addClickListener(polygons);
     }
-    return polygons; // Return the list of polygons to the maps
+    return polygons; // return the list of polygons to the maps
 }
 
 function findCenter(coords) {

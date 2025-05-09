@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250505153459 extends AbstractMigration
+final class Version20250509190238 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -19,17 +19,21 @@ final class Version20250505153459 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            ALTER TABLE hexagon ADD owner VARCHAR(255) DEFAULT NULL
+            CREATE TABLE hexagon (
+                latitude VARCHAR(255) NOT NULL,
+                longitude VARCHAR(255) NOT NULL,
+                color VARCHAR(7) NOT NULL,
+                owner VARCHAR(255) DEFAULT NULL,
+                level INT NOT NULL,
+                PRIMARY KEY (latitude, longitude)
+            )
         SQL);
     }
 
+
     public function down(Schema $schema): void
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
-            ALTER TABLE hexagon DROP owner
-        SQL);
+        $this->addSql('DROP TABLE hexagon');
     }
 }

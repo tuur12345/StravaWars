@@ -6,18 +6,17 @@ use App\Repository\HexagonRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: HexagonRepository::class)]
-#[ORM\Table(name: 'hexagon')]
 class Hexagon
 {
     #[ORM\Id]
-    #[ORM\Column(length: 255)]
-    private ?string $latitude = null;
+    #[ORM\Column(type: 'string')]
+    private ?String $latitude = null;
 
     #[ORM\Id]
-    #[ORM\Column(length: 255)]
-    private ?string $longitude = null;
+    #[ORM\Column(type: 'string')]
+    private ?String $longitude = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 7)]
     private ?string $color = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -26,24 +25,24 @@ class Hexagon
     #[ORM\Column]
     private ?int $level = null;
 
-    public function getLatitude(): ?string
+    public function getLatitude(): ?String
     {
         return $this->latitude;
     }
 
-    public function setLatitude(string $latitude): static
+    public function setLatitude(String $latitude): static
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?string
+    public function getLongitude(): ?String
     {
         return $this->longitude;
     }
 
-    public function setLongitude(string $longitude): static
+    public function setLongitude(String $longitude): static
     {
         $this->longitude = $longitude;
 
@@ -55,7 +54,7 @@ class Hexagon
         return $this->color;
     }
 
-    public function setColor(?string $color): static
+    public function setColor(string $color): static
     {
         $this->color = $color;
 
