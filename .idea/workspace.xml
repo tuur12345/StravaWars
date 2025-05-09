@@ -386,7 +386,7 @@
     &quot;git-widget-placeholder&quot;: &quot;feature/deployment&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/decle/Documents/StravawarsClone/public/images&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/oscar/IdeaProjects/StravaWars V2&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
@@ -406,6 +406,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\oscar\IdeaProjects\StravaWars V2" />
       <recent name="C:\Users\decle\Documents\StravawarsClone\public\images" />
       <recent name="C:\Users\TUUR\IdeaProjects\StravaWars\public\images" />
     </key>
@@ -455,6 +456,7 @@
       <workItem from="1745396401294" duration="6244000" />
       <workItem from="1745479672353" duration="305000" />
       <workItem from="1746688120823" duration="4282000" />
+      <workItem from="1746702693827" duration="154000" />
     </task>
     <task id="LOCAL-00001" summary="login with strava">
       <option name="closed" value="true" />
