@@ -20,6 +20,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    # Force Symfony to use CurlHttpClient instead of NativeHttpClient
+    Symfony\Contracts\HttpClient\HttpClientInterface:
+        factory: ['App\Factory\AmpHttpClientFactory', 'create']
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

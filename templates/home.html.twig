@@ -11,12 +11,15 @@
     <script src="{{ asset('js/RouteHexagons.js') }}"></script>
     <script src="{{ asset('js/DrawHexagon.js') }}"></script>
     <script src="{{ asset('js/ActivityMap.js') }}"></script>
-    <script src="{{ asset('js/stravabucks.js') }}"></script>
-
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
+    <script src="{{ asset('js/stravabucks.js') }}"></script>
+    <script src="{{ asset('js/Hexagon.js') }}"></script>
 
-
-
+    {% include('sync.html.twig') %}
+    <script>
+        const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
+        const hexagons_db = {{ hexagons|json_encode|raw }};
+    </script>
     <div class="container">
         <h1>All Activities</h1>
         {% if activities is not empty %}

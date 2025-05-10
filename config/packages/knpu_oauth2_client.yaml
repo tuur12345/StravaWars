@@ -1,1 +1,14 @@
+# config/packages/knpu_oauth2_client.yaml
+knpu_oauth2_client:
+  clients:
+    strava:
+      type: generic
+      client_id: '%env(STRAVA_CLIENT_ID)%'
+      client_secret: '%env(STRAVA_CLIENT_SECRET)%'
+      redirect_route: strava_callback
+      provider_class: League\OAuth2\Client\Provider\GenericProvider
+      provider_options:
+        urlAuthorize: 'https://www.strava.com/oauth/authorize'
+        urlAccessToken: 'https://www.strava.com/oauth/token'
+        urlResourceOwnerDetails: 'https://www.strava.com/api/v3/athlete'
 

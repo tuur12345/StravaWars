@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controller;
+//ini_set('max_execution_time', 3000);
+//ini_set('memory_limit', '1024M');
 
 use App\Entity\Hexagon;
 use App\Entity\User;
@@ -19,8 +21,8 @@ use Doctrine\DBAL\Connection;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153505'; // Replace with your Strava client ID
-    private $clientSecret = '658ffd98156a5101444096565e9565a00c051ca4'; // Replace with your Strava client secret
+    private $clientId = '154290'; // Replace with your Strava client ID
+    private $clientSecret = '5e927e0e6d2d449168ef7924a7dde989f10814ea'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
@@ -99,7 +101,7 @@ class StravaController extends AbstractController
     }
 
     #[Route('/', name:'home')]
-    public function home(Request $request, HttpClientInterface $httpClient, UserRepository $userRepository): Response {
+    public function home(Request $request, HttpClientInterface $httpClient, UserRepository $userRepository, HexagonRepository $hexagonRepository): Response {
         $accessToken = $request->getSession()->get('access_token'); // retrieve accesstoken from session
         if (!$accessToken) {
             return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
@@ -154,17 +156,31 @@ class StravaController extends AbstractController
         $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
         $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
 
+        $data = $hexagonRepository->findAll();
+        $hexagons = [];
+        foreach ($data as $hex) {
+            $hexagons[] = [
+                'latitude' => $hex->getLatitude(),
+                'longitude' => $hex->getLongitude(),
+                'color' => $hex->getColor(),
+                'owner' => $hex->getOwner(),
+                'level' => $hex->getLevel()
+            ];
+        }
+        $request->getSession()->set('hexagons', $hexagons);
+
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
             'user' => $user,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek/2),
-            'stravabucks' => $stravabucks
+            'stravabucks' => $stravabucks,
+            'hexagons' => $hexagons
         ]);
     }
 
     #[Route('/maps', name:'maps')]
-    public function maps(Request $request, UserRepository $userRepository): Response {
+    public function maps(Request $request, UserRepository $userRepository, HexagonRepository $hexagonRepository): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
@@ -178,12 +194,15 @@ class StravaController extends AbstractController
         $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
         $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
 
+        $hexagons = $request->getSession()->get('hexagons', []);
+
         return $this->render('maps.html.twig', [
             'user' => $user,
             'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek),
-            'stravabucks' => $stravabucks
+            'stravabucks' => $stravabucks,
+            'hexagons' => $hexagons
         ]);
     }
 
@@ -301,4 +320,52 @@ class StravaController extends AbstractController
             'stravabucks' => $user->getStravabucks()
         ]);
     }
+//    #[Route('/insert-hexagons', methods: ['POST'])]
+//    public function insertHexagons(Request $request, EntityManagerInterface $em): JsonResponse
+//    {
+//        // insert hexagons in database in batches
+//        $data = json_decode($request->getContent(), true);
+//
+//        $batchSize = 100;
+//        $i = 0;
+//
+//        foreach ($data['hexagons'] as $hexData) {
+//            $hex = new Hexagon();
+//            $hex->setLatitude($hexData['latitude']);
+//            $hex->setLongitude($hexData['longitude']);
+//            $hex->setColor($hexData['color']);
+//            $hex->setOwner($hexData['owner']);
+//            $hex->setLevel($hexData['level']);
+//
+//            $em->persist($hex);
+//            $i++;
+//
+//            if (($i % $batchSize) === 0) {
+//                $em->flush();
+//                $em->clear(); // free memory
+//            }
+//        }
+//        $em->flush();
+//        $em->clear();
+//
+//        return new JsonResponse(['status' => 'success']);
+//    }
+
+    #[Route('/hexagons', name: 'getAllHexagons')]
+    public function getAllHexagons(HexagonRepository $hexagonRepository): JsonResponse
+    {
+        $hexagons = $hexagonRepository->findAll();
+        $data = [];
+        foreach ($hexagons as $hex) {
+            $data[] = [
+                'latitude' => $hex->getLatitude(),
+                'longitude' => $hex->getLongitude(),
+                'color' => $hex->getColor(),
+                'owner' => $hex->getOwner(),
+                'level' => $hex->getLevel()
+            ];
+        }
+        return new JsonResponse($data);
+    }
+
 }

@@ -15,7 +15,14 @@ document.addEventListener("DOMContentLoaded", function() {
         card.addEventListener('click', function() {
             detailsActivityName.textContent = this.getAttribute('data-activity-name');
             detailsActivityDetails.innerHTML = '';
-            detailsActivityDetails.appendChild(this.cloneNode(true)); // copies map properly
+
+            const cloned = this.cloneNode(true); // copy map properly
+            const mapDiv = cloned.querySelector('.activities-map'); // set map to clickable
+            if (mapDiv) {
+                mapDiv.setAttribute('data-clickable', 'true');
+            }
+
+            detailsActivityDetails.appendChild(cloned);
             activityDetails.style.display = 'block';
             document.getElementById('activities-content').style.display = 'none'; //hide the activity list.
             openPopup(); // Open the popup if it's not already open
@@ -41,8 +48,11 @@ function openPopup() {
     // Wait for popup content to render
     setTimeout(() => {
         document.querySelectorAll('.activities-map').forEach(div => {
+            const clickableAttr = div.getAttribute('data-clickable');
+            const clickable = clickableAttr === 'true';
+
             if (!div._leaflet_map) {
-                initializeActivityMap(div); // see ActivityMapPopUp.js
+                initializeActivityMap(div, clickable); // see ActivityMap.js
             } else {
                 div._leaflet_map.invalidateSize();
                 div._leaflet_map.fitBounds(div._leaflet_polyline.getBounds());

@@ -1,0 +1,22 @@
+image: composer:2.8
+
+before_script:
+  - mkdir -p ~/.ssh
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+  - ssh-keyscan shell.studev.groept.be > ~/.ssh/known_hosts
+  - apk add rsync
+
+deploy-job:
+  only:
+    - master
+    - rsync -rv ...your existing rsync command...
+    - ssh a24sewt303@shell.studev.groept.be "chmod -R 775 /var/www/html/var"
+  script:
+    - composer install
+    - rsync -rv --exclude=".git/" 
+                --exclude=".env/" 
+      --exclude="upload/" 
+                --delete 
+                ./ a24sewt303@shell.studev.groept.be:/var/www/html
+
