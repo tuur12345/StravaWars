@@ -81,7 +81,7 @@ class StravaController extends AbstractController
     }
 
     #[Route('/', name:'home')]
-    public function home(Request $request, HttpClientInterface $httpClient): Response {
+    public function home(Request $request, HttpClientInterface $httpClient, HexagonRepository $hexagonRepository): Response {
         $accessToken = $request->getSession()->get('access_token'); // retrieve accesstoken from session
         if (!$accessToken) {
             return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
@@ -131,16 +131,30 @@ class StravaController extends AbstractController
         $request->getSession()->set('weekActivities', $weekActivities); // save activities of this week
         $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek); // save kudos
 
+        $data = $hexagonRepository->findAll();
+        $hexagons = [];
+        foreach ($data as $hex) {
+            $hexagons[] = [
+                'latitude' => $hex->getLatitude(),
+                'longitude' => $hex->getLongitude(),
+                'color' => $hex->getColor(),
+                'owner' => $hex->getOwner(),
+                'level' => $hex->getLevel()
+            ];
+        }
+        $request->getSession()->set('hexagons', $hexagons);
+
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
             'user' => $user,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
-            'Kudostocoins'=> round($totalKudosThisWeek/2)
+            'Kudostocoins'=> round($totalKudosThisWeek/2),
+            'hexagons' => $hexagons
         ]);
     }
 
     #[Route('/maps', name:'maps')]
-    public function maps(Request $request): Response {
+    public function maps(Request $request, HexagonRepository $hexagonRepository): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
@@ -149,11 +163,14 @@ class StravaController extends AbstractController
         $weekActivities = $request->getSession()->get('weekActivities', []);
         $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
 
+        $hexagons = $request->getSession()->get('hexagons', []);
+
         return $this->render('maps.html.twig', [
             'user' => $user,
             'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek),
+            'hexagons' => $hexagons
         ]);
     }
 

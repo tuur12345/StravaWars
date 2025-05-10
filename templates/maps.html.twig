@@ -8,13 +8,19 @@
     <link href="{{ asset('css/map.css') }}" rel="stylesheet"/>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <!-- script to draw hexagon over the world, fully customizable -->
-    <script src="{{ asset('js/DrawHexagon.js') }}"></script>
+    <script src="{{ asset('js/Hexagon.js') }}"></script>
     <script src="{{ asset('js/WorldMap.js') }}"></script>
     <script src="{{ asset('js/HexagonPopUp.js') }}"></script>
 
-    <!-- allow other js to access user -->
-    <script>const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";</script>
+    <!-- allow js to access constants from controller -->
+    <script>
+        const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
+        const hexagons_db = {{ hexagons|json_encode|raw }};
+    </script>
+
+
     <div id="map"></div>
+
 
 
 {% endblock %}

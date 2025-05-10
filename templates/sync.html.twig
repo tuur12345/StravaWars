@@ -1,9 +1,8 @@
 <link rel="stylesheet" href="{{ asset('css/sync.css') }}">
 <script src="{{ asset('js/SyncPopUp.js') }}"></script>
-<script src="{{ asset('js/ActivityMapPopUp.js') }}"></script>
+<script src="{{ asset('js/ActivityMap.js') }}"></script>
 <script src="{{ asset('js/HexagonPopUp.js') }}"></script>
 <script src="{{ asset('js/polyline.js') }}"></script>
-<script src="{{ asset('js/RouteHexagons.js') }}"></script>
 
 <script> // inline because it uses twig assets and symfony cant handle it outside
     function changeContent(contentType) {
@@ -65,7 +64,7 @@
                                     <div class="activity">
                                         {% if activity.map.summary_polyline is not empty %}
                                             <h4>Activity Route:</h4>
-                                            <div id="act_map_{{ activity.id }}" class="activities-map" data-polyline="{{ activity.map.summary_polyline }}"></div>
+                                            <div id="act_map_{{ activity.id }}" class="activities-map" data-polyline="{{ activity.map.summary_polyline }}" data-clickable="false"></div>
                                         {% else %}
                                             <p>No map available for this activity.</p>
                                         {% endif %}

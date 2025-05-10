@@ -1,25 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () { // when map div is loaded
-    const map = L.map('map', {
+    const map = createWorldMap();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    addWorldHexagons(map);
+});
+
+function createWorldMap() {
+    return L.map('map', {
         preferCanvas: true
     }).setView([50.875, 4.7], 14); // map centered at leuven, zoomed in
+}
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { // add actual map
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+async function addWorldHexagons(map) {
+    let hexagonLayer = L.layerGroup().addTo(map); // add a hexagonLayer to the map
+    let hexagons = await drawHexagons(hexagonLayer);
+    addClickListenerWorldMap(hexagons);
+}
 
-    let hexLayer = L.layerGroup().addTo(map); // add a hexlayer to the map
-
-    let bounds = L.latLngBounds(
-        L.latLng(50.82, 4.61),    // Southwest
-        L.latLng(50.92, 4.81)   // Northeast
-    );
-
-    map.whenReady(function() { // draw hexagons when map is ready
-        drawHexagons(hexLayer, bounds);
-    });
-
-    //insert_hexagon_into_database(map, hexLayer, bounds) // query to initialise hexagons in database, only used once
-});
+function addClickListenerWorldMap(hexagons) {
+    hexagons.forEach(hex => {
+        hex.polygon.on('click', function () {
+            openHexagonInfo(hex)
+        })
+        addMouseListener(hex);
+    })
+}
 
 // function insert_hexagon_into_database(map, hexLayer, bounds) {
 //     map.whenReady(async function() {
