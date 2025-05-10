@@ -19,10 +19,6 @@
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
 
 
 ### all .iml files because they are managed by intellij
