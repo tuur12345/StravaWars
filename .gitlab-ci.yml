@@ -16,5 +16,5 @@ deploy-job:
                 --exclude=".env/" 
       --exclude="upload/" 
                 --delete 
-                ./ a24sewt303@shell.studev.groept.be:/var/www/html
+                ./ a24sewt303@shell.studev.groept.be:/public/index.php
 
