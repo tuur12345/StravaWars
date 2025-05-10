@@ -21,8 +21,8 @@ use Doctrine\DBAL\Connection;
 class StravaController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153511'; // Replace with your Strava client ID
-    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
+    private $clientId = '154290'; // Replace with your Strava client ID
+    private $clientSecret = '5e927e0e6d2d449168ef7924a7dde989f10814ea'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
