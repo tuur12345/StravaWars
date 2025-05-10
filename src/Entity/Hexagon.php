@@ -9,40 +9,45 @@ use Doctrine\ORM\Mapping as ORM;
 class Hexagon
 {
     #[ORM\Id]
-    #[ORM\Column(type: 'string')]
-    private ?String $latitude = null;
+    #[ORM\Column(length: 255)]
+    private ?string $latitude = null;
 
     #[ORM\Id]
-    #[ORM\Column(type: 'string')]
-    private ?String $longitude = null;
+    #[ORM\Column(length: 255)]
+    private ?string $longitude = null;
 
     #[ORM\Column(length: 7)]
     private ?string $color = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $owner = null;
 
     #[ORM\Column]
     private ?int $level = null;
 
-    public function getLatitude(): ?String
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getLatitude(): ?string
     {
         return $this->latitude;
     }
 
-    public function setLatitude(String $latitude): static
+    public function setLatitude(string $latitude): static
     {
         $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getLongitude(): ?String
+    public function getLongitude(): ?string
     {
         return $this->longitude;
     }
 
-    public function setLongitude(String $longitude): static
+    public function setLongitude(string $longitude): static
     {
         $this->longitude = $longitude;
 
@@ -66,7 +71,7 @@ class Hexagon
         return $this->owner;
     }
 
-    public function setOwner(?string $owner): static
+    public function setOwner(string $owner): static
     {
         $this->owner = $owner;
 
