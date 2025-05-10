@@ -9,7 +9,7 @@ before_script:
 
 deploy-job:
   only:
-    - feature/deployment
+    - master
     - rsync -rv ...your existing rsync command...
     - ssh a24sewt303@shell.studev.groept.be "chmod -R 775 /var/www/html/var"
   script:
