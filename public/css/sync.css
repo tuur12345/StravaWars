@@ -160,9 +160,7 @@ body.no-scroll {
     height: auto;
 }
 .floating-button-coin-2 {
-    position: fixed;
-    bottom: 400px; /* Afstand vanaf de onderkant */
-    right: 350px;  /* Afstand vanaf de rechterkant */
+    position: relative;
     border: none;
     transition: transform 0.2s;
     background: none; /* Geen achtergrondkleur of afbeelding */
