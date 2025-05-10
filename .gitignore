@@ -25,3 +25,12 @@
 ###< symfony/phpunit-bridge ###
 
 
+### all .iml files because they are managed by intellij
+*.iml
+
+### .idea/ folder there are some exceptions tho
+.idea/*
+
+
+
+
