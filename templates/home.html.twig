@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% include('sync.html.twig') %}
+    {% include('coins.html.twig') %}
     <!-- leaflet provides global map and ability to add route and hexagons -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -9,9 +11,11 @@
     <script src="{{ asset('js/RouteHexagons.js') }}"></script>
     <script src="{{ asset('js/DrawHexagon.js') }}"></script>
     <script src="{{ asset('js/ActivityMap.js') }}"></script>
+    <script src="{{ asset('js/stravabucks.js') }}"></script>
+
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 
-    {% include('sync.html.twig') %}
+
 
     <div class="container">
         <h1>All Activities</h1>
