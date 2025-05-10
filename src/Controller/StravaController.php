@@ -15,7 +15,7 @@ class StravaController extends AbstractController
     // create own Strava API application: https://www.strava.com/settings/api
     private $clientId = '154290'; // Replace with your Strava client ID
     private $clientSecret = '5e927e0e6d2d449168ef7924a7dde989f10814ea'; // Replace with your Strava client secret
-    private $redirectUri = 'https://a24sewt303.studev.groept.be/strava/callback'; // redirect URL, dont change
+    private $redirectUri = 'https://a24sewt303.studev.groept.be/public/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
     public function connect_strava(): Response { // start screen with button to connect to strava
