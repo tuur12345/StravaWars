@@ -183,3 +183,123 @@
     margin-bottom: 10px;
     font-weight: bold;
 }
+#purchaseConfirmOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#purchaseConfirmPopup {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    overflow: hidden;
+}
+
+.purchase-popup-header {
+    background-color: #f0cdbb;
+    padding: 15px;
+    position: relative;
+    text-align: center;
+}
+
+.purchase-popup-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.purchase-popup-content {
+    padding: 20px;
+}
+
+.item-preview {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.item-preview img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.quantity-selector {
+    margin-bottom: 20px;
+}
+
+.quantity-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-controls button {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    background-color: #f0cdbb;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantity-controls input {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.total-cost {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-buttons button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.cancel-button {
+    background-color: #f2f2f2;
+    color: #333;
+    margin-right: 10px;
+}
+
+.confirm-button {
+    background-color: #f85000;
+    color: white;
+    margin-left: 10px;
+}
+
+.cancel-button:hover {
+    background-color: #e0e0e0;
+}
+
+.confirm-button:hover {
+    background-color: #ff6a1f;
+}

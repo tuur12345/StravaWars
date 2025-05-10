@@ -1,10 +1,16 @@
+{# shop.html.twig - Complete file with purchase confirmation popup #}
+<script src="{{ asset('js/stravabucks.js') }}"></script>
+
+{# Include CSS for coins display and shop #}
 <link rel="stylesheet" href="{{ asset('css/coins.css') }}">
 
+{# Floating coin button #}
 <button class="floating-button-coin" onclick="CoinPopup();">
     <img src="{{ asset('images/coins.png') }}" alt="coins button">
     <div class="circle-container single-digit">{{ stravabucks }}</div>
 </button>
 
+{# Shop overlay #}
 <div id="coinsoverlay">
     <div class="shop-window" id="coinspopup">
         <div class="shop-menu">
@@ -14,29 +20,7 @@
             <button class="close-button" onclick="CoinclosePopup()">&times;</button>
         </div>
 
-        <div class="shop-content" id="shopContent">
-            <div class="hexagon-container">
-                <img src="{{ asset('images/trap.png') }}" alt="Trap">
-                <div class="price" onclick="toggleActive(this)" data-item="trap" data-price="15">
-                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                    <span>15</span>
-                </div>
-            </div>
-            <div class="hexagon-container">
-                <img src="{{ asset('images/fake.png') }}" alt="Fake Hexagon">
-                <div class="price" onclick="toggleActive(this)" data-item="fake" data-price="15">
-                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                    <span>15</span>
-                </div>
-            </div>
-            <div class="hexagon-container">
-                <img src="{{ asset('images/poison.png') }}" alt="Poison">
-                <div class="price" onclick="toggleActive(this)" data-item="poison" data-price="15">
-                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                    <span>15</span>
-                </div>
-            </div>
-        </div>
+        <div class="shop-content" id="shopContent"></div>  {# Dynamically populated #}
 
         <div class="buy-coins-section" id="buyCoinsSection" style="display: none;">
             <script async src="https://js.stripe.com/v3/buy-button.js"></script>
@@ -58,7 +42,52 @@
     </div>
 </div>
 
+
+{# Purchase confirmation popup #}
+<div id="purchaseConfirmOverlay" style="display: none;">
+    <div id="purchaseConfirmPopup">
+        <div class="purchase-popup-header">
+            <h3>Bevestig Aankoop</h3>
+            <button class="close-button" onclick="closePurchasePopup()">&times;</button>
+        </div>
+        <div class="purchase-popup-content">
+            <div class="item-preview">
+                <img id="previewItemImage" src="" alt="Item Preview">
+                <h4 id="previewItemName"></h4>
+            </div>
+            <div class="quantity-selector">
+                <p>Selecteer aantal:</p>
+                <div class="quantity-controls">
+                    <button onclick="decreaseQuantity()">-</button>
+                    <input type="number" id="itemQuantity" value="1" min="1" max="10">
+                    <button onclick="increaseQuantity()">+</button>
+                </div>
+            </div>
+            <div class="total-cost">
+                <p>Totale kosten: <span id="totalCost">15</span>
+                    <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon" style="width: 20px; height: auto; vertical-align: middle;">
+                </p>
+            </div>
+            <div class="action-buttons">
+                <button class="cancel-button" onclick="closePurchasePopup()">Annuleren</button>
+                <button class="confirm-button" onclick="confirmPurchase()">Kopen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{# JavaScript for shop functionality #}
 <script>
+    // Global variables to store selected item details
+    let selectedItem = {
+        name: '',
+        price: 0,
+        imageUrl: '',
+        element: null
+    };
+
+    // Menu tab functionality
     const menu = document.querySelector('.shop-menu');
     const menuButtons = menu.querySelectorAll('.menu-button');
     const shopContent = document.getElementById('shopContent');
@@ -72,6 +101,7 @@
         </div>
     `;
 
+    // Tab switching logic
     menuButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Remove 'active' class from all buttons
@@ -90,27 +120,34 @@
                 buyCoinsSection.style.display = 'none';
                 shopContent.innerHTML = `
                     <div class="hexagon-container">
-                        <img src="{{ asset('images/trap.png') }}" alt="Hexagon 1">
-                        <div class="price" onclick="toggleActive(this)">
+                        <img src="{{ asset('images/trap.png') }}" alt="Trap">
+                        <div class="price"  data-item="trap" data-price="15">
                             <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                             <span>15</span>
                         </div>
                     </div>
                     <div class="hexagon-container">
-                        <img src="{{ asset('images/fake.png') }}" alt="Hexagon 2">
-                        <div class="price" onclick="toggleActive(this)">
+                        <img src="{{ asset('images/fake.png') }}" alt="Fake Hexagon">
+                        <div class="price" data-item="fake" data-price="15">
                             <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                             <span>15</span>
                         </div>
                     </div>
                     <div class="hexagon-container">
-                        <img src="{{ asset('images/poison.png') }}" alt="Hexagon 3">
-                        <div class="price" onclick="toggleActive(this)">
+                        <img src="{{ asset('images/poison.png') }}" alt="Poison">
+                        <div class="price"  data-item="poison" data-price="15">
                             <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                             <span>15</span>
                         </div>
                     </div>
                 `;
+
+                // Re-attach event listeners to the newly created price elements
+                document.querySelectorAll('.price').forEach(priceElement => {
+                    priceElement.addEventListener('click', function() {
+                        toggleActive(this);
+                    });
+                });
             } else if (tab === 'inventory') {
                 shopContent.style.display = 'block';
                 buyCoinsSection.style.display = 'none';
@@ -122,6 +159,7 @@
         });
     });
 
+    // Coin shop popup functions
     const coinoverlay = document.getElementById('coinsoverlay');
     const coinpopup = document.getElementById('coinspopup');
 
@@ -141,6 +179,70 @@
         document.getElementById('coinspopup').style.display = 'none';
     }
 
+    // Purchase confirmation popup functions
+    function openPurchasePopup(element) {
+        // Store the clicked element
+        selectedItem.element = element;
+
+        // Get item details
+        const itemContainer = element.closest('.hexagon-container');
+        selectedItem.name = itemContainer.querySelector('img').alt;
+        selectedItem.price = parseInt(element.querySelector('span').textContent);
+        selectedItem.imageUrl = itemContainer.querySelector('img').src;
+
+        // Update the popup with item details
+        document.getElementById('previewItemName').textContent = selectedItem.name;
+        document.getElementById('previewItemImage').src = selectedItem.imageUrl;
+
+        // Reset quantity to 1
+        document.getElementById('itemQuantity').value = 1;
+        updateTotalCost();
+
+        // Show the popup
+        document.getElementById('purchaseConfirmOverlay').style.display = 'flex';
+    }
+
+    function closePurchasePopup() {
+        document.getElementById('purchaseConfirmOverlay').style.display = 'none';
+    }
+
+    function increaseQuantity() {
+        const quantityInput = document.getElementById('itemQuantity');
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue < 10) { // Set a reasonable maximum
+            quantityInput.value = currentValue + 1;
+            updateTotalCost();
+        }
+    }
+
+    function decreaseQuantity() {
+        const quantityInput = document.getElementById('itemQuantity');
+        const currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) {
+            quantityInput.value = currentValue - 1;
+            updateTotalCost();
+        }
+    }
+
+    function updateTotalCost() {
+        const quantity = parseInt(document.getElementById('itemQuantity').value);
+        const totalCost = selectedItem.price * quantity;
+        document.getElementById('totalCost').textContent = totalCost;
+    }
+
+    function confirmPurchase() {
+        const quantity = parseInt(document.getElementById('itemQuantity').value);
+        const totalCost = selectedItem.price * quantity;
+
+        // Use the stravabucks system to make the purchase
+        useStravabucks(totalCost, `${quantity}x ${selectedItem.name}`);
+
+        // Close the popup
+        closePurchasePopup();
+
+
+    }
+
     function toggleActive(element) {
         // Remove active class from all price elements
         document.querySelectorAll('.price').forEach(item => {
@@ -150,11 +252,66 @@
         // Add active class to clicked element
         element.classList.add('active');
 
-        // Get item details
-        const itemName = element.dataset.item;
-        const price = parseInt(element.dataset.price);
-
-        // Purchase the item
-        useStravabucks(price, itemName);
+        // Open the purchase confirmation popup
+        openPurchasePopup(element);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const buyCoinsButton = document.querySelector('.menu-button[data-tab="buycoins"]');
+        buyCoinsButton.classList.add('active');  // Maak de "Buy Coins" knop actief
+
+        // Zorg ervoor dat de "Shop" knop niet actief is bij het openen van de pagina
+        const shopButton = document.querySelector('.menu-button[data-tab="shop"]');
+        shopButton.classList.remove('active');  // Verwijder de "active" class van de shop knop
+
+        // Fetch initial balance
+        fetchStravabucks();
+
+        // Handle shop price clicks
+        document.querySelectorAll('.price').forEach(priceElement => {
+            priceElement.addEventListener('click', function() {
+                const itemContainer = this.closest('.hexagon-container');
+                const itemName = itemContainer.querySelector('img').alt;
+                const cost = parseInt(this.querySelector('span').textContent);
+
+                // Attempt to purchase the item
+                useStravabucks(cost, itemName);
+            });
+        });
+
+        // If there's a button to collect coins from kudos
+        const collectKudosBtn = document.getElementById('collect-kudos-btn');
+        if (collectKudosBtn) {
+            collectKudosBtn.addEventListener('click', function() {
+                const kudosToCoins = parseInt(this.dataset.amount || 0);
+                if (kudosToCoins > 0) {
+                    addStravabucks(kudosToCoins);
+                    this.disabled = true;
+                    this.textContent = 'Collected!';
+                }
+            });
+        }
+
+        // Zorg ervoor dat de "Buy Coins" sectie zichtbaar is en de "Shop" sectie niet
+        const shopContent = document.getElementById('shopContent');
+        const buyCoinsSection = document.getElementById('buyCoinsSection');
+        shopContent.style.display = 'none';  // Verberg de shop bij het openen
+        buyCoinsSection.style.display = 'block';  // Toon de Buy Coins sectie
+
+        // Fetch initial balance
+        fetchStravabucks();
+
+        // Handle shop price clicks
+        document.querySelectorAll('.price').forEach(priceElement => {
+            priceElement.addEventListener('click', function() {
+                const itemContainer = this.closest('.hexagon-container');
+                const itemName = itemContainer.querySelector('img').alt;
+                const cost = parseInt(this.querySelector('span').textContent);
+
+                // Attempt to purchase the item
+                useStravabucks(cost, itemName);
+            });
+        });
+
+    });
 </script>
