@@ -8,7 +8,7 @@
     <script src="{{ asset('js/Hexagon.js') }}"></script>
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 
-    <!-- allow js to access constants from controller -->
+    <!-- allow js to access constants from controller. -->
     <script>
         const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
         const hexagons_db = {{ hexagons|json_encode|raw }};
