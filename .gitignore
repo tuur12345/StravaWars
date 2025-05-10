@@ -31,6 +31,8 @@
 ### .idea/ folder there are some exceptions tho
 .idea/*
 
+### all ~ files will ignored. These are backup files
+*~
 
 
 
