@@ -88,7 +88,7 @@
                             <img src="{{ asset('images/coins.png') }}" alt="coins button">
                             <div class="circle-container ">{{ Kudostocoins }}</div>                        </div>
                         </div>
-                    <button class="convert-button" onclick="convert()"><img src="{{ asset('images/convertbutton.png') }}"></button>
+                    <button id="collect-kudos-btn" class="convert-button" data-amount="{{ Kudostocoins }}"><img src="{{ asset('images/convertbutton.png') }}"></button>
                 </div>
                 <div id="activity-details" style="display: none;">
                     <h1 id="details-activity-name"></h1>

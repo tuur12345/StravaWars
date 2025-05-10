@@ -2,7 +2,7 @@
 
 <button class="floating-button-coin" onclick="CoinPopup();">
     <img src="{{ asset('images/coins.png') }}" alt="coins button">
-    <div class="circle-container single-digit">81</div>
+    <div class="circle-container single-digit">{{ stravabucks }}</div>
 </button>
 
 <div id="coinsoverlay">
@@ -16,22 +16,22 @@
 
         <div class="shop-content" id="shopContent">
             <div class="hexagon-container">
-                <img src="{{ asset('images/trap.png') }}" alt="Hexagon 1">
-                <div class="price" onclick="toggleActive(this)">
+                <img src="{{ asset('images/trap.png') }}" alt="Trap">
+                <div class="price" onclick="toggleActive(this)" data-item="trap" data-price="15">
                     <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                     <span>15</span>
                 </div>
             </div>
             <div class="hexagon-container">
-                <img src="{{ asset('images/fake.png') }}" alt="Hexagon 2">
-                <div class="price" onclick="toggleActive(this)">
+                <img src="{{ asset('images/fake.png') }}" alt="Fake Hexagon">
+                <div class="price" onclick="toggleActive(this)" data-item="fake" data-price="15">
                     <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                     <span>15</span>
                 </div>
             </div>
             <div class="hexagon-container">
-                <img src="{{ asset('images/poison.png') }}" alt="Hexagon 3">
-                <div class="price" onclick="toggleActive(this)">
+                <img src="{{ asset('images/poison.png') }}" alt="Poison">
+                <div class="price" onclick="toggleActive(this)" data-item="poison" data-price="15">
                     <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
                     <span>15</span>
                 </div>
@@ -150,7 +150,11 @@
         // Add active class to clicked element
         element.classList.add('active');
 
-        // You can add more functionality here, like storing the selected item
-        console.log('Selected item:', element.parentNode.querySelector('img').alt);
+        // Get item details
+        const itemName = element.dataset.item;
+        const price = parseInt(element.dataset.price);
+
+        // Purchase the item
+        useStravabucks(price, itemName);
     }
 </script>

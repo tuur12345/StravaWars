@@ -2,12 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Hexagon;
+use App\Entity\User;
+use App\Repository\HexagonRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Doctrine\DBAL\Connection;
 
 class StravaController extends AbstractController
 {
@@ -35,7 +42,7 @@ class StravaController extends AbstractController
     }
 
     #[Route('/strava/callback', name:'strava_callback')]
-    public function callback(Request $request, HttpClientInterface $httpClient): Response { // after login strava return to this
+    public function callback(Request $request, HttpClientInterface $httpClient, EntityManagerInterface $entityManager, UserRepository $userRepository): Response { // after login strava return to this
         if ($request->query->get('error') === 'access_denied') { // if users doesnt allow permission this should return them
             return $this->redirectToRoute('connect_to_strava');
         }
@@ -72,11 +79,27 @@ class StravaController extends AbstractController
         $userData = $userDataResponse->toArray();
         $request->getSession()->set('userData', $userData); // store user data in session for other pages
 
+        // Check if user exists in database, if not create a new user
+        $stravaUsername = $userData['username'] ?? $userData['firstname'] . '_' . $userData['id'];
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+
+        if (!$user) {
+            // Create new user
+            $user = new User();
+            $user->setUsername($stravaUsername);
+            $user->setStravabucks(0); // Initialize coins to zero
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+
+        // Store username in session for easy access
+        $request->getSession()->set('strava_username', $stravaUsername);
+
         return $this->redirectToRoute('home'); // go to the home screen
     }
 
     #[Route('/', name:'home')]
-    public function home(Request $request, HttpClientInterface $httpClient): Response {
+    public function home(Request $request, HttpClientInterface $httpClient, UserRepository $userRepository): Response {
         $accessToken = $request->getSession()->get('access_token'); // retrieve accesstoken from session
         if (!$accessToken) {
             return $this->redirectToRoute('connect_to_strava'); // send back if no accesstoken
@@ -126,16 +149,22 @@ class StravaController extends AbstractController
         $request->getSession()->set('weekActivities', $weekActivities); // save activities of this week
         $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek); // save kudos
 
+        // Get user from database to display current stravabucks
+        $stravaUsername = $request->getSession()->get('strava_username');
+        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
+
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
             'user' => $user,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
-            'Kudostocoins'=> round($totalKudosThisWeek/2)
+            'Kudostocoins'=> round($totalKudosThisWeek/2),
+            'stravabucks' => $stravabucks
         ]);
     }
 
     #[Route('/maps', name:'maps')]
-    public function maps(Request $request): Response {
+    public function maps(Request $request, UserRepository $userRepository): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
@@ -143,17 +172,23 @@ class StravaController extends AbstractController
 
         $weekActivities = $request->getSession()->get('weekActivities', []);
         $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
+
+        // Get user's stravabucks
+        $stravaUsername = $request->getSession()->get('strava_username');
+        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
 
         return $this->render('maps.html.twig', [
             'user' => $user,
             'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
-            'Kudostocoins'=> round($totalKudosThisWeek/2)
+            'Kudostocoins'=> round($totalKudosThisWeek),
+            'stravabucks' => $stravabucks
         ]);
     }
 
     #[Route('/profile', name:'profile')]
-    public function profile(Request $request): Response {
+    public function profile(Request $request, UserRepository $userRepository): Response {
         $user = $request->getSession()->get('userData'); // get user data from session
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
@@ -161,16 +196,109 @@ class StravaController extends AbstractController
 
         $weekActivities = $request->getSession()->get('weekActivities', []);
         $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
+
+        // Get user's stravabucks
+        $stravaUsername = $request->getSession()->get('strava_username');
+        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
 
         return $this->render('profile.html.twig',
             [
                 'user' => $user,
                 'activities' => $weekActivities,
                 'totalKudosThisWeek'=> $totalKudosThisWeek,
-
+                'stravabucks' => $stravabucks
             ]
         );
     }
+
+    #[Route('/add-stravabucks', name:'add_stravabucks', methods: ['POST'])]
+    public function addStravabucks(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $amount = $data['amount'] ?? 0;
+        $stravaUsername = $request->getSession()->get('strava_username');
+
+        if (!$stravaUsername) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not logged in'], 401);
+        }
+
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not found'], 404);
+        }
+
+        // Add amount to current stravabucks
+        $currentAmount = $user->getStravabucks();
+        $user->setStravabucks($currentAmount + $amount);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Stravabucks added successfully',
+            'current_balance' => $user->getStravabucks()
+        ]);
+    }
+
+    #[Route('/use-stravabucks', name:'use_stravabucks', methods: ['POST'])]
+    public function useStravabucks(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $amount = $data['amount'] ?? 0;
+        $stravaUsername = $request->getSession()->get('strava_username');
+
+        if (!$stravaUsername) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not logged in'], 401);
+        }
+
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not found'], 404);
+        }
+
+        $currentAmount = $user->getStravabucks();
+
+        // Check if user has enough stravabucks
+        if ($currentAmount < $amount) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Not enough stravabucks',
+                'current_balance' => $currentAmount
+            ], 400);
+        }
+
+        // Deduct amount from current stravabucks
+        $user->setStravabucks($currentAmount - $amount);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'Purchase successful',
+            'current_balance' => $user->getStravabucks()
+        ]);
+    }
+
+    #[Route('/get-stravabucks', name:'get_stravabucks')]
+    public function getStravabucks(Request $request, UserRepository $userRepository): JsonResponse
+    {
+        $stravaUsername = $request->getSession()->get('strava_username');
+
+        if (!$stravaUsername) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not logged in'], 401);
+        }
+
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return new JsonResponse(['status' => 'error', 'message' => 'User not found'], 404);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'stravabucks' => $user->getStravabucks()
+        ]);
+    }
 }
-
-
