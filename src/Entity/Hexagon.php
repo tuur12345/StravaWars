@@ -25,11 +25,6 @@ class Hexagon
     #[ORM\Column]
     private ?int $level = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
     public function getLatitude(): ?string
     {
         return $this->latitude;
