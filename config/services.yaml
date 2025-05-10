@@ -23,7 +23,7 @@ services:
 
     # Force Symfony to use CurlHttpClient instead of NativeHttpClient
     Symfony\Contracts\HttpClient\HttpClientInterface:
-        class: Symfony\Component\HttpClient\CurlHttpClient
+        factory: ['App\Factory\AmpHttpClientFactory', 'create']
 
 
     # add more service definitions when explicit configuration is needed
