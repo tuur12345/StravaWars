@@ -11,8 +11,15 @@ const hexRadiusLng = hexRadiusMeters * metersToLng;
 //     west: 2,
 //     east: 6
 // };
+//
+// const bounds = L.latLngBounds(
+//     L.latLng(50.82, 4.61),    // Southwest
+//     L.latLng(50.92, 4.81)   // Northeast
+// );
+
 
 async function drawHexagons(hexagonLayer) {
+    //let hexagons_db = generateHexagonGrid(bounds);
     let hexagons = [];
     for (let hex of hexagons_db) {
         let points = generateHexagon(hex.latitude, hex.longitude); // generate 6 point based on center coordinates stored in database
@@ -76,30 +83,22 @@ function addMouseListener(hex) {
     });
 }
 
-// function findHexagonFromDb(hex, hexagons_from_db) {
-//     const center = findCenter(hex);
-//     return hexagons_from_db.find(hexagon =>
-//         hexagon.latitude === center.lat.toFixed(4) &&
-//         hexagon.longitude === center.lng.toFixed(4)
-//     );
-// }
+function generateHexagonGrid(bounds) {
+    let hexagons = [];
+    let row = 0;
+    // calculate relative position of hexagons
+    for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3) / 2, row++) {
+        // shift every other row
+        let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;
 
-// function generateHexagonGrid(bounds) {
-//     let hexagons = [];
-//     let row = 0;
-//     // calculate relative position of hexagons
-//     for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3) / 2, row++) {
-//         // shift every other row
-//         let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;
-//
-//         for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
-//             if (bounds.contains([lat, lng])) {
-//                 hexagons.push(generateHexagon(lat, lng));
-//             }
-//         }
-//     }
-//     return hexagons;
-// }
+        for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
+            if (bounds.contains([lat, lng])) {
+                hexagons.push(generateHexagon(lat, lng));
+            }
+        }
+    }
+    return hexagons;
+}
 
 
 

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () { // when map div is l
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     addWorldHexagons(map);
+    //insert_hexagon_into_database(map, bounds);
 });
 
 function createWorldMap() {
@@ -26,9 +27,10 @@ function addClickListenerWorldMap(hexagons) {
     })
 }
 
-// function insert_hexagon_into_database(map, hexLayer, bounds) {
+// function insert_hexagon_into_database(map, bounds) {
+//     let hexagonLayer = L.layerGroup().addTo(map); // add a hexagonLayer to the map
 //     map.whenReady(async function() {
-//         let polygons = await drawHexagons(hexLayer, bounds);
+//         let polygons = await drawHexagons(hexagonLayer);
 //
 //         let hexagons = polygons.map(poly => {
 //             let center = findCenter(poly.coords);
@@ -50,4 +52,4 @@ function addClickListenerWorldMap(hexagons) {
 //             .then(data => console.log('Success:', data))
 //             .catch(error => console.error('Error:', error));
 //     });
-//}
+// }
