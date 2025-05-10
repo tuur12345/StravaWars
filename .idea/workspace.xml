@@ -4,18 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="tuur deleted the database so this happened and deleted .gitignore">
+    <list default="true" id="2d6e2296-65cc-44f5-9d83-7b86ec82c2e6" name="Changes" comment="fixed currency logic to version2">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/50bbc71b-b281-40e2-9ef6-fd2044fcd188.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/50bbc71b-b281-40e2-9ef6-fd2044fcd188.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/50bbc71b-b281-40e2-9ef6-fd2044fcd188/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/50bbc71b-b281-40e2-9ef6-fd2044fcd188/storage_v2/_src_/schema/performance_schema.kIw0nw.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_24_04_2025_13_32__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/StravaWars.iml" beforeDir="false" afterPath="$PROJECT_DIR$/StravaWars.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/coins.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/coins.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/coins.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/coins.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/sync.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/sync.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/home.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/sync.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sync.html.twig" afterDir="false" />
     </list>
@@ -43,6 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
+        <entry key="$PROJECT_DIR$" value="master" />
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
@@ -527,7 +521,8 @@
       <workItem from="1746894561132" duration="58000" />
       <workItem from="1746894625592" duration="2600000" />
       <workItem from="1746897925514" duration="2296000" />
-      <workItem from="1746902078168" duration="5570000" />
+      <workItem from="1746902078168" duration="5818000" />
+      <workItem from="1746907975343" duration="3568000" />
     </task>
     <task id="LOCAL-00001" summary="login with strava">
       <option name="closed" value="true" />
@@ -609,7 +604,15 @@
       <option name="project" value="LOCAL" />
       <updated>1746898169828</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="fixed currency logic to version2">
+      <option name="closed" value="true" />
+      <created>1746907744623</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1746907744623</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -677,7 +680,8 @@
     <MESSAGE value="Added currency logic version 1" />
     <MESSAGE value="added User table" />
     <MESSAGE value="tuur deleted the database so this happened and deleted .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="tuur deleted the database so this happened and deleted .gitignore" />
+    <MESSAGE value="fixed currency logic to version2" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed currency logic to version2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
