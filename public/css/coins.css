@@ -303,3 +303,63 @@
 .confirm-button:hover {
     background-color: #ff6a1f;
 }
+/* Voeg dit toe aan je coins.css bestand */
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Responsive kolommen */
+    gap: 20px; /* Ruimte tussen items */
+    padding: 20px;
+    max-height: calc(80vh - 120px); /* Maximale hoogte, aanpassen aan popup hoogte minus menu/padding */
+    overflow-y: auto; /* Scrollen als er veel items zijn */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inventory-item {
+    background-color: #ffffff; /* Witte achtergrond voor elk item */
+    border-radius: 10px; /* Afgeronde hoeken zoals de shop items */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtiele schaduw */
+    padding: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Zorgt dat content mooi verdeeld wordt */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.inventory-item:hover {
+    transform: translateY(-3px); /* Klein lift effect on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.inventory-item img {
+    width: 80px; /* Grootte van de afbeelding */
+    height: 80px; /* Zorg voor consistente afbeeldingsgrootte */
+    object-fit: contain; /* Zorgt dat afbeelding past zonder vervorming */
+    margin-bottom: 10px;
+}
+
+.inventory-item p {
+    margin: 0;
+    font-size: 14px; /* Tekstgrootte voor item naam en aantal */
+    color: #333333; /* Donkergrijze tekst */
+    font-weight: bold;
+}
+
+/* Stijl voor als de inventaris leeg is (binnen .shop-content) */
+/* De .empty-inventory class had je al, hier een kleine verfijning als het in .shop-content staat */
+.shop-content > .empty-inventory {
+    width: 100%; /* Zorg dat het de volle breedte neemt in de flex container */
+    text-align: center;
+    padding: 40px 20px;
+    color: #777;
+}
+.shop-content > .empty-inventory h2 { /* Als je de h2 terug wilt */
+    color: #555;
+    margin-bottom: 15px;
+}
+.shop-content > .empty-inventory p {
+    font-size: 16px;
+}

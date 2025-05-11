@@ -84,8 +84,10 @@
         name: '',
         price: 0,
         imageUrl: '',
-        element: null
+        element: null, // Dit is het .price element
+        itemIdentifier: '' // bv. 'trap', 'fake', 'poison' - BELANGRIJK!
     };
+    let currentInventory = { trap: 0, fake: 0, poison: 0 };
 
     // Menu tab functionality
     const menu = document.querySelector('.shop-menu');
@@ -93,65 +95,189 @@
     const shopContent = document.getElementById('shopContent');
     const buyCoinsSection = document.getElementById('buyCoinsSection');
 
-    // Empty inventory content
-    const inventoryContent = `
-        <div class="empty-inventory">
-            <h2>Inventaris</h2>
-            <p>Je hebt nog geen items in je inventaris.</p>
-        </div>
-    `;
+    // (De statische 'inventoryContent' variabele is niet meer nodig als we renderInventory gebruiken)
 
-    // Tab switching logic
+    function confirmPurchase() {
+        const quantity = parseInt(document.getElementById('itemQuantity').value);
+        const totalCost = selectedItem.price * quantity;
+        const itemNameForDisplay = selectedItem.name;
+        const itemIdentifierForDB = selectedItem.itemIdentifier;
+
+        if (!itemIdentifierForDB) {
+            showNotification('Fout', 'Item identifier niet gevonden. Kan aankoop niet voltooien.', 'error');
+            console.error("itemIdentifier is leeg in confirmPurchase. selectedItem:", selectedItem);
+            return;
+        }
+
+        // STAP 1: Probeer Stravabucks af te schrijven (server-side)
+        fetch('/use-stravabucks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({ amount: totalCost, itemName: `${quantity}x ${itemNameForDisplay}` })
+        })
+            .then(response => response.json())
+            .then(stravabucksData => {
+                if (stravabucksData.status === 'success') {
+                    // Stravabucks succesvol afgeschreven. Het nieuwe saldo is stravabucksData.current_balance
+                    // STAP 2: Probeer item aan inventaris toe te voegen (server-side)
+                    fetch('/add-to-inventory', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ itemName: itemIdentifierForDB, quantity: quantity })
+                    })
+                        .then(response => response.json())
+                        .then(inventoryData => {
+                            if (inventoryData.status === 'success') {
+                                // Zowel Stravabucks afschrijven als item toevoegen aan inventaris is gelukt.
+                                // Sla notificatie op voor weergave NA het herladen.
+                                localStorage.setItem('stravabucks_notification', JSON.stringify({
+                                    title: 'Aankoop Succesvol!',
+                                    message: `${quantity}x ${itemNameForDisplay} gekocht voor ${totalCost} Stravabucks en toegevoegd aan je inventaris.`,
+                                    type: 'success'
+                                }));
+                                // Herlaad de pagina
+                                location.reload();
+                            } else {
+                                // Stravabucks zijn afgeschreven, maar item kon niet aan inventaris worden toegevoegd.
+                                // Dit is een lastige situatie. Idealiter zou er een "rollback" moeten zijn
+                                // van de Stravabucks-transactie, maar dat is complexer.
+                                // Voor nu: toon een duidelijke foutmelding, sla notificatie op en herlaad
+                                // zodat de gebruiker in ieder geval het correcte (lagere) Stravabucks-saldo ziet.
+                                localStorage.setItem('stravabucks_notification', JSON.stringify({
+                                    title: 'Deels Mislukte Aankoop',
+                                    message: `Je Stravabucks zijn afgeschreven, maar ${itemNameForDisplay} kon niet aan de inventaris worden toegevoegd: ${inventoryData.message}. Nieuw saldo: ${stravabucksData.current_balance}.`,
+                                    type: 'error'
+                                }));
+                                location.reload(); // Herlaad om het nieuwe saldo te tonen, zelfs bij deze fout
+                            }
+                        })
+                        .catch(error => {
+                            // Ernstige fout bij het toevoegen aan de inventaris.
+                            // Stravabucks zijn mogelijk wel afgeschreven.
+                            console.error('Error adding to inventory:', error);
+                            localStorage.setItem('stravabucks_notification', JSON.stringify({
+                                title: 'Fout bij Inventaris',
+                                message: `Er ging iets mis bij het toevoegen aan de inventaris na je aankoop. Controleer je saldo en inventaris. Saldo zou nu ${stravabucksData.current_balance} moeten zijn.`,
+                                type: 'error'
+                            }));
+                            location.reload(); // Herlaad om het nieuwe saldo te tonen
+                        });
+                } else {
+                    // Fout bij het afschrijven van Stravabucks (bv. niet genoeg saldo)
+                    showNotification('Aankoop Mislukt', stravabucksData.message, 'error');
+                    // De popup blijft open zodat de gebruiker het kan proberen op te lossen.
+                    // De pagina wordt hier NIET herladen.
+                }
+            })
+            .catch(error => {
+                console.error('Error using stravabucks:', error);
+                showNotification('Fout', 'Kon aankoop niet voltooien. Controleer je verbinding.', 'error');
+                // De pagina wordt hier NIET herladen.
+            });
+    }
+
+    function fetchInventory() {
+        fetch('/get-inventory')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.inventory) {
+                    currentInventory = data.inventory;
+                } else {
+                    console.warn('Failed to fetch inventory or inventory empty:', data.message);
+                    currentInventory = { trap: 0, fake: 0, poison: 0 };
+                }
+                if (document.querySelector('.menu-button[data-tab="inventory"].active')) {
+                    renderInventory();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching inventory:', error);
+                currentInventory = { trap: 0, fake: 0, poison: 0 };
+                if (document.querySelector('.menu-button[data-tab="inventory"].active')) {
+                    renderInventory();
+                }
+            });
+    }
+
+    function renderInventory() {
+        const inventoryTabActive = document.querySelector('.menu-button[data-tab="inventory"].active');
+        if (!inventoryTabActive) return;
+
+        let inventoryHTML = '<h2>Inventaris</h2>';
+        const hasItems = Object.values(currentInventory).some(count => count > 0);
+
+        if (!hasItems) {
+            inventoryHTML += '<div class="empty-inventory"><p>Je hebt nog geen items in je inventaris.</p></div>';
+        } else {
+            inventoryHTML += '<div class="inventory-grid">';
+            const itemImagePaths = {
+                trap: "{{ asset('images/trap.png') }}",
+                fake: "{{ asset('images/fake.png') }}",
+                poison: "{{ asset('images/poison.png') }}"
+            };
+            const itemDisplayNames = { trap: "Vallen", fake: "Fake Hexagons", poison: "Gif" };
+
+            for (const itemType in currentInventory) {
+                if (currentInventory[itemType] > 0) {
+                    const imagePath = itemImagePaths[itemType] || "{{ asset('images/default_item.png') }}";
+                    const displayName = itemDisplayNames[itemType] || itemType.charAt(0).toUpperCase() + itemType.slice(1);
+                    inventoryHTML += `
+                    <div class="inventory-item">
+                        <img src="${imagePath}" alt="${displayName}">
+                        <p>${displayName}: ${currentInventory[itemType]}</p>
+                    </div>`;
+                }
+            }
+            inventoryHTML += '</div>';
+        }
+        shopContent.innerHTML = inventoryHTML;
+        shopContent.style.display = 'block'; // Zorg dat de content zichtbaar is
+        buyCoinsSection.style.display = 'none';
+    }
+
     menuButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Remove 'active' class from all buttons
-            menuButtons.forEach(btn => {
-                btn.classList.remove('active');
-            });
-            // Add 'active' class to clicked button
+            menuButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-
-            // Get data-tab attribute to determine which content to show
             const tab = this.dataset.tab;
 
-            // Update content based on selected tab
+            shopContent.innerHTML = ''; // Leegmaken voor nieuwe content
+
             if (tab === 'shop') {
-                shopContent.style.display = 'flex';
                 buyCoinsSection.style.display = 'none';
+                shopContent.style.display = 'flex';
                 shopContent.innerHTML = `
                     <div class="hexagon-container">
                         <img src="{{ asset('images/trap.png') }}" alt="Trap">
-                        <div class="price"  data-item="trap" data-price="15">
-                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                            <span>15</span>
+                        <div class="price" data-item="trap" data-price="15">
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
                         </div>
                     </div>
                     <div class="hexagon-container">
                         <img src="{{ asset('images/fake.png') }}" alt="Fake Hexagon">
                         <div class="price" data-item="fake" data-price="15">
-                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                            <span>15</span>
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
                         </div>
                     </div>
                     <div class="hexagon-container">
                         <img src="{{ asset('images/poison.png') }}" alt="Poison">
-                        <div class="price"  data-item="poison" data-price="15">
-                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon">
-                            <span>15</span>
+                        <div class="price" data-item="poison" data-price="15">
+                            <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
                         </div>
-                    </div>
-                `;
-
-                // Re-attach event listeners to the newly created price elements
+                    </div>`;
                 document.querySelectorAll('.price').forEach(priceElement => {
-                    priceElement.addEventListener('click', function() {
-                        toggleActive(this);
-                    });
+                    priceElement.addEventListener('click', function() { toggleActive(this); });
                 });
             } else if (tab === 'inventory') {
-                shopContent.style.display = 'block';
                 buyCoinsSection.style.display = 'none';
-                shopContent.innerHTML = inventoryContent;
+                shopContent.style.display = 'block'; // Wordt 'grid' door .inventory-grid CSS
+                fetchInventory(); // Haalt data op en triggert renderInventory
             } else if (tab === 'buycoins') {
                 shopContent.style.display = 'none';
                 buyCoinsSection.style.display = 'block';
@@ -159,46 +285,46 @@
         });
     });
 
-    // Coin shop popup functions
     const coinoverlay = document.getElementById('coinsoverlay');
     const coinpopup = document.getElementById('coinspopup');
 
     coinoverlay.addEventListener('click', function (e) {
-        if (!coinpopup.contains(e.target)) {
+        if (e.target === coinoverlay) { // Alleen sluiten bij klik op overlay zelf
             CoinclosePopup();
         }
     });
 
     function CoinPopup() {
         document.getElementById('coinsoverlay').style.display = 'block';
-        document.getElementById('coinspopup').style.display = 'block';
+        document.getElementById('coinspopup').style.display = 'block'; // Zorg dat de popup zichtbaar is
+
+        // Stel een default actieve tab in als de popup opent, of refresh de huidige
+        let activeTabButton = document.querySelector('.shop-menu .menu-button.active');
+        if (!activeTabButton) { // Als geen enkele tab actief is, maak shop actief
+            activeTabButton = document.querySelector('.shop-menu .menu-button[data-tab="shop"]');
+        }
+        if (activeTabButton) {
+            // Forceer een 'klik' om de content van de (mogelijk) al actieve tab te herladen/tonen
+            activeTabButton.click();
+        }
     }
 
     function CoinclosePopup() {
         document.getElementById('coinsoverlay').style.display = 'none';
-        document.getElementById('coinspopup').style.display = 'none';
     }
 
-    // Purchase confirmation popup functions
     function openPurchasePopup(element) {
-        // Store the clicked element
         selectedItem.element = element;
-
-        // Get item details
         const itemContainer = element.closest('.hexagon-container');
         selectedItem.name = itemContainer.querySelector('img').alt;
-        selectedItem.price = parseInt(element.querySelector('span').textContent);
+        selectedItem.price = parseInt(element.dataset.price);
         selectedItem.imageUrl = itemContainer.querySelector('img').src;
+        selectedItem.itemIdentifier = element.dataset.item; // Essentieel!
 
-        // Update the popup with item details
         document.getElementById('previewItemName').textContent = selectedItem.name;
         document.getElementById('previewItemImage').src = selectedItem.imageUrl;
-
-        // Reset quantity to 1
         document.getElementById('itemQuantity').value = 1;
         updateTotalCost();
-
-        // Show the popup
         document.getElementById('purchaseConfirmOverlay').style.display = 'flex';
     }
 
@@ -208,78 +334,68 @@
 
     function increaseQuantity() {
         const quantityInput = document.getElementById('itemQuantity');
-        const currentValue = parseInt(quantityInput.value);
-        if (currentValue < 10) { // Set a reasonable maximum
-            quantityInput.value = currentValue + 1;
-            updateTotalCost();
-        }
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue < 10) { quantityInput.value = ++currentValue; updateTotalCost(); }
     }
 
     function decreaseQuantity() {
         const quantityInput = document.getElementById('itemQuantity');
-        const currentValue = parseInt(quantityInput.value);
-        if (currentValue > 1) {
-            quantityInput.value = currentValue - 1;
-            updateTotalCost();
-        }
+        let currentValue = parseInt(quantityInput.value);
+        if (currentValue > 1) { quantityInput.value = --currentValue; updateTotalCost(); }
     }
 
     function updateTotalCost() {
         const quantity = parseInt(document.getElementById('itemQuantity').value);
-        const totalCost = selectedItem.price * quantity;
-        document.getElementById('totalCost').textContent = totalCost;
-    }
-
-    function confirmPurchase() {
-        const quantity = parseInt(document.getElementById('itemQuantity').value);
-        const totalCost = selectedItem.price * quantity;
-
-        // Use the stravabucks system to make the purchase
-        useStravabucks(totalCost, `${quantity}x ${selectedItem.name}`);
-
-        // Close the popup
-        closePurchasePopup();
-
-
+        document.getElementById('totalCost').textContent = selectedItem.price * quantity;
     }
 
     function toggleActive(element) {
-        // Remove active class from all price elements
-        document.querySelectorAll('.price').forEach(item => {
-            item.classList.remove('active');
-        });
-
-        // Add active class to clicked element
+        document.querySelectorAll('.price').forEach(item => item.classList.remove('active'));
         element.classList.add('active');
-
-        // Open the purchase confirmation popup
         openPurchasePopup(element);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const buyCoinsButton = document.querySelector('.menu-button[data-tab="buycoins"]');
-        buyCoinsButton.classList.add('active');  // Maak de "Buy Coins" knop actief
-
-        // Zorg ervoor dat de "Shop" knop niet actief is bij het openen van de pagina
-        const shopButton = document.querySelector('.menu-button[data-tab="shop"]');
-        shopButton.classList.remove('active');  // Verwijder de "active" class van de shop knop
-
-        // Fetch initial balance
         fetchStravabucks();
+        fetchInventory();
 
-        // Handle shop price clicks
-        document.querySelectorAll('.price').forEach(priceElement => {
-            priceElement.addEventListener('click', function() {
-                const itemContainer = this.closest('.hexagon-container');
-                const itemName = itemContainer.querySelector('img').alt;
-                const cost = parseInt(this.querySelector('span').textContent);
+        // Verwijder 'active' class van alle knoppen initieel
+        menuButtons.forEach(btn => btn.classList.remove('active'));
 
-                // Attempt to purchase the item
-                useStravabucks(cost, itemName);
+        // Stel de initiële actieve tab in (bijvoorbeeld 'shop')
+        const initialTabButton = document.querySelector('.menu-button[data-tab="shop"]');
+        if (initialTabButton) {
+            initialTabButton.click(); // Simuleert een klik, maakt actief en laadt content
+        } else {
+            // Fallback als de knop niet gevonden wordt (zou niet mogen)
+            shopContent.style.display = 'flex';
+            buyCoinsSection.style.display = 'none';
+            // Laad shop content handmatig als .click() faalt
+            shopContent.innerHTML = `
+                <div class="hexagon-container">
+                    <img src="{{ asset('images/trap.png') }}" alt="Trap">
+                    <div class="price" data-item="trap" data-price="15">
+                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
+                    </div>
+                </div>
+                <div class="hexagon-container">
+                    <img src="{{ asset('images/fake.png') }}" alt="Fake Hexagon">
+                    <div class="price" data-item="fake" data-price="15">
+                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
+                    </div>
+                </div>
+                <div class="hexagon-container">
+                    <img src="{{ asset('images/poison.png') }}" alt="Poison">
+                    <div class="price" data-item="poison" data-price="15">
+                        <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon"> <span>15</span>
+                    </div>
+                </div>`;
+            document.querySelectorAll('.price').forEach(priceElement => {
+                priceElement.addEventListener('click', function() { toggleActive(this); });
             });
-        });
+        }
 
-        // If there's a button to collect coins from kudos
+
         const collectKudosBtn = document.getElementById('collect-kudos-btn');
         if (collectKudosBtn) {
             collectKudosBtn.addEventListener('click', function() {
@@ -291,27 +407,5 @@
                 }
             });
         }
-
-        // Zorg ervoor dat de "Buy Coins" sectie zichtbaar is en de "Shop" sectie niet
-        const shopContent = document.getElementById('shopContent');
-        const buyCoinsSection = document.getElementById('buyCoinsSection');
-        shopContent.style.display = 'none';  // Verberg de shop bij het openen
-        buyCoinsSection.style.display = 'block';  // Toon de Buy Coins sectie
-
-        // Fetch initial balance
-        fetchStravabucks();
-
-        // Handle shop price clicks
-        document.querySelectorAll('.price').forEach(priceElement => {
-            priceElement.addEventListener('click', function() {
-                const itemContainer = this.closest('.hexagon-container');
-                const itemName = itemContainer.querySelector('img').alt;
-                const cost = parseInt(this.querySelector('span').textContent);
-
-                // Attempt to purchase the item
-                useStravabucks(cost, itemName);
-            });
-        });
-
     });
 </script>
