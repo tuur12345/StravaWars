@@ -83,12 +83,41 @@
                     <h1>Converting Kudos from this week</h1>
                     <div class="arrow">
                         <h1>Kudos this week: {{ totalKudosThisWeek }}</h1>
-                        <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}"></div>
+                        <div class="arrowimg"><img src="{{ asset('images/arrow.png') }}" alt="arrow"></div>
                         <div class="floating-button-coin-2">
                             <img src="{{ asset('images/coins.png') }}" alt="coins button">
-                            <div class="circle-container ">{{ Kudostocoins }}</div>                        </div>
+                            <div class="circle-container ">{{ Kudostocoins }}</div>
                         </div>
-                    <button id="collect-kudos-btn" class="convert-button" data-amount="{{ Kudostocoins }}"><img src="{{ asset('images/convertbutton.png') }}"></button>
+                    </div>
+
+                    {% set isDisabledByState = kudosAlreadyConverted or Kudostocoins <= 0 %}
+
+                    <button id="collect-kudos-btn"
+                            class="convert-button"
+                            data-amount="{{ Kudostocoins }}"
+                            {% if isDisabledByState %}disabled{% endif %}>
+                        {% if isDisabledByState %}
+                            {# Toon tekst als de knop disabled is bij het laden #}
+                            {% if Kudostocoins > 0 and kudosAlreadyConverted %}
+                                Collected!
+                            {% elseif Kudostocoins <= 0 %}
+                                No Kudos
+                            {% else %}
+                                {# Fallback, zou niet vaak moeten voorkomen als logica klopt #}
+                                <img src="{{ asset('images/convertbutton.png') }}" alt="Convert Kudos">
+                            {% endif %}
+                        {% else %}
+                            {# Normale staat: toon de afbeelding #}
+                            <img src="{{ asset('images/convertbutton.png') }}" alt="Convert Kudos">
+                        {% endif %}
+                    </button>
+
+                    {# Toon de statusmelding onder de knop #}
+                    {% if kudosAlreadyConverted and Kudostocoins > 0 %}
+                        <p class="conversion-message" style="text-align: center; margin-top: 10px;">Kudos already converted!</p>
+                    {% elseif Kudostocoins <= 0 and not kudosAlreadyConverted %} {# Voorkom dubbele melding als al geconverteerd EN 0 kudos #}
+                        <p class="conversion-message" style="text-align: center; margin-top: 10px;">No kudos to convert.</p>
+                    {% endif %}
                 </div>
                 <div id="activity-details" style="display: none;">
                     <h1 id="details-activity-name"></h1>

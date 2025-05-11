@@ -82,7 +82,7 @@ class StravaController extends AbstractController
 
         $userData = $userDataResponse->toArray();
         $request->getSession()->set('userData', $userData); // store user data in session for other pages
-
+        $request->getSession()->remove('kudos_converted_this_session');
         // Check if user exists in database, if not create a new user
         $stravaUsername = $userData['username'] ?? $userData['firstname'] . '_' . $userData['id'];
         $user = $userRepository->findOneBy(['username' => $stravaUsername]);
@@ -170,6 +170,7 @@ class StravaController extends AbstractController
             ];
         }
         $request->getSession()->set('hexagons', $hexagons);
+        $kudosAlreadyConvertedThisSession = $request->getSession()->get('kudos_converted_this_session', false);
 
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
@@ -177,7 +178,8 @@ class StravaController extends AbstractController
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek/2),
             'stravabucks' => $stravabucks,
-            'hexagons' => $hexagons
+            'hexagons' => $hexagons,
+            'kudosAlreadyConverted' => $kudosAlreadyConvertedThisSession // Variabele voor Twig
         ]);
     }
 
@@ -197,6 +199,7 @@ class StravaController extends AbstractController
         $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
 
         $hexagons = $request->getSession()->get('hexagons', []);
+        $kudosAlreadyConvertedThisSession = $request->getSession()->get('kudos_converted_this_session', false);
 
         return $this->render('maps.html.twig', [
             'user' => $user,
@@ -204,7 +207,8 @@ class StravaController extends AbstractController
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek/2),
             'stravabucks' => $stravabucks,
-            'hexagons' => $hexagons
+            'hexagons' => $hexagons,
+            'kudosAlreadyConverted' => $kudosAlreadyConvertedThisSession // Variabele voor Twig
         ]);
     }
 
@@ -344,6 +348,16 @@ class StravaController extends AbstractController
     #[Route('/add-stravabucks', name:'add_stravabucks', methods: ['POST'])]
     public function addStravabucks(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository): JsonResponse
     {
+        // SERVER-SIDE CHECK: Zijn kudos al geconverteerd in deze sessie?
+        if ($request->getSession()->get('kudos_converted_this_session', false)) {
+            $stravaUsername = $request->getSession()->get('strava_username');
+            $user = $stravaUsername ? $userRepository->findOneBy(['username' => $stravaUsername]) : null;
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Kudos already converted in this session.',
+                'current_balance' => $user ? $user->getStravabucks() : 0
+            ], 403); // 403 Forbidden is een goede HTTP status hiervoor
+        }
         $data = json_decode($request->getContent(), true);
         $amount = $data['amount'] ?? 0;
         $stravaUsername = $request->getSession()->get('strava_username');
@@ -363,7 +377,7 @@ class StravaController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
-
+        $request->getSession()->set('kudos_converted_this_session', true);
         return new JsonResponse([
             'status' => 'success',
             'message' => 'Stravabucks added successfully',
