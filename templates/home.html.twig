@@ -6,16 +6,10 @@
     <!-- leaflet provides global map and ability to add route and hexagons -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="{{ asset('js/polyline.js') }}"></script>
-    {# <script src="{{ asset('js/ActivityMapPopUp.js') }}"></script> already inside sync.html.twig#}
-    <script src="{{ asset('js/RouteHexagons.js') }}"></script>
-    <script src="{{ asset('js/DrawHexagon.js') }}"></script>
-    <script src="{{ asset('js/ActivityMap.js') }}"></script>
-    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
-    <script src="{{ asset('js/stravabucks.js') }}"></script>
     <script src="{{ asset('js/Hexagon.js') }}"></script>
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet">
 
-    {% include('sync.html.twig') %}
+
     <script>
         const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
         const hexagons_db = {{ hexagons|json_encode|raw }};
