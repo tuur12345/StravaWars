@@ -13,16 +13,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     activityCards.forEach(card => {
         card.addEventListener('click', function() {
-            detailsActivityName.textContent = this.getAttribute('data-activity-name');
+            detailsActivityName.textContent = "Attack or upgrade hexagons"
             detailsActivityDetails.innerHTML = '';
 
-            const cloned = this.cloneNode(true); // copy map properly
-            const mapDiv = cloned.querySelector('.activities-map'); // set map to clickable
+            const mapDiv = this.querySelector('.activities-map'); // set map to clickable
             if (mapDiv) {
-                mapDiv.setAttribute('data-clickable', 'true');
+                const clonedMap = mapDiv.cloneNode(true); // copy map properly
+                detailsActivityDetails.appendChild(clonedMap);
+                initializeActivityMap(clonedMap, true);
             }
 
-            detailsActivityDetails.appendChild(cloned);
             activityDetails.style.display = 'block';
             document.getElementById('activities-content').style.display = 'none'; //hide the activity list.
             openPopup(); // Open the popup if it's not already open

@@ -77,7 +77,7 @@ function addMouseListener(hex) {
     });
     hex.polygon.on('mouseout', function () {
         this.setStyle({
-            fillOpacity: (hex.color !== '#fc5200') ? 0.2 : 0,
+            fillOpacity: (hex.color !== '#fc5200') ? 0.4 : 0,
             fillColor: hex.color
         });
     });
