@@ -1,5 +1,4 @@
-
-document.addEventListener("DOMContentLoaded", function () {
+//document.addEventListener("DOMContentLoaded", function () {
     const toggleButton = document.querySelector('#dark-mode a'); // Dark mode toggle button
     const profilePicture = document.getElementById('profile-picture') // Profile picture
     const html = document.documentElement;
@@ -10,9 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Toggle dark mode
     toggleButton.addEventListener('click', function (event) {
-        console.log('hello2')
         html.classList.toggle('dark-mode');
-        console.log('hello')
         // Save user preference
         if (html.classList.contains("dark-mode")) {
             localStorage.setItem("darkMode", "enabled");
@@ -20,8 +17,5 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("darkMode", "disabled");
         }
     });
-
-
-    console.log('hello')
-});
+    //});
 

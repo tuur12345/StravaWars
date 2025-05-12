@@ -1,5 +1,5 @@
 // Add event listeners for the shop items when they're clicked
-document.addEventListener('DOMContentLoaded', function() {
+//document.addEventListener('DOMContentLoaded', function() {
     // Fetch initial balance
     fetchStravabucks();
 
@@ -57,35 +57,38 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
+//});
 
-function changeContent(contentType) {
-    // Controleer of de configuratie bestaat
-    if (typeof syncPopupConfig === 'undefined' || !syncPopupConfig.assetPaths) {
-        console.error('syncPopupConfig or necessary assetPaths not found!');
-        return; // Stop uitvoering als data mist
-    }
-    const paths = syncPopupConfig.assetPaths; // Haal de paden op
 
-    // Verberg content (zoals voorheen)
-    document.getElementById('activities-content').style.display = 'none';
-    document.getElementById('kudosconverter').style.display = 'none';
-    document.getElementById('activity-details').style.display = 'none';
+// duplicated ??
 
-    // Selecteer de afbeeldingen (veiliger met check of ze bestaan)
-    const img1 = document.querySelector('.sidebar-btn:nth-child(1) img');
-    const img2 = document.querySelector('.sidebar-btn:nth-child(2) img');
-
-    if (contentType === 'activities') {
-        // Gebruik de paden uit het configuratie object
-        if (img1) img1.src = paths.orangeActivity;
-        if (img2) img2.src = paths.whiteThumbsup;
-        document.getElementById('activities-content').style.display = 'block';
-    } else if (contentType === 'kudosconverter') {
-        // Gebruik de paden uit het configuratie object
-        if (img1) img1.src = paths.whiteActivity;
-        if (img2) img2.src = paths.orangeThumbsup;
-        document.getElementById('kudosconverter').style.display = 'block';
-    }
-    // Voeg eventueel logica voor 'activity-details' toe
-}
+// function changeContent(contentType) {
+//     // Controleer of de configuratie bestaat
+//     if (typeof syncPopupConfig === 'undefined' || !syncPopupConfig.assetPaths) {
+//         console.error('syncPopupConfig or necessary assetPaths not found!');
+//         return; // Stop uitvoering als data mist
+//     }
+//     const paths = syncPopupConfig.assetPaths; // Haal de paden op
+//
+//     // Verberg content (zoals voorheen)
+//     document.getElementById('activities-content').style.display = 'none';
+//     document.getElementById('kudosconverter').style.display = 'none';
+//     document.getElementById('activity-details').style.display = 'none';
+//
+//     // Selecteer de afbeeldingen (veiliger met check of ze bestaan)
+//     const img1 = document.querySelector('.sidebar-btn:nth-child(1) img');
+//     const img2 = document.querySelector('.sidebar-btn:nth-child(2) img');
+//
+//     if (contentType === 'activities') {
+//         // Gebruik de paden uit het configuratie object
+//         if (img1) img1.src = paths.orangeActivity;
+//         if (img2) img2.src = paths.whiteThumbsup;
+//         document.getElementById('activities-content').style.display = 'block';
+//     } else if (contentType === 'kudosconverter') {
+//         // Gebruik de paden uit het configuratie object
+//         if (img1) img1.src = paths.whiteActivity;
+//         if (img2) img2.src = paths.orangeThumbsup;
+//         document.getElementById('kudosconverter').style.display = 'block';
+//     }
+//     // Voeg eventueel logica voor 'activity-details' toe
+// }

@@ -1,10 +1,15 @@
 {% extends 'base.html.twig' %}
-{% block title %}StravaWars | Home{% endblock %}
+
+{% block title %}
+    StravaWars | Home
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="{{ asset('css/home.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/sync.css') }}">
 {% endblock %}
+
 {% block body %}
     <div class="container">
         <h1>All Activities</h1>
@@ -48,15 +53,17 @@
     <footer>
         <img src="{{ asset('images/powered_by_strava.png') }}" alt="powered by strava">
     </footer>
+
     {% include('sync.html.twig') %}
     {% include('coins.html.twig') %}
+
 {% endblock %}
-{% block javascripts%}
+
+{% block javascripts %}
     <script>
         const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
         const hexagons_db = {{ hexagons|json_encode|raw }};
         var globalConfig = globalConfig || {};
-
 
         globalConfig.syncPopup = {
             assetPaths: {

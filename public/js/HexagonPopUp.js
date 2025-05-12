@@ -1,5 +1,6 @@
 function openHexagonInfo(hexagon) {
     const container = L.DomUtil.create('div');
+
     const popup = createHexagonPopUp(container, hexagon);
 
     container.innerHTML = createInnerHTML(hexagon);
@@ -13,6 +14,7 @@ function openHexagonInfo(hexagon) {
 
 function openHexagonAttackInfo(hexagon) {
     const container = L.DomUtil.create('div');
+
     const popup = createHexagonPopUp(container, hexagon);
 
     container.innerHTML = createInnerHTML(hexagon);

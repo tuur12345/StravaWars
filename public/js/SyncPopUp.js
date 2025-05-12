@@ -28,7 +28,7 @@
             return;
         }
 
-        console.log("Opening popup...");
+        //console.log("Opening popup...");
         overlay.style.display = 'block';
         popup.style.display = 'block';
         document.body.classList.add('no-scroll');
@@ -40,7 +40,7 @@
         // Wacht even tot de popup CSS volledig is toegepast
         setTimeout(() => {
             const mapsToUpdate = popup.querySelectorAll('#activities-content .activities-map');
-            console.log(`Found ${mapsToUpdate.length} maps in #activities-content to initialize/update.`);
+            //console.log(`Found ${mapsToUpdate.length} maps in #activities-content to initialize/update.`);
             mapsToUpdate.forEach(mapDiv => {
                 initializeOrUpdateMap(mapDiv, false); // Kaarten in lijst zijn niet clickable
             });
@@ -52,7 +52,7 @@
         const popup = document.getElementById('popup');
         if (!overlay || !popup) return;
 
-        console.log("Closing popup...");
+        //console.log("Closing popup...");
         overlay.style.display = 'none';
         popup.style.display = 'none';
         document.body.classList.remove('no-scroll');
@@ -82,7 +82,7 @@
         if (kudosContent) kudosContent.style.display = 'none';
         if (detailsContent) detailsContent.style.display = 'none';
 
-        console.log(`SyncPopup: Changing content to: ${contentType}`);
+        //console.log(`SyncPopup: Changing content to: ${contentType}`);
 
         // Toon de juiste sectie en update iconen
         if (contentType === 'activities') {
@@ -122,28 +122,23 @@
         }
 
         const activityName = cardElement.dataset.activityName || 'Activity Details';
-        console.log(`Showing details for: ${activityName}`);
+        //console.log(`Showing details for: ${activityName}`);
 
-        nameElement.textContent = activityName;
+        nameElement.textContent = "Attack or upgrade hexagons";
         contentElement.innerHTML = ''; // Leegmaken
 
-        // Kloon de kaart inhoud om in de details te plaatsen
-        const cardContentClone = cardElement.cloneNode(true);
-        const mapDiv = cardContentClone.querySelector('.activities-map');
+        const originalMap = cardElement.querySelector('.activities-map');
+        if (originalMap) {
+            const newMapDiv = document.createElement('div');
+            newMapDiv.className = 'activities-map';
+            newMapDiv.setAttribute('data-clickable', 'true'); // make map interactable
+            newMapDiv.setAttribute('data-polyline', originalMap.dataset.polyline );
+            contentElement.appendChild(newMapDiv);
 
-        if (mapDiv) {
-            // Geef de gekloonde map een unieke ID (optioneel, maar kan helpen)
-            const originalId = mapDiv.id;
-            mapDiv.id = `details-${originalId}`;
-            mapDiv.setAttribute('data-clickable', 'true'); // Maak deze kaart clickable
+            requestAnimationFrame(() => {
+                initializeActivityMap(newMapDiv, true);
+            });        }
 
-            // Belangrijk: Verwijder interne Leaflet state van de kloon
-            // Dit voorkomt conflicten als Leaflet dezelfde div probeert te beheren
-            delete mapDiv._leaflet_id; // Als Leaflet dit gebruikt
-            delete mapDiv._leaflet_map; // Verwijder referentie naar oude map instantie
-        }
-
-        contentElement.appendChild(cardContentClone);
         changeContent('activity-details'); // Schakel naar de details view
 
         // Initialiseer/update de kaart in de details view
@@ -175,14 +170,14 @@
 
         // Check of er al een map instantie is
         if (mapDiv._leaflet_map instanceof L.Map) {
-            console.log(`Map already initialized for ${mapDiv.id}. Invalidating size.`);
+            // console.log(`Map already initialized for ${mapDiv.id}. Invalidating size.`);
             mapDiv._leaflet_map.invalidateSize();
             // Optioneel: opnieuw inzoomen op polyline
             // if (mapDiv._leaflet_polyline) {
             //     mapDiv._leaflet_map.fitBounds(mapDiv._leaflet_polyline.getBounds());
             // }
         } else {
-            console.log(`Initializing new map for ${mapDiv.id}. Clickable: ${isClickable}`);
+            // console.log(`Initializing new map for ${mapDiv.id}. Clickable: ${isClickable}`);
             // Roep de functie uit ActivityMap.js aan
             // Deze functie zou nu de kaart moeten maken, route en hexagons toevoegen
             initializeActivityMap(mapDiv, isClickable);
@@ -201,11 +196,11 @@
             return;
         }
         if (amount <= 0) {
-            console.log("Amount is zero or negative, not adding Stravabucks.");
+            // console.log("Amount is zero or negative, not adding Stravabucks.");
             return;
         }
 
-        console.log(`SyncPopup: Attempting to add ${amount} Stravabucks via ${url}`);
+        // console.log(`SyncPopup: Attempting to add ${amount} Stravabucks via ${url}`);
         buttonElement.disabled = true; // Disable direct
         buttonElement.textContent = 'Processing...'; // Feedback
 
@@ -226,7 +221,7 @@
                 return response.json();
             })
             .then(data => {
-                console.log("SyncPopup: Add Stravabucks server response:", data);
+                // console.log("SyncPopup: Add Stravabucks server response:", data);
                 if (data.status === 'success') {
                     // Update de coin display
                     if (typeof updateCoinsDisplay === 'function') {
@@ -284,7 +279,7 @@
 
 
     // --- DOMContentLoaded Event Listener ---
-    document.addEventListener("DOMContentLoaded", function() {
+    // document.addEventListener("DOMContentLoaded", function() {
         const config = getSyncConfig();
         if (!config) {
             console.error("Sync Popup cannot initialize due to missing configuration.");
@@ -342,7 +337,7 @@
                 // Zoek de dichtstbijzijnde .activities-card ouder van het geklikte element
                 const card = event.target.closest('.activities-card');
                 if (card) {
-                    console.log("Activity card clicked via delegation:", card.dataset.activityName);
+                    // console.log("Activity card clicked via delegation:", card.dataset.activityName);
                     showActivityDetails(card); // Roep de functie aan met de gevonden kaart
                 }
             });
@@ -408,8 +403,8 @@
         // Zet de initiële view (optioneel, openPopup doet dit ook)
         // changeContent('activities');
 
-        console.log("SyncPopup Initialized");
+        // console.log("SyncPopup Initialized");
 
-    }); // Einde DOMContentLoaded
+    //}); // Einde DOMContentLoaded
 
 })(); // Einde IIFE

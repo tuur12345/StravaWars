@@ -1,3 +1,4 @@
+// wait on DOM to be fully loaded since the polyline takes some time
 document.addEventListener("DOMContentLoaded", function () {
     const activities = document.querySelectorAll('.activity-map');
     activities.forEach((activityMap) => {

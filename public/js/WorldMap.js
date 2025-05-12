@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded", function () { // when map div is loaded
+//document.addEventListener("DOMContentLoaded", function () { // when map div is loaded
     const map = createWorldMap();
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     addWorldHexagons(map);
     //insert_hexagon_into_database(map, bounds);
-});
+//});
 
 function createWorldMap() {
     return L.map('map', {

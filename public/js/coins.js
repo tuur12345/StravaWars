@@ -465,7 +465,7 @@
 
 
     // --- DOMContentLoaded ---
-    document.addEventListener('DOMContentLoaded', function() {
+    //document.addEventListener('DOMContentLoaded', function() {
         // Check if required global config exists
         const shopConfig = getConfig('shop');
         if (!shopConfig) {
@@ -473,7 +473,7 @@
             // Optionally display an error message to the user in the UI
             const shopWindow = document.getElementById('coinspopup');
             if(shopWindow) shopWindow.innerHTML = '<p style="color: red; padding: 20px;">Error: Shop configuration is missing. Please contact support.</p>';
-            return; // Stop initialization
+            //return; // Stop initialization idk what to put here since DOM is gone
         }
 
         // Get DOM elements
@@ -595,5 +595,5 @@
 
         // NOTE: Listener for #collect-kudos-btn removed - assuming it belongs elsewhere (e.g., SyncPopUp.js)
 
-    }); // End DOMContentLoaded
+    //}); // End DOMContentLoaded
 

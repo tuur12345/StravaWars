@@ -1,15 +1,21 @@
 {% extends 'base.html.twig' %}
-{% block title %}StravaWars | Maps{% endblock %}
+
+{% block title %}
+    StravaWars | Maps
+{% endblock %}
+
 {% block stylesheets %}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link href="{{ asset('css/map.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/sync.css') }}">
 {% endblock %}
+
 {% block body %}
     <div id="map"></div>
     {% include('sync.html.twig') %}
     {% include('coins.html.twig') %}
 {% endblock %}
+
 {% block javascripts%}
     <script>
         const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";

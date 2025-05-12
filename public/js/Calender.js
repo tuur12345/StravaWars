@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+//document.addEventListener("DOMContentLoaded", function () {
     const calendar = document.getElementById('calendar');
     const date = new Date();
     const year = date.getFullYear();
@@ -35,4 +35,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     calendarHTML += `</div>`;
     calendar.innerHTML = calendarHTML;
-});
+//});
