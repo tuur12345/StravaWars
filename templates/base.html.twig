@@ -2,12 +2,11 @@
 <html lang="">
 <head>
     <meta charset="UTF-8">
-    <title>StravaWars</title>
+    <title>{% block title %}Stravawars{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
     <link href="{{ asset('css/base.css') }}" rel="stylesheet"/>
     <link href="{{ asset('css/hamburger_menu.css') }}" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
-    <script src="{{ asset('js/DarkMode.js') }}"></script>
+    {% block stylesheets %}{% endblock %}
 </head>
 <header>
     <div class="banner">
@@ -63,7 +62,10 @@
 
 
 <body>
-{% block body %}
-{% endblock %}
+    {% block body %}{% endblock %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
+    <script src="{{ asset('js/DarkMode.js') }}"></script>
+    {% block javascripts %}{% endblock %}
 </body>
 </html>
