@@ -1,26 +1,65 @@
 {% extends 'base.html.twig' %}
-
+{% block title %}StravaWars | Maps{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link href="{{ asset('css/map.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/sync.css') }}">
+{% endblock %}
 {% block body %}
+    <div id="map"></div>
     {% include('sync.html.twig') %}
     {% include('coins.html.twig') %}
-    <!-- leaflet provides global map and ability to add points / hexagons -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link href="{{ asset('css/map.css') }}" rel="stylesheet"/>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- script to draw hexagon over the world, fully customizable -->
-    <script src="{{ asset('js/Hexagon.js') }}"></script>
-    <script src="{{ asset('js/WorldMap.js') }}"></script>
-    <script src="{{ asset('js/HexagonPopUp.js') }}"></script>
-
-    <!-- allow js to access constants from controller -->
+{% endblock %}
+{% block javascripts%}
     <script>
         const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
         const hexagons_db = {{ hexagons|json_encode|raw }};
+        var globalConfig = globalConfig || {};
+
+        globalConfig.syncPopup = {
+            assetPaths: {
+                orangeActivity: "{{ asset('images/orangeactivity.png') }}",
+                whiteThumbsup: "{{ asset('images/whitethumbsup.png') }}",
+                whiteActivity: "{{ asset('images/whiteactivity.png') }}",
+                orangeThumbsup: "{{ asset('images/orangethumbsup.png') }}",
+                syncIcon: "{{ asset('images/sync.png') }}",
+                arrowIcon: "{{ asset('images/arrow.png') }}",
+                coinsIcon: "{{ asset('images/coins.png') }}", // Ook hier nodig?
+                convertButtonIcon: "{{ asset('images/convertbutton.png') }}"
+            },
+            urls: {
+                addStravabucks: "{{ path('add_stravabucks') }}" // Route voor kudos conversion
+            },
+            initialKudosState: {
+                kudosAlreadyConverted: {{ kudosAlreadyConverted|default(false)|json_encode }}, {# Voeg default toe #}
+                kudostocoins: {{ Kudostocoins|default(0)|json_encode }} {# Voeg default toe #}
+            }
+        };
+        globalConfig.shop = {
+            assetPaths: {
+                trap: "{{ asset('images/trap.png') }}",
+                fake: "{{ asset('images/fake.png') }}",
+                poison: "{{ asset('images/poison.png') }}",
+                stravabucksIcon: "{{ asset('images/stravabucks.png') }}",
+                coinsIcon: "{{ asset('images/coins.png') }}", // Hier ook nodig
+                defaultItemIcon: "{{ asset('images/default_item.png') }}" // Fallback icoon
+            },
+            urls: {
+                useStravabucks: "{{ path('use_stravabucks') }}",      // Route voor aankoop (geld afschrijven)
+                addToInventory: "{{ path('add_to_inventory') }}",  // Route om item aan inventaris toe te voegen
+                getInventory: "{{ path('get_inventory') }}",      // Route om inventaris op te halen
+                getStravabucks: "{{ path('get_stravabucks') }}"      // Route om saldo op te halen (als fetchStravabucks dit gebruikt)
+            }
+        };
     </script>
-
-
-    <div id="map"></div>
-
-
-
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="{{ asset('js/Hexagon.js') }}"></script>
+    <script src="{{ asset('js/SyncPopUp.js') }}"></script>
+    <script src="{{ asset('js/ActivityMap.js') }}"></script>
+    <script src="{{ asset('js/HexagonPopUp.js') }}"></script>
+    <script src="{{ asset('js/polyline.js') }}"></script>
+    <script src="{{ asset('js/sync.js') }}"></script>
+    <script src="{{ asset('js/WorldMap.js') }}"></script>
+    <script src="{{ asset('js/coins.js') }}"></script>
 {% endblock %}
+
