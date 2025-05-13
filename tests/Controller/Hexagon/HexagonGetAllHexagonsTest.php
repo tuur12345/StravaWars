@@ -12,11 +12,6 @@ class HexagonGetAllHexagonsTest extends TestCase
     public function testGetAllHexagons()
     {
         $hexagon = $this->createMock(\App\Entity\Hexagon::class);
-        $hexagon->setLatitude('1.23');
-        $hexagon->setLongitude('4.56');
-        $hexagon->setColor('red');
-        $hexagon->setOwner('user1');
-        $hexagon->setLevel(2);
         $hexagon->method('getLatitude')->willReturn('1.23');   // string
         $hexagon->method('getLongitude')->willReturn('4.56');  // string
         $hexagon->method('getColor')->willReturn('red');
