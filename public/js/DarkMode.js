@@ -8,9 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
         html.classList.add("dark-mode");
     }
 
-    // Toggle dark mode
+
     toggleButton.addEventListener('click', function (event) {
-        // Save user preference
         if (html.classList.contains("dark-mode")) {
             localStorage.setItem("darkMode", "enabled");
         } else {
