@@ -10,9 +10,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Toggle dark mode
     toggleButton.addEventListener('click', function (event) {
-        console.log('hello2')
-        html.classList.toggle('dark-mode');
-        console.log('hello')
         // Save user preference
         if (html.classList.contains("dark-mode")) {
             localStorage.setItem("darkMode", "enabled");
@@ -20,8 +17,5 @@ document.addEventListener("DOMContentLoaded", function () {
             localStorage.setItem("darkMode", "disabled");
         }
     });
-
-
-    console.log('hello')
 });
 

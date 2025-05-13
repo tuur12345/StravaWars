@@ -12,9 +12,9 @@
   --primary-color: #fc5200;
   --secondary-color: #333;
   --background-color: #AAA;
-  --background-color-menu: #AAA;
+  --background-color-menu: #777;
   --text-color: #FFF;
-  --menu-background: #AAA;
+  --menu-background: red;
   --bordor-color-accordian-menu: #dbdcd2
 }
 
