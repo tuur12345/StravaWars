@@ -3,17 +3,3 @@
     height: calc(100vh - 140px); /* calc heigth dynamic minus banner height*/
     z-index: 8;
 }
-
-.hex-popup button {
-    margin-top: 5px;
-    background-color: var(--primary-color);
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.hex-popup button:hover {
-    background-color: #c13e00;
-}

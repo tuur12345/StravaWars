@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
+    StravaWars | Profile
+{% endblock %}
+
+{% block stylesheets %}
     <link href="{{ asset('css/profile.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
     <div class="profile-container">
         <div class="profile-icon-container">
             <img src="{{ user.profile_medium }}" alt="Profile Picture">
@@ -11,7 +18,6 @@
         <div class="profile-activities-container">
             <div id="calendar"></div>
         </div>
-        <script src="{{ asset('js/Calender.js') }}"></script>
         <div class="profile-friends-container">
             <ul>
                 <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
@@ -33,23 +39,10 @@
             </ul>
         </div>
         <div class="profile-stats-container">4</div>
-
-
-{#        <div class="profile-header">#}
-{#            <img src="{{ user.profile_medium }}" alt="Profile Picture" class="profile-image">#}
-{#            <div class="profile-info">#}
-{#                <h1>{{ user.firstname }} {{ user.lastname }}</h1>#}
-{#                <p><strong>Username:</strong> {{ user.username }}</p>#}
-{#                <p><strong>Location:</strong> {{ user.city }}, {{ user.state }}, {{ user.country }}</p>#}
-{#                <p><strong>Sex:</strong> {{ user.sex == 'M' ? 'Male' : 'Female' }}</p>#}
-{#                <p><strong>Premium:</strong> {{ user.premium ? 'Yes' : 'No' }}</p>#}
-{#            </div>#}
-{#        </div>#}
-{# test Pipeline6 #}
-{#        <div class="profile-stats">#}
-{#            <h2>Profile Stats</h2>#}
-{#            <p><strong>Follower Count:</strong> {{ user.follower }}</p>#}
-{#            <p><strong>Friend Count:</strong> {{ user.friend }}</p>#}
-{#        </div>#}
     </div>
 {% endblock %}
+{% block javascripts%}
+    <script src="{{ asset('js/Calender.js') }}"></script>
+{% endblock %}
+
+

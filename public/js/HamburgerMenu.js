@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+//document.addEventListener("DOMContentLoaded", function () {
     $(function () {
         function slideMenu() {
             var activeState = $("#menu-container .menu-list").hasClass("active");
@@ -26,4 +26,4 @@ document.addEventListener("DOMContentLoaded", function () {
             $(".menu-list .accordion-toggle").not($(this)).removeClass("active-tab").find(".menu-link").removeClass("active");
         });
     });
-});
+//});

@@ -196,16 +196,36 @@ body.no-scroll {
     height: 12px;
 }
 
-.hex-popup button {
+.hex-button {
     margin-top: 5px;
-    background-color: var(--primary-color);
     border: none;
     color: white;
-    padding: 5px 10px;
     cursor: pointer;
     border-radius: 4px;
+    background-image: url("/images/stravabucks.png");
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    padding: 5px 10px 5px 32px;
+    background-size: 16px;
+
 }
 
-.hex-popup button:hover {
-    background-color: #c13e00;
+.hex-button:hover {
+    filter: brightness(80%);
+}
+
+.hex-button:disabled {
+    background-color: #cccccc;
+}
+
+.upgrade-button {
+    background-color: var(--primary-color);
+}
+
+.attack-button {
+    background-color: red;
+}
+
+.claim-button {
+    background-color: green;
 }

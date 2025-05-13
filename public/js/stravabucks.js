@@ -1,8 +1,3 @@
-/**
- * Add this script to your base template or to specific templates
- * where you want to manage Stravabucks.
- */
-
 // Update the coins display in UI
 function updateCoinsDisplay(amount) {
     const coinsCounter = document.querySelector('.circle-container');
@@ -157,7 +152,7 @@ function showNotification(title, message, type) {
 }
 
 // Show pending notification (if present in localStorage) after reload
-document.addEventListener('DOMContentLoaded', () => {
+//document.addEventListener('DOMContentLoaded', () => {
     const notif = localStorage.getItem('stravabucks_notification');
     if (notif) {
         const { title, message, type } = JSON.parse(notif);
@@ -167,4 +162,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Optional: fetch balance on page load
     fetchStravabucks();
-});
+//});

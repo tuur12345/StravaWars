@@ -77,28 +77,28 @@ function addMouseListener(hex) {
     });
     hex.polygon.on('mouseout', function () {
         this.setStyle({
-            fillOpacity: (hex.color !== '#fc5200') ? 0.2 : 0,
+            fillOpacity: (hex.color !== '#fc5200') ? 0.4 : 0,
             fillColor: hex.color
         });
     });
 }
 
-function generateHexagonGrid(bounds) {
-    let hexagons = [];
-    let row = 0;
-    // calculate relative position of hexagons
-    for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3) / 2, row++) {
-        // shift every other row
-        let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;
-
-        for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
-            if (bounds.contains([lat, lng])) {
-                hexagons.push(generateHexagon(lat, lng));
-            }
-        }
-    }
-    return hexagons;
-}
+// function generateHexagonGrid(bounds) {
+//     let hexagons = [];
+//     let row = 0;
+//     // calculate relative position of hexagons
+//     for (let lat = worldBounds.south; lat < worldBounds.north; lat += hexRadiusLat * Math.sqrt(3) / 2, row++) {
+//         // shift every other row
+//         let lngOffset = (row % 2 === 0) ? 0 : hexRadiusLng * 1.5;
+//
+//         for (let lng = worldBounds.west + lngOffset; lng < worldBounds.east; lng += hexRadiusLng * 3) {
+//             if (bounds.contains([lat, lng])) {
+//                 hexagons.push(generateHexagon(lat, lng));
+//             }
+//         }
+//     }
+//     return hexagons;
+// }
 
 
 
