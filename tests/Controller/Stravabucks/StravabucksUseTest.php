@@ -65,4 +65,56 @@ class StravabucksUseTest extends TestCase
         $this->assertEquals('Purchase successful', $data['message']);
         $this->assertEquals('40', $data['current_balance']);
     }
+
+    public function testUseStravabucksUserNotLoggedIn()
+    {
+        $user = new User();
+        $user->setUsername('testuser')->setStravabucks(50);
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->method('get')->with('strava_username')->willReturn(null);
+
+        $request = new Request([], [], [], [], [], [], json_encode(['amount' => 10]));
+        $request->setSession($session);
+
+        $userRepo = $this->createMock(UserRepository::class);
+        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+
+        $em = $this->createMock(EntityManagerInterface::class);
+
+        $controller = new StravabucksController();
+        $response = $controller->useStravabucks($request, $em, $userRepo);
+
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('error', $data['status']);
+        $this->assertEquals('User not logged in', $data['message']);
+    }
+
+    public function testUseStravabucksUserNotFound()
+    {
+        $user = new User();
+        $user->setUsername('testuser')->setStravabucks(50);
+
+        $session = $this->createMock(SessionInterface::class);
+        $session->method('get')->with('strava_username')->willReturn('testuser');
+
+        $request = new Request([], [], [], [], [], [], json_encode(['amount' => 10]));
+        $request->setSession($session);
+
+        $userRepo = $this->createMock(UserRepository::class);
+        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn(null);
+
+        $em = $this->createMock(EntityManagerInterface::class);
+
+        $controller = new StravabucksController();
+        $response = $controller->useStravabucks($request, $em, $userRepo);
+
+        $this->assertEquals(404, $response->getStatusCode());
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('error', $data['status']);
+        $this->assertEquals('User not found', $data['message']);
+    }
 }
