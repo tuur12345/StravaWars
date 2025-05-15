@@ -116,11 +116,11 @@ async function updateHexagonInDb(container, hexagon, button) {
             hexagon.polygon.setStyle({ fillColor: hexagon.color, fillOpacity: (responseData.owner !== "None") ? 0.4 : 0 });
         } else {
 
-            alert(responseData.message || "Actie mislukt. Probeer opnieuw.");
+            alert(responseData.message || "Action failed.");
         }
     } catch (error) {
-        console.error("Fout in updateHexagonInDb:", error);
-        alert("Een onverwachte fout is opgetreden. Probeer het opnieuw.");
+        console.error("Error in updateHexagonInDb:", error);
+        alert("Unexpected error");
     } finally {
         button.textContent = "Done!";
         hexagon.polygon._map.closePopup();
