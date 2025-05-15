@@ -77,7 +77,7 @@
         const favicon = document.getElementById('dynamic-favicon');
         const color = "{{ user ? user.color : '' }}";
         if (favicon && color) {
-            favicon.href = '/public/images/favicon' + color + '.png?v=' + Date.now();
+            favicon.href = '/public/images/favicon' + color + '.png?v=' + color; // trick to avoid caching issue idk
         }
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
