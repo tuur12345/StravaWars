@@ -12,9 +12,5 @@ deploy-job:
     - master
   script:
     - composer install
-    - rsync -rv --exclude=".git/" \
-      --exclude=".env/" \
-      --exclude="upload/" \
-      --delete \
-      ./ a24sewt303@shell.studev.groept.be:/var/www/html
+    - rsync -rv --exclude=".git/" --exclude=".env/" --exclude="upload/" --delete ./ a24sewt303@shell.studev.groept.be:/var/www/html
     - ssh a24sewt303@shell.studev.groept.be "chmod -R 777 /var/www/html/var/cache /var/www/html/var/log"
