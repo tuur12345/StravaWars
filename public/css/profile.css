@@ -79,6 +79,10 @@ html, body {
     border: none;
 }
 
+.calendar-day.activity {
+    background-color: var(--primary-color);
+}
+
 .profile-friends-container {
     grid-area: 1/ 3/ span 2;
     overflow-x: hidden;

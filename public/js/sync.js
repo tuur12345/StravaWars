@@ -3,17 +3,17 @@
     // Fetch initial balance
     fetchStravabucks();
 
-    // Handle shop price clicks
-    document.querySelectorAll('.price').forEach(priceElement => {
-        priceElement.addEventListener('click', function() {
-            const itemContainer = this.closest('.hexagon-container');
-            const itemName = itemContainer.querySelector('img').alt;
-            const cost = parseInt(this.querySelector('span').textContent);
-
-            // Attempt to purchase the item
-            useStravabucks(cost, itemName);
-        });
-    });
+    // // Handle shop price clicks
+    // document.querySelectorAll('.price').forEach(priceElement => {
+    //     priceElement.addEventListener('click', function() {
+    //         const itemContainer = this.closest('.hexagon-container');
+    //         const itemName = itemContainer.querySelector('img').alt;
+    //         const cost = parseInt(this.querySelector('span').textContent);
+    //
+    //         // Attempt to purchase the item
+    //         useStravabucks(cost, itemName);
+    //     });
+    // });
 
     // If there's a button to collect coins from kudos
     const collectKudosBtn = document.getElementById('collect-kudos-btn');

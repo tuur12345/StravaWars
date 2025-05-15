@@ -30,9 +30,21 @@
 
     // Fill the days
     for (let i = 1; i <= daysInMonth; i++) {
-        calendarHTML += `<div class="calendar-day">${i}</div>`;
+        const dayWithActivity = activities.some(activity => {
+            const activityDate = new Date(activity.start_date);
+            return activityDate.getFullYear() === year &&
+                activityDate.getMonth() === month &&
+                activityDate.getDate() === i;
+        });
+
+        if (dayWithActivity) {
+            calendarHTML += `<div class="calendar-day activity">${i}</div>`;
+        } else {
+            calendarHTML += `<div class="calendar-day">${i}</div>`;
+        }
     }
 
-    calendarHTML += `</div>`;
+
+calendarHTML += `</div>`;
     calendar.innerHTML = calendarHTML;
 //});

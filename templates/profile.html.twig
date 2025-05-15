@@ -20,28 +20,18 @@
         </div>
         <div class="profile-friends-container">
             <ul>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
-                <li><span class="profile-friends-initials">OM</span><span class="profile-friends-username">Oscar Mues</span></li>
+                <li><span class="profile-friends-initials"></span><span class="profile-friends-username">FRIEND 1</span></li>
+                <li><span class="profile-friends-initials"></span><span class="profile-friends-username">FRIEND 2</span></li>
+                <li><span class="profile-friends-initials"></span><span class="profile-friends-username">FRIEND 3</span></li>
+                <li><span class="profile-friends-initials"></span><span class="profile-friends-username">FRIEND 4</span></li>
+                <li><span class="profile-friends-initials"></span><span class="profile-friends-username">FRIEND 5</span></li>
             </ul>
         </div>
         <div class="profile-stats-container">4</div>
     </div>
 {% endblock %}
 {% block javascripts%}
+    <script>const activities = {{ activities|json_encode|raw }};</script>
     <script src="{{ asset('js/Calender.js') }}"></script>
 {% endblock %}
 

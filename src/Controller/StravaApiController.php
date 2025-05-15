@@ -17,8 +17,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class StravaApiController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153511'; // Replace with your Strava client ID
-    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
+    private $clientId = '159754'; // Replace with your Strava client ID
+    private $clientSecret = '96a65964a5b075789a2775833b3a733a04a76f2c'; // Replace with your Strava client secret
     private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
@@ -78,14 +78,15 @@ class StravaApiController extends AbstractController
         $request->getSession()->set('userData', $userData); // store user data in session for other pages
         $request->getSession()->remove('kudos_converted_this_session');
         // Check if user exists in database, if not create a new user
-        $user = $userRepository->findOneBy(['username' => $userData['username']]);
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
 
         $colors = ['blue', 'red', 'green', 'yellow'];
 
         if (!$user) {
             // Create new user
             $user = new User();
-            $user->setUsername($userData['username']);
+            $user->setId($userData['id']);
+            $user->setUsername($userData['firstname'] . ' ' . $userData['lastname']);
             $user->setColor($colors[rand(0, count($colors) - 1)]); // give user random color
             $user->setStravabucks(0); // Initialize coins to zero
             $entityManager->persist($user);
