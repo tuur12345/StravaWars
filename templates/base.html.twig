@@ -78,7 +78,7 @@
             const favicon = document.getElementById('dynamic-favicon');
             const color = "{{ user ? user.color : '' }}";
             if (favicon && color) {
-                favicon.href = '/public/images/favicon' + color + '.png'; // no /public
+                favicon.href = '/public/images/favicon' + color + '.png?v=' + Date.now();
                 console.log("Favicon set to:", favicon.href);
             }
         });
