@@ -97,13 +97,8 @@ class StravabucksController extends AbstractController
     #[Route('/get-stravabucks', name:'get_stravabucks')]
     public function getStravabucks(Request $request, UserRepository $userRepository): JsonResponse
     {
-        $stravaUsername = $request->getSession()->get('strava_username');
-
-        if (!$stravaUsername) {
-            return new JsonResponse(['status' => 'error', 'message' => 'User not logged in'], 401);
-        }
-
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $userData = $request->getSession()->get('userData');
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'User not found'], 404);
         }

@@ -92,7 +92,6 @@ class StravaApiController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
         }
-        $request->getSession()->set('strava_username', $user->getUsername());
 
         return $this->redirectToRoute('home'); // go to the home screen
     }

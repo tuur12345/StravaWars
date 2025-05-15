@@ -67,8 +67,8 @@ class StravaController extends AbstractController
         $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek); // save kudos
 
         // Get user from database to display current stravabucks
-        $userName = $request->getSession()->get('strava_username');
-        $user = $userRepository->findOneBy(['username' => $userName]);
+        $userData = $request->getSession()->get('userData');
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
         }
@@ -87,8 +87,6 @@ class StravaController extends AbstractController
         }
         $request->getSession()->set('hexagons', $hexagons);
         $kudosAlreadyConvertedThisSession = $request->getSession()->get('kudos_converted_this_session', false);
-
-
 
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
@@ -113,8 +111,7 @@ class StravaController extends AbstractController
         $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
 
         // Get user's stravabucks
-        $stravaUsername = $request->getSession()->get('strava_username');
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
         }
@@ -146,8 +143,8 @@ class StravaController extends AbstractController
         $totalKudosThisWeek = $request->getSession()->get('totalKudosThisWeek', 0);
 
         // Get user's stravabucks
-        $stravaUsername = $request->getSession()->get('strava_username');
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $userData = $request->getSession()->get('userData');
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
         }
