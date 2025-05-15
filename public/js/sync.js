@@ -18,13 +18,13 @@
     // If there's a button to collect coins from kudos
     const collectKudosBtn = document.getElementById('collect-kudos-btn');
     if (collectKudosBtn) {
-        console.log('EventListener toegevoegd aan collect-kudos-btn');
+        //console.log('EventListener toegevoegd aan collect-kudos-btn');
         collectKudosBtn.addEventListener('click', function () {
-            console.log('Kudos button clicked');
+            //console.log('Kudos button clicked');
             const kudosToCoins = parseInt(this.dataset.amount || 0);
-            console.log('addStravabucks called with:', kudosToCoins);
+            //console.log('addStravabucks called with:', kudosToCoins);
             if (kudosToCoins > 0) {
-                console.log('addStravabucks inside:', amount);
+                //console.log('addStravabucks inside:', amount);
 
                 fetch('public/add-stravabucks', {
                     method: 'POST',
@@ -34,11 +34,11 @@
                     body: JSON.stringify({ amount: amount })
                 })
                     .then(response => {
-                        console.log('Response received');
+                        //console.log('Response received');
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Response data:', data);
+                        //console.log('Response data:', data);
 
                         if (data.status === 'success') {
                             updateCoinsDisplay(data.current_balance);

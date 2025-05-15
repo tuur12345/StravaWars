@@ -47,7 +47,7 @@
 <div id="purchaseConfirmOverlay" style="display: none;">
     <div id="purchaseConfirmPopup">
         <div class="purchase-popup-header">
-            <h3>Bevestig Aankoop</h3>
+            <h3>Accept purchase</h3>
             <button class="close-button" onclick="closePurchasePopup()">&times;</button>
         </div>
         <div class="purchase-popup-content">
@@ -56,7 +56,7 @@
                 <h4 id="previewItemName"></h4>
             </div>
             <div class="quantity-selector">
-                <p>Selecteer aantal:</p>
+                <p>Select amount:</p>
                 <div class="quantity-controls">
                     <button onclick="decreaseQuantity()">-</button>
                     <input type="number" id="itemQuantity" value="1" min="1" max="10">
@@ -64,13 +64,13 @@
                 </div>
             </div>
             <div class="total-cost">
-                <p>Totale kosten: <span id="totalCost">15</span>
+                <p>Total costs: <span id="totalCost">15</span>
                     <img src="{{ asset('images/stravabucks.png') }}" alt="Coin Icon" style="width: 20px; height: auto; vertical-align: middle;">
                 </p>
             </div>
             <div class="action-buttons">
-                <button class="cancel-button" onclick="closePurchasePopup()">Annuleren</button>
-                <button class="confirm-button" onclick="confirmPurchase()">Kopen</button>
+                <button class="cancel-button" onclick="closePurchasePopup()">Cancel</button>
+                <button class="confirm-button" onclick="confirmPurchase()">Buy</button>
             </div>
         </div>
     </div>

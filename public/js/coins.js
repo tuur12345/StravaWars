@@ -55,7 +55,7 @@
             return;
         }
         if (quantity <= 0) {
-            showNotification('Info', 'Selecteer een geldig aantal.', 'info');
+            showNotification('Info', 'Select a real amount.', 'info');
             return;
         }
 
@@ -94,8 +94,8 @@
                             if (inventoryData.status === 'success') {
                                 // ALL GOOD! Set notification and reload.
                                 localStorage.setItem('stravabucks_notification', JSON.stringify({
-                                    title: 'Aankoop Succesvol!',
-                                    message: `${quantity}x ${itemNameForDisplay} gekocht voor ${totalCost} Stravabucks en toegevoegd. Nieuw saldo: ${stravabucksData.current_balance}.`,
+                                    title: 'Purchase succesfull!',
+                                    message: `${quantity}x ${itemNameForDisplay} bought for ${totalCost} Stravabucks and added. New balance: ${stravabucksData.current_balance}.`,
                                     type: 'success'
                                 }));
                                 location.reload();
@@ -104,7 +104,7 @@
                                 console.error(`Inventory add failed after purchase: ${inventoryData.message}. Item: ${itemIdentifierForDB}, Qty: ${quantity}`);
                                 localStorage.setItem('stravabucks_notification', JSON.stringify({
                                     title: 'Deels Mislukte Aankoop',
-                                    message: `Je Stravabucks (${totalCost}) zijn afgeschreven, maar ${itemNameForDisplay} kon niet aan de inventaris worden toegevoegd: ${inventoryData.message}. Nieuw saldo: ${stravabucksData.current_balance}.`,
+                                    message: `Your Stravabucks (${totalCost}) are gone, but ${itemNameForDisplay} isn't added to the inventory: ${inventoryData.message}. New balance: ${stravabucksData.current_balance}.`,
                                     type: 'error'
                                 }));
                                 location.reload();
@@ -122,7 +122,7 @@
                         });
                 } else {
                     // Failed to use Stravabucks (e.g., insufficient funds)
-                    showNotification('Aankoop Mislukt', stravabucksData.message || 'Kon Stravabucks niet afschrijven.', 'error');
+                    showNotification('Purchase Failed', stravabucksData.message || 'Kon Stravabucks niet afschrijven.', 'error');
                     // Keep confirmation popup open
                     closePurchasePopup(); // Sluit enkel de confirmation popup
                 }
