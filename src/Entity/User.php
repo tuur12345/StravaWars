@@ -9,11 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 class User
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $username = null;
 
     #[ORM\Column]
@@ -59,6 +58,12 @@ class User
     public function setColor(string $color): static
     {
         $this->color = $color;
+
+        return $this;
+    }
+    public function setId(int $id): static
+    {
+        $this->id = $id;
 
         return $this;
     }
