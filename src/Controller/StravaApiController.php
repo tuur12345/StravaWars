@@ -78,20 +78,16 @@ class StravaApiController extends AbstractController
         $request->getSession()->set('userData', $userData); // store user data in session for other pages
         $request->getSession()->remove('kudos_converted_this_session');
         // Check if user exists in database, if not create a new user
-        $stravaUsername = $userData['username'] ?? $userData['firstname'] . '_' . $userData['id'];
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $user = $userRepository->findOneBy(['username' => $userData['username']]);
 
         if (!$user) {
             // Create new user
             $user = new User();
-            $user->setUsername($stravaUsername);
+            $user->setUsername($userData['username']);
             $user->setStravabucks(0); // Initialize coins to zero
             $entityManager->persist($user);
             $entityManager->flush();
         }
-
-        // Store username in session for easy access
-        $request->getSession()->set('strava_username', $stravaUsername);
 
         return $this->redirectToRoute('home'); // go to the home screen
     }

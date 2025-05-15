@@ -4,21 +4,14 @@ namespace App\Controller;
 //ini_set('max_execution_time', 3000);
 //ini_set('memory_limit', '1024M');
 
-use App\Entity\Hexagon;
-use App\Entity\User;
-use App\Entity\Inventory;
 use App\Repository\HexagonRepository;
 use App\Repository\InventoryRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use GuzzleHttp\Exception\RequestException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Doctrine\DBAL\Connection;
 
 class StravaController extends AbstractController
 {
