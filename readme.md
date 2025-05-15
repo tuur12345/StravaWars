@@ -18,6 +18,10 @@
 ## Implemented Features
 Provide a short description of the actual implemented features in your project
 * user authentication using the Strava API
+* store users and hexagons data in a database
+* load the map with the current hexagon overlay from the database
+* converting kudos to stravabucks(ingame currency)
+* buying upgrades 
+* taking over and upgrading hexagons
+
 * 
-* (e.g.) search libraries
-* ...
