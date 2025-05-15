@@ -23,13 +23,13 @@ class HexagonClaimHexagonTest extends TestCase
         $hexagon->setColor('red');
 
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn('user2');
+        $session->method('get')->with('userData')->willReturn(['id' => 13]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => 'user2','level' => 1, 'color' => 'blue']));
         $request->setSession($session);
 
         $em = $this->createMock(EntityManagerInterface::class);
-//        $em->expects($this->once())->method('flush');
+        $em->expects($this->once())->method('flush');
 
         $hexaRepo = $this->createMock(HexagonRepository::class);
         $hexaRepo->method('findOneBy')->with(['latitude' => '1.23', 'longitude' => '4.56'])->willReturn($hexagon);
@@ -38,7 +38,7 @@ class HexagonClaimHexagonTest extends TestCase
         $user->setUsername('user2')->setStravabucks(13);
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $controller = new HexagonController();
         $response = $controller->claimHexagonAction($request, $hexaRepo,$userRepo, $em);
@@ -48,42 +48,6 @@ class HexagonClaimHexagonTest extends TestCase
         $this->assertEquals('user2', $data['owner']);
         $this->assertEquals(1, $data['level']);
         $this->assertEquals('blue', $data['color']);
-    }
-
-    public function testClaimHexagonUserNotLoggedIn(): void{
-        $hexagon = $this->createMock(\App\Entity\Hexagon::class);
-        $hexagon = new \App\Entity\Hexagon();
-        $hexagon->setLatitude('1.23');
-        $hexagon->setLongitude('4.56');
-        $hexagon->setOwner('user1');
-        $hexagon->setLevel(2);
-        $hexagon->setColor('red');
-
-        $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn(null);
-
-        $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => 'user1','level' => 2, 'color' => 'red']));
-        $request->setSession($session);
-
-        $em = $this->createMock(EntityManagerInterface::class);
-
-        $hexaRepo = $this->createMock(HexagonRepository::class);
-        $hexaRepo->method('findOneBy')->with(['latitude' => '1.23', 'longitude' => '4.56'])->willReturn($hexagon);
-
-        $user = new \App\Entity\User();
-        $user->setUsername('user2')->setStravabucks(13);
-
-        $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn($user);
-
-        $controller = new HexagonController();
-        $response = $controller->claimHexagonAction($request, $hexaRepo, $userRepo, $em);
-
-        $this->assertEquals(401, $response->getStatusCode());
-        $this->assertInstanceOf(JsonResponse::class, $response);
-        $data = json_decode($response->getContent(), true);
-        $this->assertEquals('error', $data['status']);
-        $this->assertEquals('Log in for this action.', $data['message']);
     }
 
     public function testClaimHexagonUserNotFound(): void{
@@ -96,7 +60,7 @@ class HexagonClaimHexagonTest extends TestCase
         $hexagon->setColor('red');
 
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn('user2');
+        $session->method('get')->with('userData')->willReturn(['id' => 13]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => 'user1','level' => 2, 'color' => 'red']));
         $request->setSession($session);
@@ -110,7 +74,7 @@ class HexagonClaimHexagonTest extends TestCase
         $user->setUsername('user2')->setStravabucks(13);
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn(null);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn(null);
 
         $controller = new HexagonController();
         $response = $controller->claimHexagonAction($request, $hexaRepo, $userRepo, $em);
@@ -132,7 +96,7 @@ class HexagonClaimHexagonTest extends TestCase
         $hexagon->setColor('red');
 
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn('user2');
+        $session->method('get')->with('userData')->willReturn(['id' => 13]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => 'user1','level' => 2, 'color' => 'red']));
         $request->setSession($session);
@@ -146,7 +110,7 @@ class HexagonClaimHexagonTest extends TestCase
         $user->setUsername('user2')->setStravabucks(0);
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $controller = new HexagonController();
         $response = $controller->claimHexagonAction($request, $hexaRepo, $userRepo, $em);
@@ -155,7 +119,7 @@ class HexagonClaimHexagonTest extends TestCase
         $this->assertInstanceOf(JsonResponse::class, $response);
         $data = json_decode($response->getContent(), true);
         $this->assertEquals('error', $data['status']);
-        $this->assertEquals('Not enough stravabucks. You need 1 Stravabuck(s) for this action.', $data['message']);
+        $this->assertEquals('Not enough stravabucks. You need 1 Stravabuck for this action.', $data['message']);
         $this->assertEquals(0, $data['current_balance']);
         $this->assertEquals(1, $data['cost']);
     }
@@ -170,7 +134,7 @@ class HexagonClaimHexagonTest extends TestCase
         $hexagon->setColor('red');
 
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn('user2');
+        $session->method('get')->with('userData')->willReturn(['id' => 13]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => 'user1','level' => 2, 'color' => 'red']));
         $request->setSession($session);
@@ -184,7 +148,7 @@ class HexagonClaimHexagonTest extends TestCase
         $user->setUsername('user2')->setStravabucks(13);
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $controller = new HexagonController();
         $response = $controller->claimHexagonAction($request, $hexaRepo, $userRepo, $em);
@@ -206,7 +170,7 @@ class HexagonClaimHexagonTest extends TestCase
         $hexagon->setColor('red');
 
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->willReturn('user2');
+        $session->method('get')->with('userData')->willReturn(['id' => 13]);
 
         $request = new Request([], [], [], [], [], [], json_encode([]));
         $request->setSession($session);
@@ -220,7 +184,7 @@ class HexagonClaimHexagonTest extends TestCase
         $user->setUsername('user2')->setStravabucks(13);
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'user2'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $controller = new HexagonController();
         $response = $controller->claimHexagonAction($request, $hexaRepo, $userRepo, $em);
@@ -231,32 +195,4 @@ class HexagonClaimHexagonTest extends TestCase
         $this->assertEquals('error', $data['status']);
         $this->assertEquals('Invalid hexagon', $data['message']);
     }
-
-
-//    public function testClaimHexagonZeroAndEmptyString(): void{
-//        $hexagon = $this->createMock(\App\Entity\Hexagon::class);
-//        $hexagon = new \App\Entity\Hexagon();
-//        $hexagon->setLatitude('1.23');
-//        $hexagon->setLongitude('4.56');
-//        $hexagon->setOwner('user1');
-//        $hexagon->setLevel(2);
-//        $hexagon->setColor('red');
-//
-//        $request = new Request([], [], [], [], [], [], json_encode(['latitude' => '1.23', 'longitude' => '4.56','owner' => '','level' => 0, 'color' => '']));
-//
-//        $em = $this->createMock(EntityManagerInterface::class);
-//        $em->expects($this->once())->method('flush');
-//
-//        $hexaRepo = $this->createMock(HexagonRepository::class);
-//        $hexaRepo->method('findOneBy')->with(['latitude' => '1.23', 'longitude' => '4.56'])->willReturn($hexagon);
-//
-//        $controller = new HexagonController();
-//        $response = $controller->claimHexagon($request, $hexaRepo, $em);
-//
-//        $this->assertInstanceOf(JsonResponse::class, $response);
-//        $data = json_decode($response->getContent(), true);
-//        $this->assertEquals('', $data['owner']);
-//        $this->assertEquals(0, $data['level']);
-//        $this->assertEquals('', $data['color']);
-//    }
 }

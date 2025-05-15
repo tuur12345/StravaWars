@@ -17,7 +17,10 @@ class AddToInventoryTest extends TestCase
 {
     public function testAddToInventorySuccess(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Trap', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -29,7 +32,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -52,7 +55,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryUserNotLoggedIn(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn(null);
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, null],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Trap', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -63,7 +69,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -84,7 +90,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryInvalidQuantity(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Trap', 'quantity' => -1, ]));
         $request ->setSession($session);
@@ -95,7 +104,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -116,7 +125,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryUserNotFound(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Trap', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -127,7 +139,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn(null);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn(null);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -148,7 +160,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryInventoryNotFound(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Trap', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -159,7 +174,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -183,7 +198,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryItemHasOtherNameButIsValid(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'Fake hexagon', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -194,7 +212,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
@@ -217,7 +235,10 @@ class AddToInventoryTest extends TestCase
 
     public function testAddToInventoryItemHasOtherNameButNotValid(): void{
         $session = $this->createMock(SessionInterface::class);
-        $session->method('get')->with('strava_username')->willReturn('testuser');
+        $session->method('get')->willReturnMap([
+            ['strava_username', null, 'testuser'],
+            ['userData', null, ['id' => 13]],
+        ]);
 
         $request = new Request([], [], [], [], [], [], json_encode(['itemName' => 'totally fake item', 'quantity' => 1, ]));
         $request ->setSession($session);
@@ -228,7 +249,7 @@ class AddToInventoryTest extends TestCase
         $user->setUsername('testuser');
 
         $userRepo = $this->createMock(UserRepository::class);
-        $userRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($user);
+        $userRepo->method('findOneBy')->with(['id' => 13])->willReturn($user);
 
         $inventory = new Inventory();
         $inventory->setUsername('testuser');
