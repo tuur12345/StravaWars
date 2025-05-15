@@ -61,7 +61,8 @@
 
 {% block javascripts %}
     <script>
-        const user = "{{ user.firstname ~ ' ' ~ user.lastname }}";
+        const user = "{{ user.username }}";
+        const userColor = "{{ user.color }}";
         const hexagons_db = {{ hexagons|json_encode|raw }};
         var globalConfig = globalConfig || {};
 

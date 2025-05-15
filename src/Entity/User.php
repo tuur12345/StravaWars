@@ -19,6 +19,9 @@ class User
     #[ORM\Column]
     private ?int $stravabucks = null;
 
+    #[ORM\Column(length: 7)]
+    private ?string $color = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class User
     public function setStravabucks(int $stravabucks): static
     {
         $this->stravabucks = $stravabucks;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): static
+    {
+        $this->color = $color;
 
         return $this;
     }

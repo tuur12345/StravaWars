@@ -80,14 +80,18 @@ class StravaApiController extends AbstractController
         // Check if user exists in database, if not create a new user
         $user = $userRepository->findOneBy(['username' => $userData['username']]);
 
+        $colors = ['blue', 'red', 'green', 'yellow'];
+
         if (!$user) {
             // Create new user
             $user = new User();
             $user->setUsername($userData['username']);
+            $user->setColor($colors[rand(0, count($colors) - 1)]); // give user random color
             $user->setStravabucks(0); // Initialize coins to zero
             $entityManager->persist($user);
             $entityManager->flush();
         }
+        $request->getSession()->set('strava_username', $user->getUsername());
 
         return $this->redirectToRoute('home'); // go to the home screen
     }

@@ -30,8 +30,8 @@ class StravaController extends AbstractController
             return $this->redirectToRoute('connect_to_strava');
         }
 
-        $user = $request->getSession()->get('userData'); // get user data from session
-        if (!$user) {
+        $userData = $request->getSession()->get('userData'); // get user data from session
+        if (!$userData) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
 
@@ -46,7 +46,7 @@ class StravaController extends AbstractController
 
 
         // calc start of week
-        $startOfWeek = strtotime('-6 week');
+        $startOfWeek = strtotime('-12 week');
         $endOfWeek = strtotime('next sunday');
 
         // filter weekly activities
@@ -67,9 +67,12 @@ class StravaController extends AbstractController
         $request->getSession()->set('totalKudosThisWeek', $totalKudosThisWeek); // save kudos
 
         // Get user from database to display current stravabucks
-        $stravaUsername = $request->getSession()->get('strava_username');
-        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
-        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
+        $userName = $request->getSession()->get('strava_username');
+        $user = $userRepository->findOneBy(['username' => $userName]);
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
+        }
+        $stravabucks = $user->getStravabucks();
 
         $data = $hexagonRepository->findAll();
         $hexagons = [];
@@ -85,8 +88,11 @@ class StravaController extends AbstractController
         $request->getSession()->set('hexagons', $hexagons);
         $kudosAlreadyConvertedThisSession = $request->getSession()->get('kudos_converted_this_session', false);
 
+
+
         return $this->render('home.html.twig', [
             'activities' => $weekActivities,
+            'userData' => $userData,
             'user' => $user,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
             'Kudostocoins'=> round($totalKudosThisWeek/2),
@@ -98,8 +104,8 @@ class StravaController extends AbstractController
 
     #[Route('/maps', name:'maps')]
     public function maps(Request $request, UserRepository $userRepository, HexagonRepository $hexagonRepository): Response {
-        $user = $request->getSession()->get('userData'); // get user data from session
-        if (!$user) {
+        $userData = $request->getSession()->get('userData'); // get user data from session
+        if (!$userData) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
 
@@ -108,13 +114,17 @@ class StravaController extends AbstractController
 
         // Get user's stravabucks
         $stravaUsername = $request->getSession()->get('strava_username');
-        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
-        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
+        }
+        $stravabucks = $user->getStravabucks();
 
         $hexagons = $request->getSession()->get('hexagons', []);
         $kudosAlreadyConvertedThisSession = $request->getSession()->get('kudos_converted_this_session', false);
 
         return $this->render('maps.html.twig', [
+            'userData' => $userData,
             'user' => $user,
             'activities' => $weekActivities,
             'totalKudosThisWeek'=> $totalKudosThisWeek,
@@ -127,8 +137,8 @@ class StravaController extends AbstractController
 
     #[Route('/profile', name:'profile')]
     public function profile(Request $request, UserRepository $userRepository): Response {
-        $user = $request->getSession()->get('userData'); // get user data from session
-        if (!$user) {
+        $userData = $request->getSession()->get('userData'); // get user data from session
+        if (!$userData) {
             return $this->redirectToRoute('connect_to_strava'); // if no user data go back to start screen
         }
 
@@ -137,11 +147,15 @@ class StravaController extends AbstractController
 
         // Get user's stravabucks
         $stravaUsername = $request->getSession()->get('strava_username');
-        $dbUser = $userRepository->findOneBy(['username' => $stravaUsername]);
-        $stravabucks = $dbUser ? $dbUser->getStravabucks() : 0;
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return $this->redirectToRoute('connect_to_strava'); // if no user go back to start screen
+        }
+        $stravabucks = $user->getStravabucks();
 
         return $this->render('profile.html.twig',
             [
+                'userData' => $userData,
                 'user' => $user,
                 'activities' => $weekActivities,
                 'totalKudosThisWeek'=> $totalKudosThisWeek,

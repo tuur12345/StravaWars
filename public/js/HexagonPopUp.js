@@ -82,7 +82,8 @@ function addClaimButton(container, hexagon) {
 
     L.DomEvent.on(button, 'click', () => {
         hexagon.level = 1;
-        hexagon.color = "blue"; // change to user.color in future
+        hexagon.color = userColor;
+        console.log(hexagon.color);
         hexagon.owner = user;
         updateHexagonInDb(container, hexagon, button);
     });
