@@ -74,14 +74,11 @@
     {% endblock %}
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const favicon = document.getElementById('dynamic-favicon');
-            const color = "{{ user ? user.color : '' }}";
-            if (favicon && color) {
-                favicon.href = '/public/images/favicon' + color + '.png?v=' + Date.now();
-                console.log("Favicon set to:", favicon.href);
-            }
-        });
+        const favicon = document.getElementById('dynamic-favicon');
+        const color = "{{ user ? user.color : '' }}";
+        if (favicon && color) {
+            favicon.href = '/public/images/favicon' + color + '.png?v=' + Date.now();
+        }
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/HamburgerMenu.js') }}"></script>
