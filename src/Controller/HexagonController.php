@@ -45,15 +45,8 @@ class HexagonController extends AbstractController
         EntityManagerInterface $em
     ): JsonResponse {
 
-        $stravaUsername = $request->getSession()->get('strava_username');
-        if (!$stravaUsername) {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => 'Log in for this action.'
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $userData = $request->getSession()->get('userData');
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return new JsonResponse([
                 'status' => 'error',

@@ -92,7 +92,7 @@ async function updateHexagonInDb(container, hexagon, button) {
     button.disabled = true;
     button.textContent = button.textContent + ' ...';
     try {
-        const response = await fetch('/hexagon/claim', {
+        const response = await fetch('/public/hexagon/claim', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

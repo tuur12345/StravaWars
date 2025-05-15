@@ -21,7 +21,7 @@ function updateCoinsDisplay(amount) {
 
 // Fetch current stravabucks balance
 function fetchStravabucks() {
-    fetch('/get-stravabucks')
+    fetch('/public/get-stravabucks')
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
@@ -35,7 +35,7 @@ function fetchStravabucks() {
 function addStravabucks(amount) {
     console.log('addStravabucks inside:', amount);
 
-    fetch('/add-stravabucks', {
+    fetch('/public/add-stravabucks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ function addStravabucks(amount) {
 
 // Use stravabucks (e.g., when buying an item)
 function useStravabucks(amount, itemName) {
-    fetch('/use-stravabucks', {
+    fetch('/public/use-stravabucks', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

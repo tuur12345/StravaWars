@@ -31,8 +31,8 @@ class InventoryController extends AbstractController
         if (!$itemName || $quantity <= 0) {
             return new JsonResponse(['status' => 'error', 'message' => 'Invalid item data'], 400);
         }
-
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $userData = $request->getSession()->get('userData'); // get user data from session
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             return new JsonResponse(['status' => 'error', 'message' => 'User not found'], 404);
         }
@@ -92,7 +92,8 @@ class InventoryController extends AbstractController
             return new JsonResponse(['status' => 'error', 'message' => 'User not logged in'], 401);
         }
 
-        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        $userData = $request->getSession()->get('userData'); // get user data from session
+        $user = $userRepository->findOneBy(['id' => $userData['id']]);
         if (!$user) {
             // Dit zou niet moeten gebeuren als de user ingelogd is, maar voor de zekerheid
             return new JsonResponse(['status' => 'error', 'message' => 'User not found for inventory'], 404);

@@ -26,7 +26,7 @@
             if (kudosToCoins > 0) {
                 console.log('addStravabucks inside:', amount);
 
-                fetch('/add-stravabucks', {
+                fetch('public/add-stravabucks', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
