@@ -200,7 +200,7 @@ class AddToInventoryTest extends TestCase
         $inventory->setUsername('testuser');
 
         $inventoryRepo = $this->createMock(InventoryRepository::class);
-        $inventoryRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn(null);
+        $inventoryRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($inventory);
 
 
         $controller = new InventoryController();
@@ -234,7 +234,7 @@ class AddToInventoryTest extends TestCase
         $inventory->setUsername('testuser');
 
         $inventoryRepo = $this->createMock(InventoryRepository::class);
-        $inventoryRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn(null);
+        $inventoryRepo->method('findOneBy')->with(['username' => 'testuser'])->willReturn($inventory);
 
 
         $controller = new InventoryController();
