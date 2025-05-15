@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ConnectStravaWebTest extends WebTestCase
 {
-    public function testSomething(): void
+    public function testConnectStrava(): void
     {
         $client = static::createClient();
         $crawler = $client->request('GET', '/connect_strava');
