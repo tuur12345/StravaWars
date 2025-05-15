@@ -37,8 +37,7 @@
                                     <div class="activity">
                                         {% if activity.map.summary_polyline is not empty %}
                                             <h4>Activity Route:</h4>
-                                            {# Attributen nodig voor ActivityMap.js #}
-                                            <div id="act_map_{{ activity.id }}" class="activities-map" data-polyline="{{ activity.map.summary_polyline | e('html_attr') }}" data-clickable="false" style="height: 150px; width: 100%;"></div> {# Voeg basis stijl toe #}
+                                            <div id="act_map_{{ activity.id }}" class="activities-map" data-polyline="{{ activity.map.summary_polyline | e('html_attr') }}" data-clickable="false" style="height: 150px; width: 100%;"></div>
                                         {% else %}
                                             <p>No map available for this activity.</p>
                                         {% endif %}

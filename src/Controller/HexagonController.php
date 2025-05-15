@@ -4,47 +4,22 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use App\Repository\HexagonRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
+use App\Entity\Hexagon;
 
 class HexagonController extends AbstractController
 {
-    //    #[Route('/insert-hexagons', methods: ['POST'])]
-    //    public function insertHexagons(Request $request, EntityManagerInterface $em): JsonResponse
-    //    {
-    //        // insert hexagons in database in batches
-    //        $data = json_decode($request->getContent(), true);
-    //
-    //        $batchSize = 100;
-    //        $i = 0;
-    //
-    //        foreach ($data['hexagons'] as $hexData) {
-    //            $hex = new Hexagon();
-    //            $hex->setLatitude($hexData['latitude']);
-    //            $hex->setLongitude($hexData['longitude']);
-    //            $hex->setColor($hexData['color']);
-    //            $hex->setOwner($hexData['owner']);
-    //            $hex->setLevel($hexData['level']);
-    //
-    //            $em->persist($hex);
-    //            $i++;
-    //
-    //            if (($i % $batchSize) === 0) {
-    //                $em->flush();
-    //                $em->clear(); // free memory
-    //            }
-    //        }
-    //        $em->flush();
-    //        $em->clear();
-    //
-    //        return new JsonResponse(['status' => 'success']);
-    //    }
+    private const COST_PER_ACTION = 1;
 
-    #[Route('/hexagons', name: 'getAllHexagons')]
+    #[Route('/hexagons', name: 'getAllHexagons', methods:['GET'])]
     public function getAllHexagons(HexagonRepository $hexagonRepository): JsonResponse
     {
         $hexagons = $hexagonRepository->findAll();
@@ -60,28 +35,78 @@ class HexagonController extends AbstractController
         }
         return new JsonResponse($data);
     }
-    #[Route('/hexagon/claim', name: 'claimHexagon')]
-    public function claimHexagon(Request $request, HexagonRepository $repo, EntityManagerInterface $em): JsonResponse
-    {
-        $hexagon = json_decode($request->getContent(), true);
-        $latitude = $hexagon['latitude'];
-        $longitude = $hexagon['longitude'];
-        $owner = $hexagon['owner'];
-        $level = $hexagon['level'];
-        $color = $hexagon['color'];
 
-        $hexagon = $repo->findOneBy(['latitude' => $latitude, 'longitude' => $longitude]);
 
-        $hexagon->setOwner($owner);
-        $hexagon->setLevel($level);
-        $hexagon->setColor($color);
+    #[Route('/hexagon/claim', name: 'claimHexagon', methods: ['POST'])]
+    public function claimHexagonAction(
+        Request $request,
+        HexagonRepository $hexagonRepository,
+        UserRepository $userRepository,
+        EntityManagerInterface $em
+    ): JsonResponse {
+
+        $stravaUsername = $request->getSession()->get('strava_username');
+        if (!$stravaUsername) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Niet ingelogd. Log in om deze actie uit te voeren.'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $user = $userRepository->findOneBy(['username' => $stravaUsername]);
+        if (!$user) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Gebruiker niet gevonden.'
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $currentStravabucks = $user->getStravabucks();
+        if ($currentStravabucks < self::COST_PER_ACTION) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => 'Niet genoeg Stravabucks voor deze actie. Je hebt ' . self::COST_PER_ACTION . ' Stravabuck(s) nodig.',
+                'current_balance' => $currentStravabucks,
+                'cost' => self::COST_PER_ACTION
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $user->setStravabucks($currentStravabucks - self::COST_PER_ACTION);
+        $em->persist($user);
+
+        $hexagonData = json_decode($request->getContent(), true);
+        if (!$hexagonData || !isset($hexagonData['latitude']) || !isset($hexagonData['longitude'])) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Ongeldige hexagon data. Latitude en longitude zijn verplicht.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $latitude = $hexagonData['latitude'];
+        $longitude = $hexagonData['longitude'];
+        $newOwner = $hexagonData['owner'] ?? 'None';
+        $newLevel = $hexagonData['level'] ?? 0;
+        $newColor = $hexagonData['color'] ?? '#FFFFFF';
+
+        $hexagonEntity = $hexagonRepository->findOneBy(['latitude' => $latitude, 'longitude' => $longitude]);
+
+        if (!$hexagonEntity) {
+            $em->remove($user);
+            $em->flush();
+            return new JsonResponse(['status' => 'error', 'message' => 'Hexagon niet gevonden op de opgegeven coördinaten.'], Response::HTTP_NOT_FOUND);
+        }
+
+
+        $hexagonEntity->setOwner($newOwner);
+        $hexagonEntity->setLevel($newLevel);
+        $hexagonEntity->setColor($newColor);
 
         $em->flush();
 
         return new JsonResponse([
-            'owner' => $hexagon->getOwner(),
-            'level' => $hexagon->getLevel(),
-            'color' => $hexagon->getColor(),
+            'status' => 'success',
+            'message' => 'Actie succesvol uitgevoerd!',
+            'owner' => $hexagonEntity->getOwner(),
+            'level' => $hexagonEntity->getLevel(),
+            'color' => $hexagonEntity->getColor(),
+            'new_stravabucks_balance' => $user->getStravabucks()
         ]);
     }
 }
