@@ -8,12 +8,12 @@
         {% endblock %}
     </title>
 
-    <link id="dynamic-favicon" rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link id="dynamic-favicon" rel="shortcut icon" type="image/png" href="{{ asset('images/favicon.png') }}">
 
     <script>
         const favicon = document.getElementById('dynamic-favicon');
         const color = "{{ user ? user.color : '' }}";
-        favicon.href = '/images/favicon' + color + '.png';
+        favicon.href = '/public/images/favicon' + color + '.png';
         console.log(color);
     </script>
 
