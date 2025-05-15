@@ -88,7 +88,6 @@ function addClaimButton(container, hexagon) {
         updateHexagonInDb(container, hexagon, button);
     });
 }
-
 async function updateHexagonInDb(container, hexagon, button) {
     button.disabled = true;
     button.textContent = button.textContent + ' ...';
@@ -105,19 +104,25 @@ async function updateHexagonInDb(container, hexagon, button) {
             })
         });
 
+        const responseData = await response.json();
+
         if (response.ok) {
-            const updatedHexagon = await response.json();
-            hexagon.color = updatedHexagon.color;
-            hexagon.owner = updatedHexagon.owner;
-            hexagon.level = updatedHexagon.level;
-            container.querySelector('#hex-owner').textContent = updatedHexagon.owner;
-            container.querySelector('#hex-level').textContent = updatedHexagon.level;
-            hexagon.polygon.setStyle({ fillColor: hexagon.color, fillOpacity: (updatedHexagon.owner !== "None") ? 0.4 : 0 });
+
+            hexagon.color = responseData.color;
+            hexagon.owner = responseData.owner;
+            hexagon.level = responseData.level;
+            container.querySelector('#hex-owner').textContent = responseData.owner;
+            container.querySelector('#hex-level').textContent = responseData.level;
+            hexagon.polygon.setStyle({ fillColor: hexagon.color, fillOpacity: (responseData.owner !== "None") ? 0.4 : 0 });
         } else {
-            alert("Failed to claim. Try again.");
+
+            alert(responseData.message || "Actie mislukt. Probeer opnieuw.");
         }
+    } catch (error) {
+        console.error("Fout in updateHexagonInDb:", error);
+        alert("Een onverwachte fout is opgetreden. Probeer het opnieuw.");
     } finally {
-        button.textContent = "Done!"
+        button.textContent = "Done!";
         hexagon.polygon._map.closePopup();
     }
 }
