@@ -17,9 +17,9 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class StravaApiController extends AbstractController
 {
     // create own Strava API application: https://www.strava.com/settings/api
-    private $clientId = '153505'; // Replace with your Strava client ID
-    private $clientSecret = '658ffd98156a5101444096565e9565a00c051ca4'; // Replace with your Strava client secret
-    private $redirectUri = 'http://localhost:8080/strava/callback'; // redirect URL, dont change
+    private $clientId = '153511'; // Replace with your Strava client ID
+    private $clientSecret = '5744714c59aa271d85bcc43727c1ecebdc4bb4f3'; // Replace with your Strava client secret
+    private $redirectUri = 'https://a24sewt303.studev.groept.be/public/strava/callback'; // redirect URL, dont change
 
     #[Route('/connect_strava', name:'connect_to_strava')]
     public function connect_strava(): Response { // start screen with button to connect to strava
