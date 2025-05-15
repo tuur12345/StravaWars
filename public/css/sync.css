@@ -202,7 +202,7 @@ body.no-scroll {
     color: white;
     cursor: pointer;
     border-radius: 4px;
-    background-image: url("/images/stravabucks.png");
+    background-image: url("../images/stravabucks.png");
     background-repeat: no-repeat;
     background-position: 8px center;
     padding: 5px 10px 5px 32px;
