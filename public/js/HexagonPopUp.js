@@ -107,20 +107,24 @@ async function updateHexagonInDb(container, hexagon, button) {
         const responseData = await response.json();
 
         if (response.ok) {
-
             hexagon.color = responseData.color;
             hexagon.owner = responseData.owner;
             hexagon.level = responseData.level;
             container.querySelector('#hex-owner').textContent = responseData.owner;
             container.querySelector('#hex-level').textContent = responseData.level;
             hexagon.polygon.setStyle({ fillColor: hexagon.color, fillOpacity: (responseData.owner !== "None") ? 0.4 : 0 });
-        } else {
 
-            alert(responseData.message || "Action failed.");
+            // Add success notification
+            showNotification('Success', 'Hexagon updated successfully!', 'success');
+        } else {
+            // Replace alert with showNotification
+            console.error("Action failed:", responseData.message);
+            showNotification('Action Failed', responseData.message || "Failed to update hexagon", 'error');
         }
     } catch (error) {
         console.error("Error in updateHexagonInDb:", error);
-        alert("Unexpected error");
+        // Replace alert with showNotification
+        showNotification('Unexpected Error', 'Could not update hexagon: ' + (error.message || 'unknown error'), 'error');
     } finally {
         button.textContent = "Done!";
         hexagon.polygon._map.closePopup();

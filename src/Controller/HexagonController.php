@@ -65,7 +65,7 @@ class HexagonController extends AbstractController
         if ($currentStravabucks < self::COST_PER_ACTION) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Not enough stravabucks. You need ' . self::COST_PER_ACTION . ' Stravabuck(s) for this action.',
+                'message' => 'Not enough stravabucks. You need ' . self::COST_PER_ACTION . ' Stravabuck for this action.',
                 'current_balance' => $currentStravabucks,
                 'cost' => self::COST_PER_ACTION
             ], Response::HTTP_FORBIDDEN);

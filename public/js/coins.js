@@ -27,6 +27,12 @@
     // --- Core Shop Functions ---
 
     function confirmPurchase() {
+        if (window.isProcessingPurchase) {
+            console.log("Purchase already in progress, ignoring duplicate request");
+            return;
+        }
+
+        window.isProcessingPurchase = true;
         const shopConfig = getConfig('shop');
         if (!shopConfig || !shopConfig.urls) {
             showNotification('Fout', 'Winkel configuratie niet gevonden.', 'error');
@@ -126,6 +132,10 @@
                 console.error('Error using stravabucks:', error);
                 showNotification('Fout', `Kon aankoop niet voltooien (${error.message || 'onbekende fout'}). Controleer je verbinding.`, 'error');
                 closePurchasePopup(); // Sluit confirmation popup
+            })
+            .finally(() => {
+                // Clear the processing flag regardless of success or failure
+                window.isProcessingPurchase = false;
             });
     }
 
