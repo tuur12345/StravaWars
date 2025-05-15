@@ -49,7 +49,7 @@ class HexagonController extends AbstractController
         if (!$stravaUsername) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Niet ingelogd. Log in om deze actie uit te voeren.'
+                'message' => 'Log in for this action.'
             ], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -57,7 +57,7 @@ class HexagonController extends AbstractController
         if (!$user) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Gebruiker niet gevonden.'
+                'message' => 'User not found.'
             ], Response::HTTP_NOT_FOUND);
         }
 
@@ -65,7 +65,7 @@ class HexagonController extends AbstractController
         if ($currentStravabucks < self::COST_PER_ACTION) {
             return new JsonResponse([
                 'status' => 'error',
-                'message' => 'Niet genoeg Stravabucks voor deze actie. Je hebt ' . self::COST_PER_ACTION . ' Stravabuck(s) nodig.',
+                'message' => 'Not enough stravabucks. You need ' . self::COST_PER_ACTION . ' Stravabuck(s) for this action.',
                 'current_balance' => $currentStravabucks,
                 'cost' => self::COST_PER_ACTION
             ], Response::HTTP_FORBIDDEN);
@@ -76,7 +76,7 @@ class HexagonController extends AbstractController
 
         $hexagonData = json_decode($request->getContent(), true);
         if (!$hexagonData || !isset($hexagonData['latitude']) || !isset($hexagonData['longitude'])) {
-            return new JsonResponse(['status' => 'error', 'message' => 'Ongeldige hexagon data. Latitude en longitude zijn verplicht.'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['status' => 'error', 'message' => 'Invalid hexagon'], Response::HTTP_BAD_REQUEST);
         }
 
         $latitude = $hexagonData['latitude'];
@@ -90,7 +90,7 @@ class HexagonController extends AbstractController
         if (!$hexagonEntity) {
             $em->remove($user);
             $em->flush();
-            return new JsonResponse(['status' => 'error', 'message' => 'Hexagon niet gevonden op de opgegeven coördinaten.'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['status' => 'error', 'message' => 'Hexagon not found'], Response::HTTP_NOT_FOUND);
         }
 
 
@@ -102,7 +102,6 @@ class HexagonController extends AbstractController
 
         return new JsonResponse([
             'status' => 'success',
-            'message' => 'Actie succesvol uitgevoerd!',
             'owner' => $hexagonEntity->getOwner(),
             'level' => $hexagonEntity->getLevel(),
             'color' => $hexagonEntity->getColor(),
