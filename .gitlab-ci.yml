@@ -10,13 +10,11 @@ before_script:
 deploy-job:
   only:
     - master
-    - rsync -rv ...your existing rsync command...
-    - ssh a24sewt303@shell.studev.groept.be "chmod -R 775 /var/www/html/var"
   script:
     - composer install
-    - rsync -rv --exclude=".git/" 
-                --exclude=".env/" 
-      --exclude="upload/" 
-                --delete 
-                ./ a24sewt303@shell.studev.groept.be:/var/www/html
-
+    - rsync -rv --exclude=".git/" \
+      --exclude=".env/" \
+      --exclude="upload/" \
+      --delete \
+      ./ a24sewt303@shell.studev.groept.be:/var/www/html
+    - ssh a24sewt303@shell.studev.groept.be "chmod -R 777 /var/www/html/var/cache /var/www/html/var/log"
