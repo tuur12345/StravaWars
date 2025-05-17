@@ -26,6 +26,9 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
+
+RUN mkdir -p /var/www/html/var
+
 # Set correct permissions (adjust as needed)
 RUN chown -R www-data:www-data /var/www/html/var /var/www/html/vendor
 
